@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 
 // Stripeクライアントの初期化
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-06-30.basil', // checkout時とバージョンを合わせる
+  apiVersion: '2025-07-30.basil', // checkout時とバージョンを合わせる
 });
 
 // Resendクライアントの初期化
