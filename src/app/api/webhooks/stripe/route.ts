@@ -35,15 +35,17 @@ export async function POST(req: NextRequest) {
     const customerEmail = session.customer_details?.email;
     const customerName = session.customer_details?.name || 'お客様';
 
+    console.log(`[Webhook] Received checkout.session.completed for email: ${customerEmail}`);
+    console.log(`[Webhook] Customer Name: ${customerName}`);
+
     if (!customerEmail) {
-      console.error('Customer email not found in checkout session.');
-      // メールアドレスがない場合は、ここで処理を終了する
+      console.error('Customer email not found in checkout session. Cannot send email.');
       return NextResponse.json({ received: true, message: 'No email to send.' });
     }
 
     try {
       // Resendを使って購入確認メールを送信
-      await resend.emails.send({
+      const { data, error: resendError } = await resend.emails.send({
         from: 'APOTHEKE FRAGRANCE <noreply@yourdomain.com>', // Resendで設定・認証したドメインのメールアドレスに変更してください
         to: customerEmail,
         subject: '【APOTHEKE FRAGRANCE】ご注文ありがとうございます',
@@ -60,11 +62,14 @@ export async function POST(req: NextRequest) {
           </div>
         `,
       });
-      console.log(`Purchase confirmation email sent to ${customerEmail}`);
+
+      if (resendError) {
+        console.error('Error sending email via Resend:', resendError);
+      } else {
+        console.log(`Purchase confirmation email sent successfully via Resend. ID: ${data?.id}`);
+      }
     } catch (error) {
-      console.error('Error sending email:', error);
-      // メール送信に失敗しても、Stripeには成功したことを伝えるため200を返す
-      // ここで500を返すと、StripeがWebhookを再送し続けてしまう
+      console.error('Unexpected error during email sending:', error);
     }
   } else {
     console.warn(`Unhandled event type: ${event.type}`);
