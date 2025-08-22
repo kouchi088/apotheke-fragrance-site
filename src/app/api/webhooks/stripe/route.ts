@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     try {
       // Resendを使って購入確認メールを送信
       const { data, error: resendError } = await resend.emails.send({
-        from: 'APOTHEKE FRAGRANCE <noreply@yourdomain.com>', // Resendで設定・認証したドメインのメールアドレスに変更してください
+        from: 'APOTHEKE FRAGRANCE <noreply@megurid.com>', // Resendで設定・認証したドメインのメールアドレスに変更してください
         to: customerEmail,
         subject: '【APOTHEKE FRAGRANCE】ご注文ありがとうございます',
         html: `
