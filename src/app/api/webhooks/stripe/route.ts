@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
+import { createClient } from '@/lib/supabaseClient'; // ADD THIS
 
 // Stripeクライアントの初期化
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -9,6 +10,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 // Resendクライアントの初期化
 const resend = new Resend(process.env.RESEND_API_KEY!);
+
+const supabase = createClient(); // ADD THIS
 
 // Stripe Webhookのシークレットキー
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -32,16 +35,70 @@ export async function POST(req: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
 
+    // Retrieve the full session with line items
+    const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+      expand: ['line_items.data.price.product'], // Expand line items and product details
+    });
+    const lineItems = fullSession.line_items?.data;
+
     const customerEmail = session.customer_details?.email;
     const customerName = session.customer_details?.name || 'お客様';
 
     console.log(`[Webhook] Received checkout.session.completed for email: ${customerEmail}`);
     console.log(`[Webhook] Customer Name: ${customerName}`);
+    console.log(`[Webhook] Session ID: ${session.id}`);
+    console.log(`[Webhook] Total Amount: ${session.amount_total} ${session.currency}`);
 
     if (!customerEmail) {
       console.error('Customer email not found in checkout session. Cannot send email.');
       return NextResponse.json({ received: true, message: 'No email to send.' });
     }
+
+    // --- Start Order Saving Logic ---
+    try {
+      // 1. Save to public.orders table
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          customer_email: customerEmail,
+          stripe_session_id: session.id,
+          total_amount: session.amount_total,
+          currency: session.currency,
+          status: 'completed',
+        })
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Error saving order to Supabase:', orderError);
+        throw new Error('Failed to save order.');
+      }
+      console.log(`Order saved to Supabase with ID: ${order.id}`);
+
+      // 2. Save to public.order_details table
+      if (lineItems && lineItems.length > 0) {
+        const orderDetailsToInsert = lineItems.map((item: any) => ({
+          order_id: order.id,
+          product_id: item.price?.product?.id || item.description, // Use Stripe Product ID or description
+          quantity: item.quantity,
+          price: item.price?.unit_amount,
+        }));
+
+        const { error: orderDetailsError } = await supabase
+          .from('order_details')
+          .insert(orderDetailsToInsert);
+
+        if (orderDetailsError) {
+          console.error('Error saving order details to Supabase:', orderDetailsError);
+          throw new Error('Failed to save order details.');
+        }
+        console.log('Order details saved to Supabase.');
+      }
+    } catch (dbError) {
+      console.error('Database operation error:', dbError);
+      // Decide whether to return an error to Stripe or just log
+    }
+    // --- End Order Saving Logic ---
 
     try {
       // Resendを使って購入確認メールを送信
@@ -78,3 +135,4 @@ export async function POST(req: NextRequest) {
   // Stripeに正常に受信したことを伝える
   return NextResponse.json({ received: true });
 }
+
