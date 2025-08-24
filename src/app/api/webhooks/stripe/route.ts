@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
         .insert({
           customer_email: customerEmail,
           stripe_session_id: session.id,
-          total_amount: session.amount_total,
+          total: session.amount_total, // Corrected line
           currency: session.currency,
           status: 'completed',
         })
