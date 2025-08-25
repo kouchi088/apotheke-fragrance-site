@@ -77,12 +77,16 @@ export async function POST(req: NextRequest) {
 
       // 2. Save to public.order_details table
       if (lineItems && lineItems.length > 0) {
-        const orderDetailsToInsert = lineItems.map((item: any) => ({
-          order_id: order.id,
-          product_id: item.price?.product?.id || item.description, // Use Stripe Product ID or description
-          quantity: item.quantity,
-          price: item.price?.unit_amount,
-        }));
+        const orderDetailsToInsert = lineItems.map((item: any) => {
+          const productIdToInsert = item.price?.product?.id || item.description; // Capture the ID being used
+          console.log(`[Webhook] Attempting to insert product_id: ${productIdToInsert}`); // ADDED LOG
+          return {
+            order_id: order.id, // Link to the newly created order
+            product_id: productIdToInsert, // Use Stripe Product ID or description
+            quantity: item.quantity,
+            price: item.price?.unit_amount, // Price in smallest currency unit
+          };
+        });
 
         const { error: orderDetailsError } = await supabase
           .from('order_details')
