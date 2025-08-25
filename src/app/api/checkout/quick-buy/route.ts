@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import Stripe from "stripe";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { createClient } from "@/lib/supabaseClient";
+import { createServerClient } from "@supabase/ssr";
+import { createClient as createAdminClient } from "@/lib/supabaseClient";
 
 // Initialize Stripe with the secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -18,7 +18,7 @@ async function logError(source: string, error: any, context: object = {}) {
   const errorMessage = error instanceof Error ? error.message : "Unknown error";
   console.error(`Error from ${source}:`, errorMessage, context);
   try {
-    const supabaseAdmin = createClient({
+    const supabaseAdmin = createAdminClient({
       global: {
         headers: { Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}` },
       },
@@ -34,7 +34,19 @@ async function logError(source: string, error: any, context: object = {}) {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
+
   try {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) {
@@ -90,7 +102,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: stripeSession.url });
 
   } catch (error) {
-    await logError('quick_buy_api', error);
+    await logError('quick_buy_api', error, { productId: (await req.clone().json()).productId });
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }

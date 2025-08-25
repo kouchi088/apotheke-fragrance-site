@@ -1,10 +1,25 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+function createSupabaseClient() {
+  const cookieStore = cookies();
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
+}
+
 // お気に入りを取得 (安全な方法)
 export async function GET(req: NextRequest) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = createSupabaseClient();
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
   if (sessionError || !session) {
@@ -26,7 +41,7 @@ export async function GET(req: NextRequest) {
 
 // お気に入りに追加 (安全な方法)
 export async function POST(req: NextRequest) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = createSupabaseClient();
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
   if (sessionError || !session) {
@@ -58,7 +73,7 @@ export async function POST(req: NextRequest) {
 
 // お気に入りから削除 (安全な方法)
 export async function DELETE(req: NextRequest) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = createSupabaseClient();
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
   if (sessionError || !session) {

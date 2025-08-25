@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import Stripe from "stripe";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { createClient } from "@/lib/supabaseClient";
+import { createServerClient } from "@supabase/ssr";
+import { createClient as createAdminClient } from "@/lib/supabaseClient";
 
 // Initialize Stripe with the secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -15,7 +15,19 @@ interface CartItem {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
+
   try {
     // Get user session
     const {
@@ -106,7 +118,7 @@ export async function POST(req: NextRequest) {
 
     // --- Log error to Supabase ---
     try {
-      const supabaseAdmin = createClient({
+      const supabaseAdmin = createAdminClient({
         global: {
           headers: {
             Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
