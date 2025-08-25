@@ -10,7 +10,7 @@ export interface Product {
   name: string;
   image: string;
   price: number;
-  stock: number; // stockプロパティを追加
+  stock_quantity: number; // stock_quantityに変更
   description: string;
 }
 
