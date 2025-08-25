@@ -1,16 +1,16 @@
-import { createClient } from '@/lib/supabaseClient';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabase = createClient();
-
-// お気に入りを取得
+// お気に入りを取得 (安全な方法)
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get('user_id');
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-  if (!userId) {
-    return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+  if (sessionError || !session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const userId = session.user.id;
 
   const { data, error } = await supabase
     .from('user_favorites')
@@ -24,12 +24,20 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(data);
 }
 
-// お気に入りに追加
+// お気に入りに追加 (安全な方法)
 export async function POST(req: NextRequest) {
-  const { userId, productId } = await req.json();
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-  if (!userId || !productId) {
-    return NextResponse.json({ error: 'User ID and Product ID are required' }, { status: 400 });
+  if (sessionError || !session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const userId = session.user.id;
+
+  const { productId } = await req.json();
+
+  if (!productId) {
+    return NextResponse.json({ error: 'Product ID is required' }, { status: 400 });
   }
 
   const { data, error } = await supabase
@@ -38,18 +46,30 @@ export async function POST(req: NextRequest) {
     .select();
 
   if (error) {
+    // Handle potential duplicate entry error gracefully
+    if (error.code === '23505') { // unique constraint violation
+      return NextResponse.json({ message: 'Item already in favorites' }, { status: 200 });
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   return NextResponse.json(data);
 }
 
-// お気に入りから削除
+// お気に入りから削除 (安全な方法)
 export async function DELETE(req: NextRequest) {
-  const { userId, productId } = await req.json();
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-  if (!userId || !productId) {
-    return NextResponse.json({ error: 'User ID and Product ID are required' }, { status: 400 });
+  if (sessionError || !session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const userId = session.user.id;
+
+  const { productId } = await req.json();
+
+  if (!productId) {
+    return NextResponse.json({ error: 'Product ID is required' }, { status: 400 });
   }
 
   const { error } = await supabase

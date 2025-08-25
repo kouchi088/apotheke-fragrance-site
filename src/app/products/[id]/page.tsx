@@ -13,7 +13,7 @@ interface Product {
   price: number;
   image: string;
   description: string;
-  stock: number;
+  stock_quantity: number; // Updated from stock to stock_quantity
 }
 
 const supabase = createClient();
@@ -23,15 +23,13 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const [loading, setLoading] = useState(true);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
       setError(null);
-
-      console.log('Fetching product with ID:', params.id); // ADDED LOG
-
       const { data: productData, error: productError } = await supabase
         .from('products')
         .select('*')
@@ -39,14 +37,12 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
         .single();
 
       if (productError) {
-        console.error('Error fetching product from Supabase:', productError); // MODIFIED LOG
+        console.error('Error fetching product:', productError);
         setError('商品情報の取得に失敗しました。');
         setProduct(null);
       } else {
-        console.log('Successfully fetched product data:', productData); // ADDED LOG
         setProduct(productData);
       }
-
       setLoading(false);
     };
 
@@ -59,6 +55,32 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
     if (product) {
       addToCart(product, quantity);
       toast.success(`${product.name}をカートに追加しました。`);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!product) return;
+    setIsBuyingNow(true);
+    try {
+      const response = await fetch('/api/checkout/quick-buy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: product.id, quantity }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || '購入処理に失敗しました。');
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+      toast.error(errorMessage);
+      setIsBuyingNow(false);
     }
   };
 
@@ -77,7 +99,6 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
   return (
     <div className="container mx-auto max-w-5xl py-16 px-4">
       <div className="grid md:grid-cols-2 gap-12 items-start">
-        {/* Image Section */}
         <div className="relative w-full aspect-square bg-accent">
           <Image
             src={product.image}
@@ -90,7 +111,6 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
           <FavoriteButton productId={product.id} />
         </div>
 
-        {/* Details Section */}
         <div className="flex flex-col pt-8">
           <h1 className="text-3xl font-bold mb-2 text-foreground">{product.name}</h1>
           <p className="text-2xl text-primary mb-6">¥{product.price.toLocaleString()}</p>
@@ -106,20 +126,29 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
               id="quantity"
               name="quantity"
               min="1"
-              max={product.stock}
+              max={product.stock_quantity} // Use stock_quantity
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               className="w-20 p-2 border border-accent rounded-md text-center bg-white focus:ring-1 focus:ring-primary focus:border-primary"
             />
           </div>
 
-          <button 
-            onClick={handleAddToCart}
-            className="w-full max-w-sm py-3 px-6 bg-primary text-white font-bold tracking-wider hover:bg-foreground transition-colors duration-300 disabled:bg-secondary"
-            disabled={product.stock === 0}
-          >
-            {product.stock > 0 ? 'ADD TO CART' : 'SOLD OUT'}
-          </button>
+          <div className="w-full max-w-sm flex flex-col gap-4">
+            <button 
+              onClick={handleAddToCart}
+              className="w-full py-3 px-6 bg-primary text-white font-bold tracking-wider hover:bg-foreground transition-colors duration-300 disabled:bg-secondary"
+              disabled={product.stock_quantity === 0}
+            >
+              {product.stock_quantity > 0 ? 'ADD TO CART' : 'SOLD OUT'}
+            </button>
+            <button 
+              onClick={handleBuyNow}
+              className="w-full py-3 px-6 bg-transparent border border-primary text-primary font-bold tracking-wider hover:bg-primary hover:text-white transition-colors duration-300 disabled:bg-secondary disabled:text-white disabled:border-secondary"
+              disabled={product.stock_quantity === 0 || isBuyingNow}
+            >
+              {isBuyingNow ? 'PROCESSING...' : (product.stock_quantity > 0 ? 'BUY NOW' : 'SOLD OUT')}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
-import { createClient } from '@/lib/supabaseClient'; // ADD THIS
+import { createClient } from '@/lib/supabaseClient';
 
 // Stripeクライアントの初期化
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-07-30.basil', // checkout時とバージョンを合わせる
+  apiVersion: '2025-07-30.basil',
 });
 
 // Resendクライアントの初期化
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
+// Supabase Admin Client
 const supabase = createClient({
   global: {
     headers: {
@@ -22,144 +23,104 @@ const supabase = createClient({
 // Stripe Webhookのシークレットキー
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+async function logError(source: string, error: any, context: object = {}) {
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+  console.error(`Error from ${source}:`, errorMessage, context);
+  try {
+    await supabase.from('app_errors').insert({
+      source,
+      error_message: errorMessage,
+      error_details: { ...context, stack: error instanceof Error ? error.stack : 'N/A' },
+    });
+  } catch (logError) {
+    console.error('Failed to log error to Supabase:', logError);
+  }
+}
+
 export async function POST(req: NextRequest) {
   const buf = await req.text();
   const sig = req.headers.get('stripe-signature')!;
 
   let event: Stripe.Event;
 
-  // Stripeからのリクエスト署名を検証
   try {
     event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    console.error(`Webhook signature verification failed: ${errorMessage}`);
-    return NextResponse.json({ error: `Webhook Error: ${errorMessage}` }, { status: 400 });
+    await logError('webhook_signature_verification', err);
+    return NextResponse.json({ error: `Webhook Error: ${err instanceof Error ? err.message : 'Unknown error'}` }, { status: 400 });
   }
 
-  // 'checkout.session.completed'イベントを処理
+  // --- Idempotency Check ---
+  try {
+    const { error: eventError } = await supabase
+      .from('processed_stripe_events')
+      .insert({ event_id: event.id });
+
+    if (eventError) {
+      console.log(`[Webhook] Duplicate event received, ignoring: ${event.id}`);
+      return NextResponse.json({ received: true, message: 'Duplicate event' });
+    }
+  } catch (dbError) {
+    await logError('webhook_idempotency_check', dbError, { eventId: event.id });
+    return NextResponse.json({ error: 'Database error during event processing' }, { status: 500 });
+  }
+  // --- End Idempotency Check ---
+
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
+    const { customer_details, client_reference_id: userId, id: sessionId } = session;
 
-    // Retrieve the full session with line items
-    const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
-      expand: ['line_items.data.price.product'], // Expand line items and product details
-    });
-    const lineItems = fullSession.line_items?.data;
-
-    const customerEmail = session.customer_details?.email;
-    const customerName = session.customer_details?.name || 'お客様';
-
-    console.log(`[Webhook] Received checkout.session.completed for email: ${customerEmail}`);
-    console.log(`[Webhook] Customer Name: ${customerName}`);
-    console.log(`[Webhook] Session ID: ${session.id}`);
-    console.log(`[Webhook] Total Amount: ${session.amount_total} ${session.currency}`);
-
-    if (!customerEmail) {
-      console.error('Customer email not found in checkout session. Cannot send email.');
-      return NextResponse.json({ received: true, message: 'No email to send.' });
-    }
-
-    // --- Start Order Saving Logic ---
     try {
-      // 1. Save to public.orders table
+      const fullSession = await stripe.checkout.sessions.retrieve(sessionId, {
+        expand: ['line_items.data.price.product'],
+      });
+      const lineItems = fullSession.line_items?.data;
+
+      if (!customer_details?.email || !userId) {
+        throw new Error('Critical data missing in session (email or user ID).');
+      }
+
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert({
-          customer_email: customerEmail,
-          stripe_session_id: session.id,
-          total: session.amount_total, // Corrected line
-          currency: session.currency,
-          status: 'completed',
-        })
+        .insert({ user_id: userId, customer_email: customer_details.email, stripe_session_id: sessionId, total: session.amount_total, currency: session.currency, status: 'completed' })
         .select()
         .single();
 
-      if (orderError) {
-        console.error('Error saving order to Supabase:', orderError);
-        throw new Error('Failed to save order.');
-      }
-      console.log(`Order saved to Supabase with ID: ${order.id}`);
+      if (orderError) throw orderError;
 
-      // 2. Save to public.order_details table
       if (lineItems && lineItems.length > 0) {
-        const orderDetailsToInsert = await Promise.all(
-          lineItems.map(async (item: any) => {
-            const stripeProductId = item.price?.product?.id || item.description; // This is the Stripe Product ID
-            console.log(`[Webhook] Attempting to insert product_id: ${stripeProductId}`); // Log the Stripe Product ID
+        const orderDetailsPromises = lineItems.map(async (item: any) => {
+          const stripeProductId = item.price?.product?.id;
+          if (!stripeProductId) throw new Error('Stripe Product ID missing in line item.');
 
-            // Look up the Supabase product ID using the Stripe Product ID
-            const { data: supabaseProduct, error: supabaseProductError } = await supabase
-              .from('products')
-              .select('id') // Select only the Supabase product ID
-              .eq('stripe_product_id', stripeProductId) // Match by the new column
-              .single();
+          const { data: supabaseProduct, error: productError } = await supabase.from('products').select('id').eq('stripe_product_id', stripeProductId).single();
+          if (productError || !supabaseProduct) throw new Error(`Product not found in Supabase for Stripe ID: ${stripeProductId}`);
 
-            if (supabaseProductError || !supabaseProduct) {
-              console.error(`Error finding Supabase product for Stripe ID ${stripeProductId}:`, supabaseProductError);
-              // Decide how to handle: throw error, skip item, or use a placeholder
-              // For now, let's throw to make it explicit
-              throw new Error(`Supabase product not found for Stripe ID: ${stripeProductId}`);
-            }
+          const { error: rpcError } = await supabase.rpc('decrement_stock_and_log', { p_order_id: order.id, p_product_id: supabaseProduct.id, p_quantity_sold: item.quantity });
+          if (rpcError) await logError('webhook_stock_decrement', rpcError, { orderId: order.id, productId: supabaseProduct.id });
 
-            return {
-              order_id: order.id,
-              product_id: supabaseProduct.id, // Use the Supabase product ID
-              quantity: item.quantity,
-              price: item.price?.unit_amount,
-            };
-          })
-        );
+          return { order_id: order.id, product_id: supabaseProduct.id, quantity: item.quantity, price: item.price?.unit_amount };
+        });
 
-        const { error: orderDetailsError } = await supabase
-          .from('order_details')
-          .insert(orderDetailsToInsert);
-
-        if (orderDetailsError) {
-          console.error('Error saving order details to Supabase:', orderDetailsError);
-          throw new Error('Failed to save order details.');
-        }
-        console.log('Order details saved to Supabase.');
+        const orderDetailsToInsert = await Promise.all(orderDetailsPromises);
+        const { error: orderDetailsError } = await supabase.from('order_details').insert(orderDetailsToInsert);
+        if (orderDetailsError) throw orderDetailsError;
       }
-    } catch (dbError) {
-      console.error('Database operation error:', dbError);
-      // Decide whether to return an error to Stripe or just log
-    }
-    // --- End Order Saving Logic ---
 
-    try {
-      // Resendを使って購入確認メールを送信
-      const { data, error: resendError } = await resend.emails.send({
-        from: 'megurid <noreply@megurid.com>', // Resendで設定・認証したドメインのメールアドレスに変更してください
-        to: customerEmail,
-        subject: '【megurid】ご注文ありがとうございます',
-        html: `
-          <div style="font-family: sans-serif; line-height: 1.6;">
-            <h1 style="font-size: 1.5em;">ご注文ありがとうございます</h1>
-            <p>${customerName}様</p>
-            <p>この度は、meguridをご利用いただき、誠にありがとうございます。</p>
-            <p>ご注文内容の詳細は、ウェブサイトの注文履歴よりご確認いただけます。</p>
-            <p>商品の発送まで、今しばらくお待ちくださいませ。</p>
-            <br>
-            <p>megurid</p>
-            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}">ウェブサイトに戻る</a></p>
-          </div>
-        `,
-      });
-
-      if (resendError) {
-        console.error('Error sending email via Resend:', resendError);
-      } else {
-        console.log(`Purchase confirmation email sent successfully via Resend. ID: ${data?.id}`);
+      try {
+        await resend.emails.send({ from: 'megurid <noreply@megurid.com>', to: customer_details.email, subject: '【megurid】ご注文ありがとうございます', html: `...` });
+      } catch (emailError) {
+        await logError('webhook_email_sending', emailError, { orderId: order.id, customerEmail: customer_details.email });
       }
-    } catch (error) {
-      console.error('Unexpected error during email sending:', error);
+
+    } catch (processingError) {
+      await logError('webhook_order_processing', processingError, { sessionId });
+      return NextResponse.json({ error: 'Error during order processing' }, { status: 500 });
     }
   } else {
     console.warn(`Unhandled event type: ${event.type}`);
   }
 
-  // Stripeに正常に受信したことを伝える
   return NextResponse.json({ received: true });
 }
 
