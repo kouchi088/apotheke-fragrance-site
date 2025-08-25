@@ -11,7 +11,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 // Resendクライアントの初期化
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
-const supabase = createClient(); // ADD THIS
+const supabase = createClient({
+  global: {
+    headers: {
+      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+    },
+  },
+});
 
 // Stripe Webhookのシークレットキー
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
