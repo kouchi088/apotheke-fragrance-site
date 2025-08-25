@@ -30,6 +30,8 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
       setLoading(true);
       setError(null);
 
+      console.log('Fetching product with ID:', params.id); // ADDED LOG
+
       const { data: productData, error: productError } = await supabase
         .from('products')
         .select('*')
@@ -37,10 +39,11 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
         .single();
 
       if (productError) {
-        console.error('Error fetching product:', productError);
+        console.error('Error fetching product from Supabase:', productError); // MODIFIED LOG
         setError('商品情報の取得に失敗しました。');
         setProduct(null);
       } else {
+        console.log('Successfully fetched product data:', productData); // ADDED LOG
         setProduct(productData);
       }
 
