@@ -77,16 +77,33 @@ export async function POST(req: NextRequest) {
 
       // 2. Save to public.order_details table
       if (lineItems && lineItems.length > 0) {
-        const orderDetailsToInsert = lineItems.map((item: any) => {
-          const productIdToInsert = item.price?.product?.id || item.description; // Capture the ID being used
-          console.log(`[Webhook] Attempting to insert product_id: ${productIdToInsert}`); // ADDED LOG
-          return {
-            order_id: order.id, // Link to the newly created order
-            product_id: productIdToInsert, // Use Stripe Product ID or description
-            quantity: item.quantity,
-            price: item.price?.unit_amount, // Price in smallest currency unit
-          };
-        });
+        const orderDetailsToInsert = await Promise.all(
+          lineItems.map(async (item: any) => {
+            const stripeProductId = item.price?.product?.id || item.description; // This is the Stripe Product ID
+            console.log(`[Webhook] Attempting to insert product_id: ${stripeProductId}`); // Log the Stripe Product ID
+
+            // Look up the Supabase product ID using the Stripe Product ID
+            const { data: supabaseProduct, error: supabaseProductError } = await supabase
+              .from('products')
+              .select('id') // Select only the Supabase product ID
+              .eq('stripe_product_id', stripeProductId) // Match by the new column
+              .single();
+
+            if (supabaseProductError || !supabaseProduct) {
+              console.error(`Error finding Supabase product for Stripe ID ${stripeProductId}:`, supabaseProductError);
+              // Decide how to handle: throw error, skip item, or use a placeholder
+              // For now, let's throw to make it explicit
+              throw new Error(`Supabase product not found for Stripe ID: ${stripeProductId}`);
+            }
+
+            return {
+              order_id: order.id,
+              product_id: supabaseProduct.id, // Use the Supabase product ID
+              quantity: item.quantity,
+              price: item.price?.unit_amount,
+            };
+          })
+        );
 
         const { error: orderDetailsError } = await supabase
           .from('order_details')
