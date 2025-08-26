@@ -76,8 +76,8 @@ export async function POST(req: NextRequest) {
       });
       const lineItems = fullSession.line_items?.data;
 
-      if (!customer_details?.email || !userId) {
-        throw new Error('Critical data missing in session (email or user ID).');
+      if (!customer_details?.email) {
+        throw new Error('Critical data missing in session (email).');
       }
 
       const { data: order, error: orderError } = await supabase

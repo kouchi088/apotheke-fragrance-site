@@ -1,0 +1,4 @@
+fix: Convert userId to undefined for Stripe client_reference_id
+
+Updates `checkout` and `quick-buy` API routes to explicitly convert `userId` from `string | null` to `string | undefined` when assigning to Stripe's `client_reference_id`.
+This resolves a TypeScript type error in Vercel builds and ensures correct guest checkout functionality.
