@@ -23,3 +23,4 @@ export function createClient(options?: { global: { headers: { Authorization: str
       secure: true,
     },
   });
+}
