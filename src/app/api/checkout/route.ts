@@ -4,6 +4,11 @@ import Stripe from "stripe";
 import { createServerClient } from "@supabase/ssr";
 import { createClient as createAdminClient } from "@/lib/supabaseClient";
 
+console.log('API route invoked: /api/checkout');
+console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log('SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+console.log('APP_URL:', process.env.NEXT_PUBLIC_APP_URL);
+
 // Initialize Stripe with the secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-07-30.basil", // Use a specific API version
