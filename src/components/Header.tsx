@@ -38,6 +38,7 @@ const Header = () => {
           ) : (
             <>
               <Link href="/auth/login" className="hover:text-primary">Login</Link>
+              <Link href="/auth/signup" className="hover:text-primary">Sign Up</Link>
             </>
           )}
           <Link href="/cart" className="hover:text-primary">Cart</Link>
