@@ -39,16 +39,9 @@ export async function POST(req: NextRequest) {
   );
 
   try {
-    // Get user session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-    }
-    const userId = session.user.id;
+    // Get user session (optional for guest checkout)
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user.id || null; // Set userId to null if not logged in
 
     const { items }: { items: CartItem[] } = await req.json();
 

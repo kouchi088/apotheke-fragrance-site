@@ -58,10 +58,9 @@ export async function POST(req: NextRequest) {
   );
 
   try {
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    if (sessionError || !session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // Get user session (optional for guest checkout)
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user.id || null; // Set userId to null if not logged in
 
     const { productId, quantity }: QuickBuyRequest = await req.json();
     if (!productId || !quantity || quantity <= 0) {
