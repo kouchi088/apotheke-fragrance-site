@@ -7,5 +7,20 @@ export function createClient(options?: { global: { headers: { Authorization: str
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing Supabase environment variables');
   }
-  return createSupabaseClient(supabaseUrl, supabaseAnonKey, options);
+  return createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+    ...options,
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce',
+      cookieOptions: {
+        name: 'sb',
+        domain: new URL(process.env.NEXT_PUBLIC_APP_URL!).hostname,
+        path: '/',
+        sameSite: 'Lax',
+        secure: true,
+      },
+    },
+  });
 }
