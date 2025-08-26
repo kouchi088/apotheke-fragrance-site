@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabaseClient';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import toast from 'react-hot-toast';
-import FavoriteButton from '@/components/FavoriteButton';
 
 interface Product {
   id: string;
@@ -108,7 +107,6 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
             style={{ objectFit: 'cover' }}
             priority
           />
-          <FavoriteButton productId={product.id} />
         </div>
 
         <div className="flex flex-col pt-8">

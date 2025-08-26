@@ -31,7 +31,7 @@ const Header = () => {
         <div className="flex items-center space-x-6 text-sm">
           {user ? (
             <>
-              <Link href="/favorites" className="hover:text-primary">Favorites</Link>
+              
               <Link href="/profile" className="hover:text-primary">Profile</Link>
               <button onClick={handleLogout} className="hover:text-primary">Logout</button>
             </>
