@@ -30,6 +30,11 @@ export async function POST(req: NextRequest) {
           return cookieStore.get(name)?.value;
         },
       },
+      // Add this options block
+      cookieOptions: {
+        domain: new URL(process.env.NEXT_PUBLIC_APP_URL!).hostname,
+        path: '/',
+      },
     }
   );
 
