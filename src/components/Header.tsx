@@ -16,19 +16,19 @@ const Header = () => {
 
   return (
     <header className="w-full py-4 border-b border-accent">
-      <div className="container mx-auto flex justify-between items-center px-4">
-        <nav className="flex items-center space-x-6 text-sm">
+      <div className="container mx-auto flex items-center px-4">
+        <nav className="flex items-center space-x-6 text-sm flex-1">
           <Link href="/concept" className="hover:text-primary">About</Link>
           <Link href="/online-store" className="hover:text-primary">Online Store</Link>
         </nav>
 
-        <div className="text-center">
+        <div className="text-center flex-1">
           <Link href="/" className="text-2xl font-bold tracking-wider">
             MEGURID
           </Link>
         </div>
 
-        <div className="flex items-center space-x-6 text-sm">
+        <div className="flex items-center space-x-6 text-sm flex-1 justify-end">
           {user ? (
             <>
               
