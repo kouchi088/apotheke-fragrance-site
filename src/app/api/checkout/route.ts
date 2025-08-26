@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
       billing_address_collection: "required",
-      client_reference_id: userId, // Use userId (can be null for guests)
+      client_reference_id: userId ?? undefined, // Use userId (can be null for guests), convert null to undefined for Stripe
     };
 
     const stripeSession = await stripe.checkout.sessions.create(sessionParams);
