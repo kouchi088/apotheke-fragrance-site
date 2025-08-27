@@ -1,7 +1,28 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabaseClient';
 
-export default function Home() {
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  stock_quantity: number;
+  stripe_price_id: string; // For linking
+}
+
+export default async function Home() {
+  const supabase = createClient();
+
+  const { data: products, error } = await supabase
+    .from('products')
+    .select('id, name, price, image, stock_quantity, stripe_price_id')
+    .limit(4); // Fetch 4 products
+
+  if (error) {
+    console.error('Error fetching products for homepage:', error);
+  }
+
   return (
     <main>
       {/* Hero Section */}
@@ -34,6 +55,32 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* Products Section */}
+      {products && products.length > 0 && (
+        <section className="py-20 md:py-32 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">OUR PRODUCTS</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {products.map((product) => (
+                <Link href={`/products/${product.id}`} key={product.id} className="block group">
+                  <div className="relative w-full aspect-square overflow-hidden bg-white rounded-lg shadow-md">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-gray-900">{product.name}</h3>
+                  <p className="mt-1 text-sm text-gray-700">¥{product.price.toLocaleString()}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

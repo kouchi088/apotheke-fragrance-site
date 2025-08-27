@@ -15,7 +15,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white shadow-md py-4 border-b border-accent">
+    <header className="fixed top-0 w-full z-50 bg-white shadow-md py-4 border-b border-accent opacity-70">
       <div className="container mx-auto flex items-center px-4">
         <nav className="flex items-center space-x-6 text-sm flex-1">
           <Link href="/concept" className="hover:text-primary">About</Link>
