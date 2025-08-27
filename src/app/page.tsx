@@ -36,7 +36,7 @@ export default async function Home() {
           priority
         />
         <div className="flex flex-col items-center">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-widest">MEGURID</h1>
+          <h1 className="text-6xl md:text-8xl font-bold tracking-widest">megurid</h1>
           <p className="mt-2 text-lg md:text-xl tracking-wider">巡る季節、変わらぬ価値。</p>
           <Link href="/online-store"
             className="mt-8 px-10 py-3 border border-white hover:bg-white hover:text-black transition-colors duration-300 text-sm tracking-widest">
