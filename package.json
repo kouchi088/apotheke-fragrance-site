@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch",
     "lint:fix": "next lint --fix",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
@@ -31,9 +30,6 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/typography": "^0.5.10",
-    "@testing-library/jest-dom": "^6.8.0",
-    "@testing-library/react": "^16.3.0",
-    "@types/jest": "^30.0.0",
     "@types/node": "^20.19.7",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
@@ -41,13 +37,9 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.5",
     "eslint-config-prettier": "^10.1.5",
-    "jest": "^30.0.5",
-    "jest-environment-jsdom": "^30.0.5",
-    "node-fetch": "^3.3.2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^3.4.17",
-    "ts-jest": "^29.4.1",
     "typescript": "^5"
   }
 }
