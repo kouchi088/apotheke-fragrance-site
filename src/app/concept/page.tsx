@@ -13,7 +13,7 @@ export default function ConceptPage() {
         <section className="mb-16">
           <div className="relative w-full h-96 bg-accent">
             <Image 
-              src="/concept-main.jpg"
+              src="/concept-1.jpg"
               alt="Brand concept image"
               fill
               style={{ objectFit: 'cover' }}
