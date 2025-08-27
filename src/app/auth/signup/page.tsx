@@ -28,7 +28,7 @@ export default function SignUpPage() {
       setError(error.message);
       console.error('Error signing up:', error);
     } else {
-      setSuccess('Account created successfully! Please check your email to confirm your account.');
+      setSuccess('アカウントが正常に作成されました！メールアドレスを確認してアカウントを有効にしてください。');
       setEmail('');
       setPassword('');
     }
