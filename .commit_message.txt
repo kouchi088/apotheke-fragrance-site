@@ -1,4 +1,4 @@
-fix: Convert userId to undefined for Stripe client_reference_id
+feat: Display products on homepage and adjust header opacity
 
-Updates `checkout` and `quick-buy` API routes to explicitly convert `userId` from `string | null` to `string | undefined` when assigning to Stripe's `client_reference_id`.
-This resolves a TypeScript type error in Vercel builds and ensures correct guest checkout functionality.
+Adds a 2x2 grid of products to the homepage, fetched from Supabase.
+Adjusts the header's opacity to 70%.

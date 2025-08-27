@@ -61,7 +61,7 @@ export default async function Home() {
         <section className="py-20 md:py-32 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">OUR PRODUCTS</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
               {products.map((product) => (
                 <Link href={`/products/${product.id}`} key={product.id} className="block group">
                   <div className="relative w-full aspect-square overflow-hidden bg-white rounded-lg shadow-md">
