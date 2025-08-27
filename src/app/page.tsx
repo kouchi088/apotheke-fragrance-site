@@ -63,19 +63,18 @@ export default async function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">OUR PRODUCTS</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
               {products.map((product) => (
-                <Link href={`/products/${product.id}`} key={product.id} className="block group">
+                <div key={product.id} className="block group">
                   <div className="relative w-full aspect-square overflow-hidden bg-white rounded-lg shadow-md">
-                    <Image
+                    <img
                       src={product.image}
                       alt={product.name}
-                      fill
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                       className="transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                   <h3 className="mt-4 text-lg font-semibold text-gray-900">{product.name}</h3>
                   <p className="mt-1 text-sm text-gray-700">¥{product.price.toLocaleString()}</p>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
