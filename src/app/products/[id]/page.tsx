@@ -12,7 +12,8 @@ interface Product {
   price: number;
   image: string;
   description: string;
-  stock_quantity: number; // Updated from stock to stock_quantity
+  stock_quantity: number;
+  images: string[]; // Add images array
 }
 
 const supabase = createClient();
@@ -24,6 +25,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
   const [loading, setLoading] = useState(true);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // New state for image slider
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -31,7 +33,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
       setError(null);
       const { data: productData, error: productError } = await supabase
         .from('products')
-        .select('*')
+        .select('*, images') // Select images column
         .eq('id', params.id)
         .single();
 
@@ -41,6 +43,10 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
         setProduct(null);
       } else {
         setProduct(productData);
+        // Ensure currentImageIndex is valid if productData.images exists
+        if (productData?.images && productData.images.length > 0) {
+          setCurrentImageIndex(0);
+        }
       }
       setLoading(false);
     };
@@ -83,6 +89,22 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  const nextImage = () => {
+    if (product && product.images && product.images.length > 0) {
+      setCurrentImageIndex((prevIndex) =>
+        (prevIndex + 1) % product.images.length
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (product && product.images && product.images.length > 0) {
+      setCurrentImageIndex((prevIndex) =>
+        (prevIndex - 1 + product.images.length) % product.images.length
+      );
+    }
+  };
+
   if (loading) {
     return <div className="text-center py-20">Loading...</div>;
   }
@@ -99,14 +121,43 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
     <div className="container mx-auto max-w-5xl py-16 px-4">
       <div className="grid md:grid-cols-2 gap-12 items-start">
         <div className="relative w-full aspect-square bg-accent">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            style={{ objectFit: 'cover' }}
-            priority
-          />
+          {product.images && product.images.length > 0 ? (
+            <>
+              <Image
+                src={product.images[currentImageIndex]}
+                alt={product.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: 'cover' }}
+                priority
+              />
+              {product.images.length > 1 && (
+                <div className="absolute inset-0 flex items-center justify-between px-4">
+                  <button
+                    onClick={prevImage}
+                    className="bg-black bg-opacity-50 text-white p-2 rounded-full focus:outline-none"
+                  >
+                    &lt;
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="bg-black bg-opacity-50 text-white p-2 rounded-full focus:outline-none"
+                  >
+                    &gt;
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <Image
+              src={product.image} // Fallback to single image if images array is empty
+              alt={product.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          )}
         </div>
 
         <div className="flex flex-col pt-8">
