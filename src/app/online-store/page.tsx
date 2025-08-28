@@ -8,7 +8,8 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image: string; // Main image for thumbnail
+  images: string[]; // Array of images for slider/hover
 }
 
 async function getProducts(): Promise<Product[]> {
@@ -16,7 +17,7 @@ async function getProducts(): Promise<Product[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('products')
-    .select('id, name, price, image');
+    .select('id, name, price, image, images'); // Select images column
 
   if (error) {
     console.error('Error fetching products:', error);
@@ -30,26 +31,39 @@ export default async function OnlineStore() {
 
   return (
     <div className="bg-background">
-      <div className="container mx-auto max-w-5xl py-16 px-4"> {/* ★ max-w-5xl に変更 */}
+      <div className="container mx-auto max-w-5xl py-16 px-4">
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold tracking-wider">PRODUCTS</h1>
           <p className="text-secondary text-sm mt-2">手作りのコンクリート雑貨コレクション</p>
         </div>
 
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16"> {/* ★ 2列表示に変更 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16">
             {products.map((product) => (
-              <Link key={product.id} href={`/products/${product.id}`} className="group">
-                <div className="relative w-full aspect-square overflow-hidden bg-accent">
+              <Link key={product.id} href={`/products/${product.id}`} className="group relative block">
+                <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg">
+                  {/* Main Image (blurred on hover) */}
                   <Image
                     src={product.image}
                     alt={product.name}
                     fill
-                    sizes="(max-width: 768px) 100vw, 50vw" /* ★ sizesを2列用に最適化 */
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     style={{ objectFit: 'cover' }}
-                    className="transition-transform duration-300 group-hover:scale-105"
+                    className="transition-all duration-300 group-hover:blur-sm group-hover:scale-105"
                   />
-                  <FavoriteButton productId={product.id} />
+
+                  {/* Second Image (appears on hover, slightly smaller) */}
+                  {product.images && product.images.length > 1 && (
+                    <Image
+                      src={product.images[1]}
+                      alt={`${product.name} - detail`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      style={{ objectFit: 'cover' }}
+                      className="absolute inset-0 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-90"
+                    />
+                  )}
+                  {/* <FavoriteButton productId={product.id} /> */}
                 </div>
                 <div className="mt-4 text-center">
                   <h3 className="text-lg text-foreground">{product.name}</h3>
