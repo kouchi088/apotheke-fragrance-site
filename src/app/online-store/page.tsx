@@ -49,7 +49,7 @@ export default async function OnlineStore() {
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
                     style={{ objectFit: 'cover' }}
-                    className="transition-all duration-300 group-hover:blur-sm group-hover:scale-105"
+                    className="transition-all duration-700 group-hover:blur-sm group-hover:scale-105"
                   />
 
                   {/* Second Image (appears on hover, slightly smaller) */}
@@ -60,7 +60,7 @@ export default async function OnlineStore() {
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       style={{ objectFit: 'cover' }}
-                      className="absolute inset-0 transition-all duration-300 opacity-0 group-hover:opacity-90 group-hover:scale-90"
+                      className="absolute inset-0 transition-all duration-700 opacity-0 group-hover:opacity-90 group-hover:scale-90"
                     />
                   )}
                   {/* <FavoriteButton productId={product.id} /> */}
