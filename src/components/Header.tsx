@@ -1,3 +1,4 @@
+'use client';
 
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -88,3 +89,4 @@ const Header = () => {
   );
 };
 
+export default Header;
