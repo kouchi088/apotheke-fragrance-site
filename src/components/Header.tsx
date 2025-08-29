@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabaseClient';
 import { useState } from 'react'; // Import useState
@@ -23,24 +22,21 @@ const Header = () => {
   return (
     <header className="fixed top-0 w-full z-50 bg-white shadow-md py-4 border-b border-accent opacity-70">
       <div className="container mx-auto flex items-center justify-between px-4">
-        {/* Left Section: Logo */}
-        <div className="flex items-center flex-1">
-          <Link href="/">
-            <Image src="/logo.png" alt="MEGURID Logo" height={40} priority style={{ width: 'auto' }} />
-          </Link>
-        </div>
+        {/* Left Nav - Hidden on mobile, shown on md+ */}
+        <nav className="hidden md:flex items-center space-x-6 text-sm flex-1">
+          <Link href="/concept" className="hover:text-primary">About</Link>
+          <Link href="/online-store" className="hover:text-primary">Online Store</Link>
+        </nav>
 
-        {/* Center Section: MEGURID Title */}
-        <div className="text-center">
+        {/* Center Logo */}
+        <div className="text-center flex-1 md:flex-none">
           <Link href="/" className="text-2xl font-bold tracking-wider">
             MEGURID
           </Link>
         </div>
 
-        {/* Right Section: All Links - Hidden on mobile, shown on md+ */}
+        {/* Right Nav - Hidden on mobile, shown on md+ */}
         <div className="hidden md:flex items-center space-x-6 text-sm flex-1 justify-end">
-          <Link href="/concept" className="hover:text-primary">About</Link>
-          <Link href="/online-store" className="hover:text-primary">Online Store</Link>
           {user ? (
             <>
               <Link href="/profile" className="hover:text-primary">Profile</Link>
