@@ -2,13 +2,11 @@ import { createClient } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import Image from 'next/image';
 import { unstable_noStore } from 'next/cache';
-import FavoriteButton from '@/components/FavoriteButton';
 
 interface Product {
   id: string;
   name: string;
   price: number;
-  image: string; // Main image for thumbnail
   images: string[]; // Array of images for slider/hover
 }
 
@@ -17,7 +15,7 @@ async function getProducts(): Promise<Product[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('products')
-    .select('id, name, price, image, images'); // Select images column
+    .select('id, name, price, images'); // Select images column
 
   if (error) {
     console.error('Error fetching products:', error);
@@ -44,7 +42,7 @@ export default async function OnlineStore() {
                 <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg">
                   {/* Main Image (blurred on hover) */}
                   <Image
-                    src={product.image}
+                    src={product.images[0]}
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -63,7 +61,6 @@ export default async function OnlineStore() {
                       className="absolute inset-0 transition-all duration-700 opacity-0 group-hover:opacity-90 group-hover:scale-90"
                     />
                   )}
-                  {/* <FavoriteButton productId={product.id} /> */}
                 </div>
                 <div className="mt-4 text-center">
                   <h3 className="text-lg text-foreground">{product.name}</h3>

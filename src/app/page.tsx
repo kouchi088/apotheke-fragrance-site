@@ -6,9 +6,9 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
   stock_quantity: number;
   stripe_price_id: string; // For linking
+  images: string[]; // Add images array
 }
 
 export default async function Home() {
@@ -16,7 +16,7 @@ export default async function Home() {
 
   const { data: products, error } = await supabase
     .from('products')
-    .select('id, name, price, image, stock_quantity, stripe_price_id')
+    .select('id, name, price, stock_quantity, stripe_price_id, images') // Select images column
     .limit(4); // Fetch 4 products
 
   if (error) {
@@ -66,7 +66,7 @@ export default async function Home() {
                 <Link href={`/products/${product.id}`} key={product.id} className="block group">
                   <div className="relative w-full aspect-square overflow-hidden bg-white rounded-lg shadow-md">
                     <Image
-                      src={product.image}
+                      src={product.images[0]}
                       alt={product.name}
                       fill
                       style={{ objectFit: 'cover' }}
