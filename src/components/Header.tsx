@@ -50,7 +50,6 @@ const Header = () => {
               <Link href="/auth/signup" className="hover:text-primary">Sign Up</Link>
             </>
           )}
-          <Link href="/cart" className="hover:text-primary">Cart</Link>
         </div>
 
         {/* Mobile Menu Button (Hamburger) - Shown on mobile, hidden on md+ */}
@@ -84,7 +83,6 @@ const Header = () => {
               <Link href="/auth/signup" className="hover:text-primary" onClick={toggleMobileMenu}>Sign Up</Link>
             </>
           )}
-          <Link href="/cart" className="hover:text-primary" onClick={toggleMobileMenu}>Cart</Link>
         </div>
       )}
     </header>
