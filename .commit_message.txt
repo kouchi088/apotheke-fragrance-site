@@ -1,3 +1,4 @@
-feat: Fine-tune header height and logo size
+fix: Adjust header padding for 56px height and include new asset
 
-Adjusts the header's vertical padding to `py-1` and sets the logo's `width` and `height` to `30px` to achieve the desired header height.
+Changes the header's vertical padding to `py-2` in `src/components/Header.tsx` to achieve approximately 56px height.
+Includes user-initiated changes to `public/logo.png` and adds `public/a.png`.
