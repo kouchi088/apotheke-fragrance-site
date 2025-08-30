@@ -1,4 +1,3 @@
-feat: Display products on homepage and adjust header opacity
+feat: Adjust header height with logo
 
-Adds a 2x2 grid of products to the homepage, fetched from Supabase.
-Adjusts the header's opacity to 70%.
+Adjusts the header's vertical padding to `py-2` and sets the logo's height to `30px` to achieve the desired header height.
