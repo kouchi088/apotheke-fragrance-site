@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
@@ -85,11 +83,6 @@ const Header = () => {
               <Link href="/auth/signup" className="hover:text-primary" onClick={toggleMobileMenu}>Sign Up</Link>
             </>
           )}
-          <Link href="/cart" className="hover:text-primary" onClick={toggleMobileMenu}>Cart</Link>
         </div>
       )}
     </header>
-  );
-};
-
-export default Header;
