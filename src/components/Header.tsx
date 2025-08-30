@@ -24,7 +24,7 @@ const Header = () => {
         {/* Left Section: Logo */}
         <div className="flex items-center flex-1">
           <Link href="/">
-            <Image src="/logo.png" alt="MEGURID Logo" width={30} height={30} priority />
+            <Image src="/logo.png" alt="MEGURID Logo" width={40} height={40} priority />
           </Link>
         </div>
 
