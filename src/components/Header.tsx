@@ -19,7 +19,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white shadow-md py-[2px] border-b border-accent opacity-70">
+    <header className="fixed top-0 w-full z-50 bg-white shadow-md py-2 border-b border-accent opacity-70">
       <div className="container mx-auto flex items-center justify-between px-4">
         {/* Left Section: Logo */}
         <div className="flex items-center flex-1">

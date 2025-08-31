@@ -1,3 +1,4 @@
-feat: Adjust header padding and logo margin for precise height
+feat: Adjust header height and logo size for 58px total height
 
-Changes the header's vertical padding to `py-0` and adds `my-2` to the logo's height to achieve a more precise header height and vertical logo positioning.
+Changes header `py-[9px]` to `py-[2px]` and sets the logo's height to `54px` in `src/components/Header.tsx`.
+This aims to achieve approximately 58px total height for the header.
