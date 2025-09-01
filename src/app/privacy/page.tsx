@@ -3,7 +3,7 @@ export default function PrivacyPage() {
     <main className="container mx-auto px-4 py-16">
       <h1 className="text-3xl font-bold mb-6">プライバシーポリシー</h1>
 
-      <p>（以下「当サイト」といいます）は、当サイトのサービスを利用するお客様（以下「ユーザー」といいます）の個人情報を保護するため、以下の方針に従って適切に取り扱います。</p>
+      <p>megurid（以下「当サイト」といいます）は、当サイトのサービスを利用するお客様（以下「ユーザー」といいます）の個人情報を保護するため、以下の方針に従って適切に取り扱います。</p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">1. 取得する個人情報</h2>
       <p>当サイトは以下の情報を取得することがあります。</p>
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
       <h2 className="text-2xl font-semibold mt-8 mb-4">5. 個人情報の開示・訂正・削除</h2>
       <p>ユーザーは、当サイトが保有する自身の個人情報について、開示・訂正・削除を求めることができます。</p>
       <p>お問い合わせは以下のメールアドレスまでお願いいたします。</p>
-      <p>（お問い合わせ用メールアドレスを記載）</p>
+      <p>info@megurid.com</p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">6. Cookieの利用について</h2>
       <p>当サイトでは、ユーザー体験向上や分析のためCookieを使用することがあります。</p>
