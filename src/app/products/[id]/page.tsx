@@ -165,7 +165,7 @@ const ProductPage = ({ params }: { params: { id: string } }) => {
           <p className="text-2xl text-primary mb-6">¥{product.price.toLocaleString()}</p>
           
           <div className="text-secondary leading-relaxed mb-8">
-            <p>{product.description}</p>
+            <p className="whitespace-pre-line">{product.description}</p>
           </div>
           
           <div className="flex items-center mb-8">
