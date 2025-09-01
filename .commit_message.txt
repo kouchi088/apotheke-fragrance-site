@@ -1,4 +1,0 @@
-feat: Adjust header height and logo size for 58px total height
-
-Changes header `py-[9px]` to `py-[2px]` and sets the logo's height to `54px` in `src/components/Header.tsx`.
-This aims to achieve approximately 58px total height for the header.

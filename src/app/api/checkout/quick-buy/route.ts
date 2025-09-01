@@ -11,7 +11,7 @@ console.log('APP_URL:', process.env.NEXT_PUBLIC_APP_URL);
 
 // Initialize Stripe with the secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-07-30.basil",
+  apiVersion: "2025-08-27.basil",
 });
 
 interface QuickBuyRequest {
