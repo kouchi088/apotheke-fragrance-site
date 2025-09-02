@@ -10,10 +10,10 @@ export default function LegalPage() {
       <p>鈴木海人</p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">所在地</h2>
-      <p>本サイトでは、販売業者の住所はお問い合わせいただいた場合に電子メール等で遅滞なく開示いたします。</p>
+      <p>東京都目黒区洗足1-5-9ルミエール・アイB号室</p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">電話番号</h2>
-      <p>※営業電話防止のため、電話での対応は行っておりません。お問い合わせは下記メールフォームをご利用ください。</p>
+      <p>080-8851-5250</p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">メールアドレス</h2>
       <p>info@megurid.com</p>
