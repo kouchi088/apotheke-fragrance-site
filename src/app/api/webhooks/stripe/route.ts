@@ -71,11 +71,12 @@ export async function POST(req: NextRequest) {
     const { client_reference_id: userId, id: sessionId } = session;
 
     try {
-      const fullSession = await stripe.checkout.sessions.retrieve(sessionId, {
+      const fullSession: Stripe.Checkout.Session = await stripe.checkout.sessions.retrieve(sessionId, {
         expand: ['line_items.data.price.product'],
       });
       const lineItems = fullSession.line_items?.data;
-      const { customer_details, shipping_details } = fullSession;
+      const { customer_details } = fullSession;
+      const shipping_details = fullSession.collected_information?.shipping_details;
 
       if (!customer_details?.email || !shipping_details) {
         throw new Error('Critical data missing in session (email or shipping).');
