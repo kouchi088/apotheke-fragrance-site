@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
-    const { customer_details, client_reference_id: userId, id: sessionId } = session;
+    const { customer_details, shipping_details, client_reference_id: userId, id: sessionId } = session;
 
     try {
       const fullSession = await stripe.checkout.sessions.retrieve(sessionId, {
@@ -76,13 +76,13 @@ export async function POST(req: NextRequest) {
       });
       const lineItems = fullSession.line_items?.data;
 
-      if (!customer_details?.email) {
-        throw new Error('Critical data missing in session (email).');
+      if (!customer_details?.email || !shipping_details) {
+        throw new Error('Critical data missing in session (email or shipping).');
       }
 
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert({ user_id: userId, customer_email: customer_details.email, stripe_session_id: sessionId, total: session.amount_total, currency: session.currency, status: 'completed' })
+        .insert({ user_id: userId, customer_email: customer_details.email, stripe_session_id: sessionId, total: session.amount_total, currency: session.currency, status: 'completed', shipping_address: shipping_details })
         .select()
         .single();
 
