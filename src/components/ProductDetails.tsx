@@ -86,7 +86,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 style={{ objectFit: 'cover' }}
-                priority
+                priority={90}
               />
               {product.images.length > 1 && (
                 <div className="absolute inset-0 flex items-center justify-between px-4">
