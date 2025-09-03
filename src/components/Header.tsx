@@ -20,16 +20,16 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white shadow-md py-2 border-b border-accent opacity-70">
-      <div className="container mx-auto flex items-center justify-between px-4">
+      <div className="container mx-auto relative flex items-center px-4">
         {/* Left Section: Logo */}
-        <div className="flex items-center flex-1">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center">
           <Link href="/">
             <Image src="/logo.png" alt="MEGURID Logo" width={40} height={54} priority className="my-2" />
           </Link>
         </div>
 
         {/* Center Section: MEGURID Title */}
-        <div className="text-center">
+        <div className="flex-grow text-center">
           <Link href="/" className="text-2xl font-bold tracking-wider">
             MEGURID
           </Link>
@@ -54,7 +54,7 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu Button (Hamburger) - Shown on mobile, hidden on md+ */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden absolute right-4 top-1/2 -translate-y-1/2 flex items-center">
           <button onClick={toggleMobileMenu} className="text-foreground focus:outline-none">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
