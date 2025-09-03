@@ -36,7 +36,7 @@ const Header = () => {
         </div>
 
         {/* Right Section: All Links - Hidden on mobile, shown on md+ */}
-        <div className="hidden md:flex items-center space-x-6 text-sm flex-1 justify-end">
+        <div className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 items-center space-x-6 text-sm justify-end">
           <Link href="/concept" className="hover:text-primary">About</Link>
           <Link href="/online-store" className="hover:text-primary">Online Store</Link>
           {user ? (
