@@ -49,7 +49,6 @@ export async function POST(req: NextRequest) {
           return cookieStore.get(name)?.value;
         },
       },
-      // Add this options block
       cookieOptions: {
         domain: new URL(process.env.NEXT_PUBLIC_APP_URL!).hostname,
         path: '/',
@@ -57,12 +56,17 @@ export async function POST(req: NextRequest) {
     }
   );
 
+  let productId: string | undefined; // productIdをtryブロックの外で定義
+
   try {
     // Get user session (optional for guest checkout)
     const { data: { session } } = await supabase.auth.getSession();
-    const userId = session?.user.id || null; // Set userId to null if not logged in
+    const userId = session?.user.id || null;
 
-    const { productId, quantity }: QuickBuyRequest = await req.json();
+    const body: QuickBuyRequest = await req.json();
+    productId = body.productId; // productIdを取得して変数に格納
+    const { quantity } = body;
+
     if (!productId || !quantity || quantity <= 0) {
       return NextResponse.json({ error: "Product ID and a valid quantity are required" }, { status: 400 });
     }
@@ -100,7 +104,7 @@ export async function POST(req: NextRequest) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/products/${productId}`,
       shipping_address_collection: { allowed_countries: ['JP'] },
       automatic_tax: { enabled: true },
-      client_reference_id: userId ?? undefined, // Use userId (can be null for guests), convert null to undefined for Stripe
+      client_reference_id: userId ?? undefined,
     };
 
     const stripeSession = await stripe.checkout.sessions.create(sessionParams);
@@ -112,7 +116,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: stripeSession.url });
 
   } catch (error) {
-    await logError('quick_buy_api', error, { productId: (await req.clone().json()).productId });
+    // tryブロックで取得したproductIdを使用
+    await logError('quick_buy_api', error, { productId });
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
