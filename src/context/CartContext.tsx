@@ -9,6 +9,7 @@ export interface Product {
   id: string;
   name: string;
   image: string;
+  images: string[]; // Add images array
   price: number;
   stock_quantity: number; // stock_quantityに変更
   description: string;

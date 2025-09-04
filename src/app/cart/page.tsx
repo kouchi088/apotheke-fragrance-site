@@ -38,7 +38,7 @@ export default function CartPage() {
             <div key={item.product.id} className="flex items-center gap-6 border-b border-accent pb-6">
               <div className="relative w-24 h-24 bg-accent flex-shrink-0">
                 <Image
-                  src={item.product.image}
+                  src={item.product.images && item.product.images.length > 0 ? item.product.images[0] : item.product.image}
                   alt={item.product.name}
                   fill
                   style={{ objectFit: 'cover' }}
