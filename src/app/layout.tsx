@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className="bg-primary-gray text-primary-black antialiased">
+      <body className="antialiased">
         <AuthProvider> {/* ★追加 */} 
           <CartProvider>
             <Toaster />

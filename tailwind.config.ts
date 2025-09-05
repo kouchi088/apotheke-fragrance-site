@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'background': '#ffffff', // White background
+        'background': '#F5F1EC', // User-specified color
         'foreground': '#111827', // Dark gray for text
         'primary': '#374151',    // Medium gray for primary elements
         'secondary': '#9CA3AF',  // Lighter gray for secondary text
