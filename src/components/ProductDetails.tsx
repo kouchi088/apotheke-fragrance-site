@@ -77,7 +77,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   return (
     <div className="container mx-auto max-w-5xl py-16 px-4">
       <div className="grid md:grid-cols-2 gap-12 items-start">
-        <div className="relative w-full aspect-square bg-accent">
+        <div className="relative w-full aspect-square">
           {product.images && product.images.length > 0 ? (
             <>
               <Image
