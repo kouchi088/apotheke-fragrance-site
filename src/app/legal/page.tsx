@@ -10,7 +10,7 @@ export default function LegalPage() {
       <p>鈴木海人</p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">所在地</h2>
-      <p>東京都目黒区洗足1-5-9ルミエール・アイB号室</p>
+      <p>東京都目黒区洗足1-5-9</p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">電話番号</h2>
       <p>080-8851-5250</p>
