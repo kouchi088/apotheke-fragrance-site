@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     const productIds = items.map((item) => item.productId);
     const { data: products, error: productsError } = await supabase
       .from("products")
-      .select("id, name, stock_quantity, stripe_price_id") // Fetch stripe_price_id instead of price
+      .select("id, name, stock_quantity, stripe_price_id, price") // Fetch stripe_price_id and price
       .in("id", productIds);
 
     if (productsError) {
@@ -96,6 +96,15 @@ export async function POST(req: NextRequest) {
       };
     });
 
+    // Calculate total amount to determine shipping cost
+    let totalAmount = 0;
+    items.forEach(item => {
+      const product = productMap.get(item.productId);
+      if (product && product.price) {
+        totalAmount += product.price * item.quantity;
+      }
+    });
+
     // Create a new Checkout Session
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ["card"],
@@ -107,6 +116,23 @@ export async function POST(req: NextRequest) {
       automatic_tax: { enabled: true },
       client_reference_id: userId ?? undefined, // Use userId (can be null for guests), convert null to undefined for Stripe
     };
+
+    // Add shipping rate if total amount is less than 8000 JPY
+    if (totalAmount < 8000) {
+      sessionParams.shipping_options = [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 800,
+              currency: 'jpy',
+            },
+            display_name: '全国一律送料',
+            tax_behavior: 'inclusive',
+          },
+        },
+      ];
+    }
 
     const stripeSession = await stripe.checkout.sessions.create(sessionParams);
 

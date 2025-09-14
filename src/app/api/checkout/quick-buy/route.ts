@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     // --- Fetch product and check stock ---
     const { data: product, error: productError } = await supabase
       .from("products")
-      .select("id, name, stock_quantity, stripe_price_id")
+      .select("id, name, stock_quantity, stripe_price_id, price")
       .eq("id", productId)
       .single();
 
@@ -96,6 +96,8 @@ export async function POST(req: NextRequest) {
       quantity: quantity,
     }];
 
+    const totalAmount = product.price * quantity;
+
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ["card"],
       line_items,
@@ -106,6 +108,22 @@ export async function POST(req: NextRequest) {
       automatic_tax: { enabled: true },
       client_reference_id: userId ?? undefined,
     };
+
+    if (totalAmount < 8000) {
+      sessionParams.shipping_options = [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: 800,
+              currency: 'jpy',
+            },
+            display_name: '全国一律送料',
+            tax_behavior: 'inclusive',
+          },
+        },
+      ];
+    }
 
     const stripeSession = await stripe.checkout.sessions.create(sessionParams);
 
