@@ -2,13 +2,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabaseClient';
-import { useState } from 'react'; // Import useState
+import { useState } from 'react';
 
 const supabase = createClient();
 
 const Header = () => {
   const { user } = useAuth();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // New state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -17,6 +17,8 @@ const Header = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const isAdmin = user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
   return (
     <header className="fixed top-0 w-full z-50 bg-white shadow-md py-2 border-b border-accent opacity-70">
@@ -39,12 +41,16 @@ const Header = () => {
         <div className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 items-center space-x-6 text-sm justify-end">
           <Link href="/concept" className="hover:text-primary">About</Link>
           <Link href="/online-store" className="hover:text-primary">Online Store</Link>
-          {user ? (
+          {user && (
             <>
+              {isAdmin && (
+                <Link href="/admin" className="hover:text-primary font-bold text-blue-600">Admin</Link>
+              )}
               <Link href="/profile" className="hover:text-primary">Profile</Link>
               <button onClick={handleLogout} className="hover:text-primary">Logout</button>
             </>
-          ) : (
+          )}
+          {!user && (
             <>
               <Link href="/auth/login" className="hover:text-primary">Login</Link>
               <Link href="/auth/signup" className="hover:text-primary">Sign Up</Link>
@@ -73,12 +79,16 @@ const Header = () => {
           </button>
           <Link href="/concept" className="hover:text-primary" onClick={toggleMobileMenu}>About</Link>
           <Link href="/online-store" className="hover:text-primary" onClick={toggleMobileMenu}>Online Store</Link>
-          {user ? (
+          {user && (
             <>
+              {isAdmin && (
+                <Link href="/admin" className="hover:text-primary font-bold text-blue-600" onClick={toggleMobileMenu}>Admin</Link>
+              )}
               <Link href="/profile" className="hover:text-primary" onClick={toggleMobileMenu}>Profile</Link>
               <button onClick={() => { handleLogout(); toggleMobileMenu(); }} className="hover:text-primary">Logout</button>
             </>
-          ) : (
+          )}
+          {!user && (
             <>
               <Link href="/auth/login" className="hover:text-primary" onClick={toggleMobileMenu}>Login</Link>
               <Link href="/auth/signup" className="hover:text-primary" onClick={toggleMobileMenu}>Sign Up</Link>
