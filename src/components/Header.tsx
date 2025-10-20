@@ -19,6 +19,8 @@ const Header = () => {
   };
 
   const isAdmin = user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+  const userEmail = user ? user.email : null;
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || null;
 
   return (
     <>
@@ -26,8 +28,13 @@ const Header = () => {
       <div style={{ position: 'fixed', top: '80px', left: '10px', background: 'rgba(255,0,0,0.8)', color: 'white', padding: '10px', zIndex: 9999, fontSize: '12px', borderRadius: '5px' }}>
         <h4 style={{ fontWeight: 'bold', marginBottom: '5px' }}>DEBUG PANEL</h4>
         <p><strong>isAdmin:</strong> {isAdmin.toString()}</p>
-        <p><strong>User Email:</strong> {user ? user.email : 'Not Logged In'}</p>
-        <p><strong>Admin Email (env):</strong> {process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'NOT SET'}</p>
+        <p><strong>User Email:</strong> {userEmail || 'Not Logged In'}</p>
+        <p><strong>Admin Email (env):</strong> {adminEmail || 'NOT SET'}</p>
+        <hr style={{ margin: '5px 0', borderColor: 'rgba(255,255,255,0.5)' }} />
+        <p style={{fontWeight: 'bold'}}>-- String Analysis --</p>
+        <p>User Email Length: {userEmail?.length ?? 'N/A'}</p>
+        <p>Admin Email Length: {adminEmail?.length ?? 'N/A'}</p>
+        <p>Are they equal? (===): { (userEmail === adminEmail).toString() }</p>
       </div>
       {/* ▲▲▲ DEBUG INFO ▲▲▲ */}
       <header className="fixed top-0 w-full z-50 bg-white shadow-md py-2 border-b border-accent opacity-70">
