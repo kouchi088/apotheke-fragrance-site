@@ -1,11 +1,9 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { createClient } from '../../lib/supabase/server';
 
-// Adminレイアウト
 const AdminLayout = async ({ children }: { children: ReactNode }) => {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createClient();
 
   const {
     data: { session },
