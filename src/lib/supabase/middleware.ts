@@ -13,6 +13,7 @@ export const createClient = (request: NextRequest) => {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      cookieOptions: { name: 'sb' },
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value
