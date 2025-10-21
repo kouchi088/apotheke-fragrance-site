@@ -2,12 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export const createClient = (request: NextRequest) => {
-  // Create an unmodified response
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+  const response = NextResponse.next() // Create response once
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,17 +14,7 @@ export const createClient = (request: NextRequest) => {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          // If the cookie is set, update the request cookies and response cookies
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
+          // Forward the cookie to the browser
           response.cookies.set({
             name,
             value,
@@ -37,17 +22,7 @@ export const createClient = (request: NextRequest) => {
           })
         },
         remove(name: string, options: CookieOptions) {
-          // If the cookie is removed, update the request cookies and response cookies
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
+          // Forward the delete request to the browser
           response.cookies.set({
             name,
             value: '',
