@@ -1,28 +1,43 @@
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { createClient } from '../../lib/supabase/server';
 
 const AdminLayout = async ({ children }: { children: ReactNode }) => {
+  console.log('\n\n--- ADMIN LAYOUT: NEW REQUEST ---');
+
+  // Raw cookie check
+  const cookieStore = cookies();
+  console.log('Raw cookies visible to layout:', cookieStore.getAll());
+  console.log('Raw "sb" cookie value:', cookieStore.get('sb')?.value || 'Not Found');
+
+  // Supabase client check
   const supabase = createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  console.log('Supabase session object:', session);
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  // ログインしていない場合はログインページへ
   if (!session) {
+    console.log('Redirect Reason: No session object.');
     redirect('/auth/login?redirect_to=/admin');
   }
 
-  // 環境変数から管理者メールアドレスを取得
-  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminEmailEnv = process.env.ADMIN_EMAIL;
+  const userEmailSession = session.user.email;
 
-  // 管理者メールアドレスが設定されていない、または一致しない場合はトップページへ
-  if (!adminEmail || session.user.email !== adminEmail) {
+  console.log(`Env ADMIN_EMAIL: "${adminEmailEnv}"`);
+  console.log(`Session User Email: "${userEmailSession}"`);
+
+  if (!adminEmailEnv) {
+    console.log('Redirect Reason: ADMIN_EMAIL environment variable is not set.');
     redirect('/');
   }
 
-  // 管理者であればページを表示
+  if (userEmailSession !== adminEmailEnv) {
+    console.log(`Redirect Reason: Email mismatch. "${userEmailSession}" !== "${adminEmailEnv}"`);
+    redirect('/');
+  }
+
+  console.log('All checks passed. Rendering admin page.');
   return <>{children}</>;
 };
 
