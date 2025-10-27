@@ -72,21 +72,120 @@ const LoginForm = ({ onLogin }: { onLogin: (email: string, pass: string) => Prom
 
 const AdminDashboard = () => {
   const { user } = useAuth();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching orders:', error);
+      setError(`Failed to fetch orders: ${error.message}`);
+    } else {
+      setOrders(data);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
 
+  const handleShippingToggle = async (orderId: string, currentStatus: boolean) => {
+    const originalOrders = orders;
+    const newStatus = !currentStatus;
+
+    // Optimistically update the UI
+    setOrders(originalOrders.map(o => o.id === orderId ? { ...o, shipped: newStatus } : o));
+
+    const { error } = await supabase
+      .from('orders')
+      .update({ shipped: newStatus })
+      .eq('id', orderId);
+
+    if (error) {
+      console.error('Error updating shipping status:', error);
+      // Revert the UI change on error
+      setOrders(originalOrders);
+      alert(`Failed to update shipping status: ${error.message}`);
+    }
+  };
+
+  const formatAddress = (address: any) => {
+    if (!address) return 'N/A';
+    return `${address.postal_code || ''} ${address.state || ''} ${address.city || ''} ${address.line1 || ''} ${address.line2 || ''}`.trim();
+  };
+
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
         <button onClick={handleLogout} className="px-4 py-2 font-semibold text-white bg-red-600 rounded-md hover:bg-red-700">
           Logout
         </button>
       </div>
-      <p>Welcome, {user?.email}!</p>
-      <p>This is where the admin content (like order history) will go.</p>
+      <p className="mb-8">Welcome, {user?.email}!</p>
+
+      <h2 className="text-xl sm:text-2xl font-bold mb-4">Order History</h2>
+      {loading && <LoadingSpinner />}
+      {error && <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>}
+      {!loading && !error && (
+        <div className="overflow-x-auto bg-white rounded-lg shadow">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th scope="col" className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">日付</th>
+                <th scope="col" className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">注文者</th>
+                <th scope="col" className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">連絡先</th>
+                <th scope="col" className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">住所</th>
+                <th scope="col" className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">値段</th>
+                <th scope="col" className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">もの (最初の品目)</th>
+                <th scope="col" className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">配送状況</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {orders.length > 0 ? (
+                orders.map((order) => (
+                  <tr key={order.id}>
+                    <td className="px-4 py-4 whitespace-nowrap text-gray-900">{new Date(order.created_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-gray-900">{order.shipping_details?.name || 'N/A'}</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-gray-500">{order.customer_email || 'N/A'}</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-gray-500">{formatAddress(order.shipping_details?.address)}</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-gray-900">¥{order.total_amount?.toLocaleString() || '0'}</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-gray-500">{order.line_items?.[0]?.description || 'N/A'}</td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={order.shipped || false}
+                          onChange={() => handleShippingToggle(order.id, order.shipped || false)}
+                          className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="ml-2 text-gray-700">{order.shipped ? 'Shipped' : 'Pending'}</span>
+                      </label>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="px-6 py-10 text-center text-gray-500">No orders found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
