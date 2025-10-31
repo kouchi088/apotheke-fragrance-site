@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(req: NextRequest) {
-  if (process.env.BASIC_AUTH_ENABLED !== 'true') {
+  // Skip Basic Auth during Vercel's build process OR if it's disabled
+  if (process.env.CI === 'true' || process.env.BASIC_AUTH_ENABLED !== 'true') {
     return NextResponse.next();
   }
 
