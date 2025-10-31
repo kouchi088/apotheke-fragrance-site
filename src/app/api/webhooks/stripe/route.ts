@@ -115,6 +115,45 @@ export async function POST(req: NextRequest) {
         await logError('webhook_email_sending', emailError, { orderId: order.id, customerEmail: customer_details.email });
       }
 
+      // Send notification email to admin
+      try {
+        const itemsHtml = lineItems?.map(item => `<li>${item.description} (Quantity: ${item.quantity})</li>`).join('') || '<li>No items found</li>';
+        const shippingAddressHtml = `
+          <p>
+            ${shipping_details.name}<br>
+            〒${shipping_details.address?.postal_code || ''}<br>
+            ${shipping_details.address?.state || ''}${shipping_details.address?.city || ''}${shipping_details.address?.line1 || ''}<br>
+            ${shipping_details.address?.line2 || ''}
+          </p>
+        `;
+
+        await resend.emails.send({
+          from: 'megurid <noreply@megurid.com>',
+          to: 'info@megurid.com',
+          subject: `[megurid Admin] New Order Received - ${order.id}`,
+          html: `
+            <h1>New Order Received</h1>
+            <p>A new order has been placed on megurid.</p>
+            <h2>Order Details</h2>
+            <ul>
+              <li><strong>Order ID:</strong> ${order.id}</li>
+              <li><strong>Customer Name:</strong> ${shipping_details.name}</li>
+              <li><strong>Customer Email:</strong> ${customer_details.email}</li>
+              <li><strong>Total Amount:</strong> ¥${fullSession.amount_total?.toLocaleString()}</li>
+            </ul>
+            <h2>Shipping Address</h2>
+            ${shippingAddressHtml}
+            <h2>Items</h2>
+            <ul>
+              ${itemsHtml}
+            </ul>
+          `
+        });
+      } catch (adminEmailError) {
+        // Log the error but don't crash the process
+        await logError('webhook_admin_email_sending', adminEmailError, { orderId: order.id });
+      }
+
     } catch (processingError) {
       await logError('webhook_order_processing', processingError, { sessionId });
       return NextResponse.json({ error: 'Error during order processing' }, { status: 500 });
