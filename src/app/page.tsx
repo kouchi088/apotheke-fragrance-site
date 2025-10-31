@@ -64,14 +64,16 @@ export default async function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
               {products.map((product) => (
                 <Link href={`/products/${product.id}`} key={product.id} className="block group">
-                  <div className="relative w-full aspect-square overflow-hidden bg-white rounded-lg shadow-md">
-                    <Image
-                      src={product.images[0]}
-                      alt={product.name}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      className="transition-transform duration-300 group-hover:scale-105"
-                    />
+                  <div className="relative w-full aspect-square overflow-hidden bg-gray-200 rounded-lg shadow-md">
+                    {product.images && product.images.length > 0 && (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        className="transition-transform duration-300 group-hover:scale-105"
+                      />
+                    )}
                   </div>
                   <h3 className="mt-4 text-lg font-semibold text-gray-900">{product.name}</h3>
                   <p className="mt-1 text-sm text-gray-700">¥{product.price.toLocaleString()}</p>
