@@ -40,7 +40,7 @@ export async function middleware(req: NextRequest) {
     response.cookies.set('aff_code', affCode, {
       path: '/',
       maxAge: 30 * 24 * 60 * 60, // 30 days
-      httponly: true,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     });
 
