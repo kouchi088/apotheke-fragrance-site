@@ -115,7 +115,15 @@ export async function POST(req: NextRequest) {
       shipping_address_collection: { allowed_countries: ['JP'] },
       automatic_tax: { enabled: true },
       client_reference_id: userId ?? undefined, // Use userId (can be null for guests), convert null to undefined for Stripe
+      metadata: {},
     };
+
+    // Get affiliate code from cookie and add to metadata if it exists
+    const affCode = cookieStore.get("aff_code")?.value;
+    if (affCode) {
+      sessionParams.metadata!.affiliate_code = affCode;
+      console.log(`Affiliate code ${affCode} added to Stripe session metadata.`);
+    }
 
     // Add shipping rate if total amount is less than 8000 JPY
     if (totalAmount < 8000) {

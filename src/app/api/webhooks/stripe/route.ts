@@ -109,6 +109,56 @@ export async function POST(req: NextRequest) {
         if (orderDetailsError) throw orderDetailsError;
       }
 
+      // --- Affiliate Attribution ---
+      const affiliateCode = fullSession.metadata?.affiliate_code;
+      if (affiliateCode) {
+        console.log(`[Webhook] Affiliate code found in session: ${affiliateCode}`);
+        try {
+          const { data: link, error: linkError } = await supabase
+            .from('affiliate_links')
+            .select(`
+              id,
+              affiliate:affiliates (id, default_rate_type, default_rate_value)
+            `)
+            .eq('code', affiliateCode)
+            .single();
+
+          if (linkError) throw new Error(`Affiliate link lookup failed: ${linkError.message}`);
+
+          if (link && link.affiliate) {
+            const affiliate = link.affiliate as unknown as { id: string; default_rate_type: string; default_rate_value: number };
+            const subtotal = fullSession.amount_subtotal / 100; // Convert from cents
+            let commission_amount = 0;
+
+            if (affiliate.default_rate_type === 'percentage') {
+              commission_amount = subtotal * affiliate.default_rate_value;
+            } else if (affiliate.default_rate_type === 'fixed') {
+              commission_amount = affiliate.default_rate_value;
+            }
+
+            const { error: orderAffiliateError } = await supabase
+              .from('order_affiliates')
+              .insert({
+                order_id: order.id,
+                affiliate_id: affiliate.id,
+                link_id: link.id,
+                commission_amount: Math.round(commission_amount),
+                commission_rate: affiliate.default_rate_value,
+                commission_type: affiliate.default_rate_type,
+                status: 'unpaid',
+              });
+
+            if (orderAffiliateError) throw new Error(`Failed to create order_affiliates record: ${orderAffiliateError.message}`);
+            console.log(`[Webhook] Successfully attributed order ${order.id} to affiliate ${affiliate.id}`);
+          } else {
+            console.warn(`[Webhook] Affiliate link with code ${affiliateCode} not found or affiliate data is missing.`);
+          }
+        } catch (attributionError) {
+          await logError('webhook_affiliate_attribution', attributionError, { orderId: order.id, affiliateCode });
+        }
+      }
+      // --- End Affiliate Attribution ---
+
       try {
         await resend.emails.send({ from: 'megurid <noreply@megurid.com>', to: customer_details.email, subject: '【megurid】ご注文ありがとうございます', html: `...` });
       } catch (emailError) {
