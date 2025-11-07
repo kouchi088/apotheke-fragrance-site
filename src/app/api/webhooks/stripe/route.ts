@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
 
           if (link && link.affiliate) {
             const affiliate = link.affiliate as unknown as { id: string; default_rate_type: string; default_rate_value: number };
-            const subtotal = fullSession.amount_subtotal / 100; // Convert from cents
+            const subtotal = (fullSession.amount_subtotal || 0) / 100; // Convert from cents
             let commission_amount = 0;
 
             if (affiliate.default_rate_type === 'percentage') {
