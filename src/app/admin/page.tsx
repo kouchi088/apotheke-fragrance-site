@@ -78,6 +78,7 @@ const LoginForm = ({ onLogin }: { onLogin: (email: string, pass: string) => Prom
 
 const Sidebar = ({ activeView, setActiveView }: { activeView: string, setActiveView: (view: string) => void }) => {
   const navItems = [
+    { id: 'dashboard', name: 'ダッシュボード' },
     { id: 'orders', name: '注文履歴' },
     { id: 'affiliates', name: 'アフィリエイト管理' },
   ];
@@ -104,6 +105,104 @@ const Sidebar = ({ activeView, setActiveView }: { activeView: string, setActiveV
         </ul>
       </nav>
     </aside>
+  );
+};
+
+const DashboardView = () => {
+  const [stats, setStats] = useState({ clicks: 0, conversions: 0, totalCommission: 0 });
+  const [recentConversions, setRecentConversions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [clicksRes, conversionsRes, recentRes] = await Promise.all([
+          supabase.from('affiliate_clicks').select('id', { count: 'exact', head: true }),
+          supabase.from('order_affiliates').select('commission_amount'),
+          supabase.from('order_affiliates').select('*, affiliates(name)').order('created_at', { ascending: false }).limit(10)
+        ]);
+
+        if (clicksRes.error) throw clicksRes.error;
+        if (conversionsRes.error) throw conversionsRes.error;
+        if (recentRes.error) throw recentRes.error;
+
+        const totalCommission = conversionsRes.data.reduce((sum, item) => sum + item.commission_amount, 0);
+
+        setStats({
+          clicks: clicksRes.count ?? 0,
+          conversions: conversionsRes.data.length,
+          totalCommission: totalCommission,
+        });
+        setRecentConversions(recentRes.data);
+
+      } catch (err: any) {
+        console.error("Error fetching dashboard data:", err);
+        setError(`Failed to load dashboard: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>;
+
+  const StatCard = ({ title, value, extra = '' }: { title: string, value: string | number, extra?: string }) => (
+    <div className="bg-gray-50 p-6 rounded-lg shadow-inner">
+      <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">{title}</h4>
+      <p className="text-3xl font-bold text-gray-900 mt-2">{value} <span className="text-lg font-medium">{extra}</span></p>
+    </div>
+  );
+
+  return (
+    <div>
+      <h3 className="text-2xl font-bold mb-6">ダッシュボード</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <StatCard title="合計クリック数" value={stats.clicks.toLocaleString()} extra="回" />
+        <StatCard title="コンバージョン数" value={stats.conversions.toLocaleString()} extra="件" />
+        <StatCard title="合計報酬額" value={`¥${Math.round(stats.totalCommission).toLocaleString()}`} />
+      </div>
+
+      <h4 className="text-xl font-semibold mb-4">最近のコンバージョン</h4>
+      <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">日時</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">アフィリエイター</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">報酬額</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">支払い状況</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {recentConversions.length > 0 ? (
+              recentConversions.map((item) => (
+                <tr key={item.id}>
+                  <td className="px-4 py-4 whitespace-nowrap text-gray-500">{new Date(item.created_at).toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap font-medium text-gray-900">{item.affiliates?.name || 'N/A'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">¥{Math.round(item.commission_amount).toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ item.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                      {item.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="px-6 py-10 text-center text-gray-500">まだコンバージョンはありません。</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
@@ -367,7 +466,7 @@ const AffiliateView = () => {
 
 const AdminDashboard = () => {
   const { user } = useAuth();
-  const [activeView, setActiveView] = useState('orders');
+  const [activeView, setActiveView] = useState('dashboard');
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -375,6 +474,8 @@ const AdminDashboard = () => {
 
   const renderActiveView = () => {
     switch (activeView) {
+      case 'dashboard':
+        return <DashboardView />;
       case 'orders':
         return <OrderHistoryView />;
       case 'affiliates':
