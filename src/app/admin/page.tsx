@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabaseClient';
 
@@ -325,6 +326,7 @@ const AffiliateView = () => {
               <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
               <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">報酬設定</th>
               <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">登録日</th>
+              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider"></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -344,11 +346,16 @@ const AffiliateView = () => {
                       : `¥${aff.default_rate_value.toLocaleString()}`}
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-gray-500">{new Date(aff.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <Link href={`/admin/affiliates/${aff.id}`} className="text-blue-600 hover:text-blue-900">
+                      詳細
+                    </Link>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-10 text-center text-gray-500">No affiliates found.</td>
+                <td colSpan={6} className="px-6 py-10 text-center text-gray-500">No affiliates found.</td>
               </tr>
             )}
           </tbody>
