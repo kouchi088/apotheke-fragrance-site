@@ -25,7 +25,7 @@ async function createLinkAction(formData: FormData) {
 
   if (!code || !affiliateId) {
     console.error('Code or Affiliate ID is missing.');
-    return { error: 'Code or Affiliate ID is missing.' };
+    return;
   }
 
   const { error } = await supabase.from('affiliate_links').insert({
@@ -36,12 +36,12 @@ async function createLinkAction(formData: FormData) {
 
   if (error) {
     console.error('Error creating affiliate link:', error);
-    // Consider returning a more user-friendly error message
-    return { error: error.message };
+    // For now, we just log the error. A more robust solution would use
+    // useFormState to display an error message to the user.
+    return;
   }
 
   revalidatePath(`/admin/affiliates/${affiliateId}`);
-  return { error: null };
 }
 
 export default async function AffiliateDetailPage({ params }: { params: { id: string } }) {
