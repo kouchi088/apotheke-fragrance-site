@@ -96,12 +96,18 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    // Calculate total amount to determine shipping cost
+    // Calculate total amount and check for test product
     let totalAmount = 0;
+    let hasTestProduct = false;
     items.forEach(item => {
       const product = productMap.get(item.productId);
-      if (product && product.price) {
-        totalAmount += product.price * item.quantity;
+      if (product) {
+        if (product.price) {
+          totalAmount += product.price * item.quantity;
+        }
+        if (product.name === 'test') {
+          hasTestProduct = true;
+        }
       }
     });
 
@@ -125,8 +131,8 @@ export async function POST(req: NextRequest) {
       console.log(`Affiliate code ${affCode} added to Stripe session metadata.`);
     }
 
-    // Add shipping rate if total amount is less than 8000 JPY
-    if (totalAmount < 8000) {
+    // Add shipping rate if total amount is less than 8000 JPY AND cart does not contain the test product
+    if (totalAmount < 8000 && !hasTestProduct) {
       sessionParams.shipping_options = [
         {
           shipping_rate_data: {
