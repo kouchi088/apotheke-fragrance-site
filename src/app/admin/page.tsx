@@ -81,6 +81,7 @@ const Sidebar = ({ activeView, setActiveView }: { activeView: string, setActiveV
     { id: 'dashboard', name: 'ダッシュボード' },
     { id: 'orders', name: '注文履歴' },
     { id: 'affiliates', name: 'アフィリエイト管理' },
+    { id: 'ugc', name: 'UGC審査' },
   ];
 
   return (
@@ -464,6 +465,124 @@ const AffiliateView = () => {
   );
 };
 
+const UgcModerationView = () => {
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchPendingSubmissions = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase
+        .from('ugc_submissions')
+        .select(`
+          *,
+          product:products (name),
+          images:ugc_images (*)
+        `)
+        .eq('status', 'pending')
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      setSubmissions(data);
+    } catch (err: any) {
+      console.error("Error fetching pending UGC submissions:", err);
+      setError(`Failed to load submissions: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingSubmissions();
+  }, []);
+
+  const handleDecision = async (submissionId: string, newStatus: 'approved' | 'rejected') => {
+    // Optimistically update UI
+    setSubmissions(submissions.filter(s => s.id !== submissionId));
+
+    const { error } = await supabase
+      .from('ugc_submissions')
+      .update({ status: newStatus, decided_at: new Date().toISOString() })
+      .eq('id', submissionId);
+
+    if (error) {
+      console.error(`Error updating submission status to ${newStatus}:`, error);
+      alert(`Failed to ${newStatus} submission. It may have been processed already. Refreshing the list.`);
+      // Re-fetch to get the correct state
+      fetchPendingSubmissions();
+    }
+  };
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>;
+
+  return (
+    <div>
+      <h3 className="text-2xl font-bold mb-6">UGC審査</h3>
+      {submissions.length > 0 ? (
+        <div className="space-y-6">
+          {submissions.map(submission => (
+            <div key={submission.id} className="bg-gray-50 rounded-lg shadow-md overflow-hidden">
+              <div className="p-5 border-b border-gray-200">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-semibold text-gray-800">{submission.product?.name || '商品不明'}</p>
+                    <p className="text-sm text-gray-500">
+                      投稿者: {submission.nickname || '匿名'} ({submission.email})
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      投稿日: {new Date(submission.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => handleDecision(submission.id, 'approved')}
+                      className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    >
+                      承認
+                    </button>
+                    <button
+                      onClick={() => handleDecision(submission.id, 'rejected')}
+                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
+                      却下
+                    </button>
+                  </div>
+                </div>
+                {submission.caption && (
+                  <p className="mt-4 text-gray-700 bg-white p-3 rounded-md">{submission.caption}</p>
+                )}
+              </div>
+              {submission.images && submission.images.length > 0 && (
+                <div className="p-5">
+                  <p className="text-sm font-medium text-gray-600 mb-3">投稿画像:</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {submission.images.map((image: any) => (
+                      <a key={image.id} href={image.cdn_url} target="_blank" rel="noopener noreferrer">
+                        <img 
+                          src={image.cdn_url} 
+                          alt="User submitted content" 
+                          className="rounded-md object-cover h-32 w-full shadow-sm hover:shadow-lg transition-shadow"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-500">審査待ちの投稿はありません。</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AdminDashboard = () => {
   const { user } = useAuth();
   const [activeView, setActiveView] = useState('dashboard');
@@ -480,6 +599,8 @@ const AdminDashboard = () => {
         return <OrderHistoryView />;
       case 'affiliates':
         return <AffiliateView />;
+      case 'ugc':
+        return <UgcModerationView />;
       default:
         return <p>Select a view from the sidebar.</p>;
     }
