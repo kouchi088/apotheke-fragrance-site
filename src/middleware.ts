@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+async function getSha256Hash(input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 // This function is called in the background and does not block the response
 async function trackAffiliateClick(req: NextRequest, affCode: string) {
   try {
@@ -24,14 +31,8 @@ async function trackAffiliateClick(req: NextRequest, affCode: string) {
       const ip = req.ip ?? 'unknown';
       const ua = req.headers.get('user-agent') ?? 'unknown';
       
-      // Anonymize IP and User Agent
-      const encoder = new TextEncoder();
-      const ipData = encoder.encode(ip);
-      const uaData = encoder.encode(ua);
-      const ipHashBuffer = await crypto.subtle.digest('SHA-256', ipData);
-      const uaHashBuffer = await crypto.subtle.digest('SHA-256', uaData);
-      const ip_hash = Array.from(new Uint8Array(ipHashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-      const ua_hash = Array.from(new Uint8Array(uaHashBuffer)).map(b => b.toString(16).padStart(2, '0').join('');
+      const ip_hash = await getSha256Hash(ip);
+      const ua_hash = await getSha256Hash(ua);
 
       await supabase.from('affiliate_clicks').insert({
         link_id: link.id,
