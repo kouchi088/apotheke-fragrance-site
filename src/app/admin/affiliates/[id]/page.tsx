@@ -48,6 +48,7 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
   const supabase = getSupabaseAdmin();
   const affiliateId = params.id;
 
+  // Fetch affiliate details
   const { data: affiliate, error: affiliateError } = await supabase
     .from('affiliates')
     .select('*')
@@ -58,11 +59,14 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
     notFound();
   }
 
+  // Fetch links with their stats using the new RPC
   const { data: links, error: linksError } = await supabase
-    .from('affiliate_links')
-    .select('*')
-    .eq('affiliate_id', affiliateId)
-    .order('created_at', { ascending: false });
+    .rpc('get_affiliate_links_with_stats', { p_affiliate_id: affiliateId });
+
+  if (linksError) {
+    console.error("Error fetching link stats:", linksError);
+    // Handle error gracefully, maybe show a message
+  }
 
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://your-site.com';
 
@@ -126,7 +130,7 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
         {/* Existing Links List */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-4">発行済みリンク一覧</h2>
-          <div className="space-y-4">
+          <div className="space-y-6">
             {links && links.length > 0 ? (
               links.map(link => {
                 const destination = new URL(link.landing_url || '/', siteUrl);
@@ -135,8 +139,24 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
 
                 return (
                   <div key={link.id} className="p-4 border rounded-lg bg-gray-50">
-                    <p className="text-sm text-gray-500 mb-2">発行日: {new Date(link.created_at).toLocaleDateString()}</p>
-                    <CopyableLink url={finalUrl} />
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-500 mb-2">発行日: {new Date(link.created_at).toLocaleDateString()}</p>
+                      <CopyableLink url={finalUrl} />
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 text-center border-t pt-4">
+                        <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-wider">Clicks</p>
+                            <p className="text-2xl font-bold text-gray-800">{link.total_clicks}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-wider">Conversions</p>
+                            <p className="text-2xl font-bold text-gray-800">{link.total_conversions}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-wider">Commission</p>
+                            <p className="text-2xl font-bold text-gray-800">¥{Math.round(link.total_commission).toLocaleString()}</p>
+                        </div>
+                    </div>
                   </div>
                 );
               })
