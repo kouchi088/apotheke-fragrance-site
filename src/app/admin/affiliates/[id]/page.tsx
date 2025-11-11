@@ -4,6 +4,19 @@ import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { CopyableLink } from './CopyableLink';
 
+// --- Type Definitions ---
+type AffiliateLinkWithStats = {
+  id: string;
+  affiliate_id: string;
+  code: string;
+  landing_url: string;
+  is_active: boolean;
+  created_at: string;
+  total_clicks: number;
+  total_conversions: number;
+  total_commission: number;
+};
+
 // Helper to create a Supabase admin client for server-side operations
 const getSupabaseAdmin = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -59,9 +72,9 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
     notFound();
   }
 
-  // Fetch links with their stats using the new RPC
+  // Fetch links with their stats using the new RPC and apply the type
   const { data: links, error: linksError } = await supabase
-    .rpc('get_affiliate_links_with_stats', { p_affiliate_id: affiliateId });
+    .rpc<AffiliateLinkWithStats>('get_affiliate_links_with_stats', { p_affiliate_id: affiliateId });
 
   if (linksError) {
     console.error("Error fetching link stats:", linksError);
@@ -132,7 +145,7 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
           <h2 className="text-xl font-bold mb-4">発行済みリンク一覧</h2>
           <div className="space-y-6">
             {links && links.length > 0 ? (
-              links.map(link => {
+              links.map((link) => {
                 const destination = new URL(link.landing_url || '/', siteUrl);
                 destination.searchParams.set('aff', link.code);
                 const finalUrl = destination.toString();
