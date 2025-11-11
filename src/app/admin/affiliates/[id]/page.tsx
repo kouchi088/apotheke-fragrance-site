@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import { CopyableLink } from './CopyableLink';
 
 // Helper to create a Supabase admin client for server-side operations
 const getSupabaseAdmin = () => {
@@ -36,14 +37,13 @@ async function createLinkAction(formData: FormData) {
 
   if (error) {
     console.error('Error creating affiliate link:', error);
-    // For now, we just log the error. A more robust solution would use
-    // useFormState to display an error message to the user.
     return;
   }
 
   revalidatePath(`/admin/affiliates/${affiliateId}`);
 }
 
+// The main page component is a Server Component
 export default async function AffiliateDetailPage({ params }: { params: { id: string } }) {
   const supabase = getSupabaseAdmin();
   const affiliateId = params.id;
@@ -111,7 +111,7 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
                 id="landing_url"
                 name="landing_url"
                 type="text"
-                placeholder="e.g., /products/some-product"
+                placeholder="/products/..."
                 className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -126,26 +126,20 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
         {/* Existing Links List */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-4">発行済みリンク一覧</h2>
-          <div className="overflow-x-auto">
+          <div className="space-y-4">
             {links && links.length > 0 ? (
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">アフィリエイトリンク</th>
-                    <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">誘導先</th>
-                    <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">発行日</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {links.map(link => (
-                    <tr key={link.id}>
-                      <td className="px-4 py-4 whitespace-nowrap font-mono bg-gray-50 rounded-md">{`${siteUrl}/?aff=${link.code}`}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-gray-600">{link.landing_url}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-gray-500">{new Date(link.created_at).toLocaleDateString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              links.map(link => {
+                const destination = new URL(link.landing_url || '/', siteUrl);
+                destination.searchParams.set('aff', link.code);
+                const finalUrl = destination.toString();
+
+                return (
+                  <div key={link.id} className="p-4 border rounded-lg bg-gray-50">
+                    <p className="text-sm text-gray-500 mb-2">発行日: {new Date(link.created_at).toLocaleDateString()}</p>
+                    <CopyableLink url={finalUrl} />
+                  </div>
+                );
+              })
             ) : (
               <p className="text-center text-gray-500 py-8">まだ発行されたリンクはありません。</p>
             )}
