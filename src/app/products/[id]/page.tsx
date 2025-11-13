@@ -150,6 +150,13 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
+      {/* Preload other images in the carousel for faster navigation */}
+      {product.images && product.images.length > 1 && (
+        product.images.slice(1).map((img: string) => (
+          <link key={img} rel="preload" as="image" href={img} />
+        ))
+      )}
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
