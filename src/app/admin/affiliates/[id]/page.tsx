@@ -76,29 +76,27 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
   const { data, error: linksError } = await supabase
     .rpc('get_affiliate_links_with_stats', { p_affiliate_id: affiliateId });
 
-  // Explicitly type the data returned from the RPC
   const links: AffiliateLinkWithStats[] | null = data;
 
   if (linksError) {
     console.error("Error fetching link stats:", linksError);
-    // Handle error gracefully, maybe show a message
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://your-site.com';
 
   return (
-    <div className="p-6 sm:p-8 bg-gray-100 min-h-screen">
+    <div className="p-6 sm:p-8 bg-background min-h-screen">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
-          <Link href="/admin" className="text-blue-600 hover:underline">&larr; 管理ダッシュボードに戻る</Link>
+          <Link href="/admin" className="text-primary hover:text-foreground underline">&larr; 管理ダッシュボードに戻る</Link>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">{affiliate.name}</h1>
-          <p className="text-gray-600">{affiliate.email}</p>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-accent mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">{affiliate.name}</h1>
+          <p className="text-secondary">{affiliate.email}</p>
           <div className="mt-4 text-sm">
-            <span className="font-semibold">報酬設定:</span>
-            <span>
+            <span className="font-semibold text-foreground">報酬設定:</span>
+            <span className="text-foreground">
               {affiliate.default_rate_type === 'percentage'
                 ? ` ${affiliate.default_rate_value * 100}%`
                 : ` ¥${affiliate.default_rate_value.toLocaleString()}`}
@@ -110,33 +108,33 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
         </div>
 
         {/* Create New Link Form */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-bold mb-4">新しいリンクを発行</h2>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-accent mb-8">
+          <h2 className="text-xl font-bold mb-4 text-foreground">新しいリンクを発行</h2>
           <form action={createLinkAction} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <input type="hidden" name="affiliate_id" value={affiliate.id} />
             <div className="md:col-span-1">
-              <label htmlFor="code" className="block text-sm font-medium text-gray-700">紹介コード (URL用)</label>
+              <label htmlFor="code" className="block text-sm font-medium text-foreground">紹介コード (URL用)</label>
               <input
                 id="code"
                 name="code"
                 type="text"
                 required
                 placeholder="e.g., friend10"
-                className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary"
               />
             </div>
             <div className="md:col-span-1">
-              <label htmlFor="landing_url" className="block text-sm font-medium text-gray-700">誘導先URL (任意)</label>
+              <label htmlFor="landing_url" className="block text-sm font-medium text-foreground">誘導先URL (任意)</label>
               <input
                 id="landing_url"
                 name="landing_url"
                 type="text"
                 placeholder="/products/..."
-                className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary"
               />
             </div>
             <div className="md:col-span-1">
-              <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-foreground transition-colors duration-300">
                 リンク発行
               </button>
             </div>
@@ -144,8 +142,8 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
         </div>
 
         {/* Existing Links List */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">発行済みリンク一覧</h2>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-accent">
+          <h2 className="text-xl font-bold mb-4 text-foreground">発行済みリンク一覧</h2>
           <div className="space-y-6">
             {links && links.length > 0 ? (
               links.map((link) => {
@@ -154,30 +152,30 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
                 const finalUrl = destination.toString();
 
                 return (
-                  <div key={link.id} className="p-4 border rounded-lg bg-gray-50">
+                  <div key={link.id} className="p-4 border border-accent rounded-lg bg-background/50">
                     <div className="mb-4">
-                      <p className="text-sm text-gray-500 mb-2">発行日: {new Date(link.created_at).toLocaleDateString()}</p>
+                      <p className="text-sm text-secondary mb-2">発行日: {new Date(link.created_at).toLocaleDateString()}</p>
                       <CopyableLink url={finalUrl} />
                     </div>
-                    <div className="grid grid-cols-3 gap-4 text-center border-t pt-4">
+                    <div className="grid grid-cols-3 gap-4 text-center border-t border-accent pt-4">
                         <div>
-                            <p className="text-xs text-gray-500 uppercase tracking-wider">Clicks</p>
-                            <p className="text-2xl font-bold text-gray-800">{link.total_clicks}</p>
+                            <p className="text-xs text-secondary uppercase tracking-wider">Clicks</p>
+                            <p className="text-2xl font-bold text-foreground">{link.total_clicks}</p>
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500 uppercase tracking-wider">Conversions</p>
-                            <p className="text-2xl font-bold text-gray-800">{link.total_conversions}</p>
+                            <p className="text-xs text-secondary uppercase tracking-wider">Conversions</p>
+                            <p className="text-2xl font-bold text-foreground">{link.total_conversions}</p>
                         </div>
                         <div>
-                            <p className="text-xs text-gray-500 uppercase tracking-wider">Commission</p>
-                            <p className="text-2xl font-bold text-gray-800">¥{Math.round(link.total_commission).toLocaleString()}</p>
+                            <p className="text-xs text-secondary uppercase tracking-wider">Commission</p>
+                            <p className="text-2xl font-bold text-foreground">¥{Math.round(link.total_commission).toLocaleString()}</p>
                         </div>
                     </div>
                   </div>
                 );
               })
             ) : (
-              <p className="text-center text-gray-500 py-8">まだ発行されたリンクはありません。</p>
+              <p className="text-center text-secondary py-8">まだ発行されたリンクはありません。</p>
             )}
           </div>
         </div>

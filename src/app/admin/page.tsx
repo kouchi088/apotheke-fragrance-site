@@ -11,7 +11,7 @@ const supabase = createClient();
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-full pt-20">
-    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
   </div>
 );
 
@@ -37,33 +37,33 @@ const LoginForm = ({ onLogin }: { onLogin: (email: string, pass: string) => Prom
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+    <div className="flex justify-center items-center min-h-screen bg-background">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center">Admin Login</h1>
+        <h1 className="text-2xl font-bold text-center text-foreground">Admin Login</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-foreground">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-foreground">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary"
               required
             />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div>
-            <button type="submit" disabled={loading} className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400">
+            <button type="submit" disabled={loading} className="w-full px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-foreground transition-colors duration-300 disabled:bg-secondary">
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </div>
@@ -85,18 +85,18 @@ const Sidebar = ({ activeView, setActiveView }: { activeView: string, setActiveV
   ];
 
   return (
-    <aside className="w-64 bg-gray-200/50 p-4 border-r border-gray-300">
-      <h2 className="text-lg font-semibold mb-4">管理メニュー</h2>
+    <aside className="w-64 bg-accent/50 p-4 border-r border-accent">
+      <h2 className="text-lg font-semibold mb-4 text-foreground">管理メニュー</h2>
       <nav>
         <ul>
           {navItems.map(item => (
             <li key={item.id}>
               <button
                 onClick={() => setActiveView(item.id)}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium ${
+                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                   activeView === item.id
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-300'
+                    ? 'bg-primary text-white'
+                    : 'text-foreground hover:bg-accent'
                 }`}
               >
                 {item.name}
@@ -154,15 +154,15 @@ const DashboardView = () => {
   if (error) return <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>;
 
   const StatCard = ({ title, value, extra = '' }: { title: string, value: string | number, extra?: string }) => (
-    <div className="bg-gray-50 p-6 rounded-lg shadow-inner">
-      <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">{title}</h4>
-      <p className="text-3xl font-bold text-gray-900 mt-2">{value} <span className="text-lg font-medium">{extra}</span></p>
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-accent">
+      <h4 className="text-sm font-medium text-secondary uppercase tracking-wider">{title}</h4>
+      <p className="text-3xl font-bold text-foreground mt-2">{value} <span className="text-lg font-medium">{extra}</span></p>
     </div>
   );
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-6">ダッシュボード</h3>
+      <h3 className="text-2xl font-bold mb-6 text-foreground">ダッシュボード</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard title="合計クリック数" value={stats.clicks.toLocaleString()} extra="回" />
@@ -170,24 +170,24 @@ const DashboardView = () => {
         <StatCard title="合計報酬額" value={`¥${Math.round(stats.totalCommission).toLocaleString()}`} />
       </div>
 
-      <h4 className="text-xl font-semibold mb-4">最近のコンバージョン</h4>
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+      <h4 className="text-xl font-semibold mb-4 text-foreground">最近のコンバージョン</h4>
+      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-accent">
+        <table className="min-w-full divide-y divide-accent text-sm">
+          <thead className="bg-accent/50">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">日時</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">アフィリエイター</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">報酬額</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">支払い状況</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">日時</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">アフィリエイター</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">報酬額</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">支払い状況</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-accent">
             {recentConversions.length > 0 ? (
               recentConversions.map((item) => (
                 <tr key={item.id}>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-500">{new Date(item.created_at).toLocaleString()}</td>
-                  <td className="px-4 py-4 whitespace-nowrap font-medium text-gray-900">{item.affiliates?.name || 'N/A'}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">¥{Math.round(item.commission_amount).toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{new Date(item.created_at).toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap font-medium text-foreground">{item.affiliates?.name || 'N/A'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">¥{Math.round(item.commission_amount).toLocaleString()}</td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ item.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                       {item.status}
@@ -197,7 +197,7 @@ const DashboardView = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={4} className="px-6 py-10 text-center text-gray-500">まだコンバージョンはありません。</td>
+                <td colSpan={4} className="px-6 py-10 text-center text-secondary">まだコンバージョンはありません。</td>
               </tr>
             )}
           </tbody>
@@ -255,44 +255,44 @@ const OrderHistoryView = () => {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-4">注文履歴</h3>
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+      <h3 className="text-2xl font-bold mb-4 text-foreground">注文履歴</h3>
+      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-accent">
+        <table className="min-w-full divide-y divide-accent text-sm">
+          <thead className="bg-accent/50">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">日付</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">注文者</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">連絡先</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">住所</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">値段</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">配送状況</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">日付</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">注文者</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">連絡先</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">住所</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">値段</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">配送状況</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-accent">
             {orders.length > 0 ? (
               orders.map((order) => (
                 <tr key={order.id}>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">{new Date(order.created_at).toLocaleDateString()}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">{order.shipping_address?.name || 'N/A'}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-500">{order.customer_email || 'N/A'}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-500">{formatAddress(order.shipping_address?.address)}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">¥{(order.total || 0).toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{new Date(order.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{order.shipping_address?.name || 'N/A'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-secondary">{order.customer_email || 'N/A'}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-secondary">{formatAddress(order.shipping_address?.address)}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">¥{(order.total || 0).toLocaleString()}</td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={order.shipped || false}
                         onChange={() => handleShippingToggle(order.id, order.shipped || false)}
-                        className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        className="h-5 w-5 text-primary border-accent rounded focus:ring-primary"
                       />
-                      <span className="ml-2 text-gray-700">{order.shipped ? 'Shipped' : 'Pending'}</span>
+                      <span className="ml-2 text-foreground">{order.shipped ? 'Shipped' : 'Pending'}</span>
                     </label>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-gray-500">No orders found.</td>
+                <td colSpan={6} className="px-6 py-10 text-center text-secondary">No orders found.</td>
               </tr>
             )}
           </tbody>
@@ -372,35 +372,35 @@ const AffiliateView = () => {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-6">アフィリエイト管理</h3>
+      <h3 className="text-2xl font-bold mb-6 text-foreground">アフィリエイト管理</h3>
       
       {/* Add New Affiliate Form */}
-      <div className="bg-gray-50 p-6 rounded-lg shadow-inner mb-8">
-        <h4 className="text-xl font-semibold mb-4">新規紹介者登録</h4>
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-accent mb-8">
+        <h4 className="text-xl font-semibold mb-4 text-foreground">新規紹介者登録</h4>
         <form onSubmit={handleAddAffiliate} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           <div className="md:col-span-1">
-            <label className="block text-sm font-medium text-gray-700">名前</label>
-            <input type="text" value={newName} onChange={e => setNewName(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+            <label className="block text-sm font-medium text-foreground">名前</label>
+            <input type="text" value={newName} onChange={e => setNewName(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary" />
           </div>
           <div className="md:col-span-1">
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+            <label className="block text-sm font-medium text-foreground">Email</label>
+            <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary" />
           </div>
           <div className="flex gap-2">
             <div>
-                <label className="block text-sm font-medium text-gray-700">報酬タイプ</label>
-                <select value={newRateType} onChange={e => setNewRateType(e.target.value as any)} className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <label className="block text-sm font-medium text-foreground">報酬タイプ</label>
+                <select value={newRateType} onChange={e => setNewRateType(e.target.value as any)} className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary">
                     <option value="percentage">割合 (%)</option>
                     <option value="fixed">固定額 (¥)</option>
                 </select>
             </div>
             <div>
-                <label className="block text-sm font-medium text-gray-700">報酬</label>
-                <input type="number" value={newRateValue} onChange={e => setNewRateValue(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                <label className="block text-sm font-medium text-foreground">報酬</label>
+                <input type="number" value={newRateValue} onChange={e => setNewRateValue(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary" />
             </div>
           </div>
           <div className="md:col-span-1">
-            <button type="submit" disabled={formLoading} className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400">
+            <button type="submit" disabled={formLoading} className="w-full px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-foreground transition-colors duration-300 disabled:bg-secondary">
               {formLoading ? '登録中...' : '登録'}
             </button>
           </div>
@@ -409,37 +409,37 @@ const AffiliateView = () => {
       </div>
 
       {/* Affiliate List */}
-      <h4 className="text-xl font-semibold mb-4">紹介者一覧</h4>
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+      <h4 className="text-xl font-semibold mb-4 text-foreground">紹介者一覧</h4>
+      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-accent">
+        <table className="min-w-full divide-y divide-accent text-sm">
+          <thead className="bg-accent/50">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">名前</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">クリック</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">CV</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">報酬額</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider"></th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">名前</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">クリック</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">CV</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">報酬額</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">ステータス</th>
+              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-accent">
             {affiliates.length > 0 ? (
               affiliates.map((aff) => (
                 <tr key={aff.id}>
                   <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">{aff.name}</div>
-                    <div className="text-gray-500">{aff.email}</div>
+                    <div className="font-medium text-foreground">{aff.name}</div>
+                    <div className="text-secondary">{aff.email}</div>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">{aff.total_clicks}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">{aff.total_conversions}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-900">¥{Math.round(aff.total_commission).toLocaleString()}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{aff.total_clicks}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{aff.total_conversions}</td>
+                  <td className="px-4 py-4 whitespace-nowrap text-foreground">¥{Math.round(aff.total_commission).toLocaleString()}</td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ aff.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                       {aff.status}
                     </span>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link href={`/admin/affiliates/${aff.id}`} className="text-blue-600 hover:text-blue-900">
+                    <Link href={`/admin/affiliates/${aff.id}`} className="text-primary hover:text-foreground underline">
                       詳細
                     </Link>
                   </td>
@@ -447,7 +447,7 @@ const AffiliateView = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-gray-500">No affiliates found.</td>
+                <td colSpan={6} className="px-6 py-10 text-center text-secondary">No affiliates found.</td>
               </tr>
             )}
           </tbody>
@@ -512,19 +512,19 @@ const UgcModerationView = () => {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-6">UGC審査</h3>
+      <h3 className="text-2xl font-bold mb-6 text-foreground">UGC審査</h3>
       {submissions.length > 0 ? (
         <div className="space-y-6">
           {submissions.map(submission => (
-            <div key={submission.id} className="bg-gray-50 rounded-lg shadow-md overflow-hidden">
-              <div className="p-5 border-b border-gray-200">
+            <div key={submission.id} className="bg-white rounded-lg shadow-sm border border-accent overflow-hidden">
+              <div className="p-5 border-b border-accent">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-semibold text-gray-800">{submission.product?.name || '商品不明'}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-semibold text-foreground">{submission.product?.name || '商品不明'}</p>
+                    <p className="text-sm text-secondary">
                       投稿者: {submission.nickname || '匿名'} ({submission.email})
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-secondary">
                       投稿日: {new Date(submission.created_at).toLocaleString()}
                     </p>
                   </div>
@@ -544,12 +544,12 @@ const UgcModerationView = () => {
                   </div>
                 </div>
                 {submission.caption && (
-                  <p className="mt-4 text-gray-700 bg-white p-3 rounded-md">{submission.caption}</p>
+                  <p className="mt-4 text-foreground bg-accent/50 p-3 rounded-md">{submission.caption}</p>
                 )}
               </div>
               {submission.images && submission.images.length > 0 && (
                 <div className="p-5">
-                  <p className="text-sm font-medium text-gray-600 mb-3">投稿画像:</p>
+                  <p className="text-sm font-medium text-foreground mb-3">投稿画像:</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {submission.images.map((image: any) => (
                       <a key={image.id} href={image.cdn_url} target="_blank" rel="noopener noreferrer">
@@ -568,7 +568,7 @@ const UgcModerationView = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500">審査待ちの投稿はありません。</p>
+          <p className="text-secondary">審査待ちの投稿はありません。</p>
         </div>
       )}
     </div>
@@ -599,17 +599,17 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-background">
       <Sidebar activeView={activeView} setActiveView={setActiveView} />
       <main className="flex-grow p-6 sm:p-8">
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Admin</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Admin</h1>
           <button onClick={handleLogout} className="px-4 py-2 font-semibold text-white bg-red-600 rounded-md hover:bg-red-700">
             Logout
           </button>
         </div>
-        <p className="mb-8 text-gray-600">Welcome, {user?.email}!</p>
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <p className="mb-8 text-secondary">Welcome, {user?.email}!</p>
+        <div className="bg-background p-6 rounded-lg">
           {renderActiveView()}
         </div>
       </main>
