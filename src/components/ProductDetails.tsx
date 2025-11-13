@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import toast from 'react-hot-toast';
 
@@ -154,6 +155,11 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
             >
               {isBuyingNow ? 'PROCESSING...' : (product.stock_quantity > 0 ? 'BUY NOW' : 'SOLD OUT')}
             </button>
+          </div>
+          <div className="w-full max-w-sm mt-6 text-center">
+            <Link href="/submit-review" className="text-sm text-gray-600 hover:text-black underline">
+              この商品のレビューを書く
+            </Link>
           </div>
         </div>
       </div>
