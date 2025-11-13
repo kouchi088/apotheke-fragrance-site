@@ -72,9 +72,12 @@ export default async function AffiliateDetailPage({ params }: { params: { id: st
     notFound();
   }
 
-  // Fetch links with their stats using the new RPC and apply the type
-  const { data: links, error: linksError } = await supabase
-    .rpc<AffiliateLinkWithStats>('get_affiliate_links_with_stats', { p_affiliate_id: affiliateId });
+  // Fetch links with their stats using the RPC
+  const { data, error: linksError } = await supabase
+    .rpc('get_affiliate_links_with_stats', { p_affiliate_id: affiliateId });
+
+  // Explicitly type the data returned from the RPC
+  const links: AffiliateLinkWithStats[] | null = data;
 
   if (linksError) {
     console.error("Error fetching link stats:", linksError);
