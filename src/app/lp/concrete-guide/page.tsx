@@ -12,7 +12,6 @@ export default function ConcreteGuideLP() {
 
       <section className="py-10 md:py-16">
         <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 1. コンクリートという素材を正しく理解する</h2>
-        <p className="mb-4 text-gray-600">
         <p className="mb-4 text-gray-600">主な理由は以下の3点です。</p>
         <ul className="list-disc list-inside mb-4 text-gray-600">
           <li className="mb-2">
