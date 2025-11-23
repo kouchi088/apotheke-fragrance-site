@@ -6,9 +6,7 @@ export default function ConcreteGuideLP() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">ハブ①｜コンクリート雑貨 完全ガイド</h1>
-      <p className="text-lg text-gray-600 mb-8">
-        ― 素材の特性・魅力・弱点・メンテナンスまで 1 ページで理解する ―
-      </p>
+
 
       <section className="py-10 md:py-16">
         <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 1. コンクリートという素材を正しく理解する</h2>
@@ -33,9 +31,7 @@ export default function ConcreteGuideLP() {
           <li className="mb-2">微細な気孔・個体差 が本質的にある</li>
           <li className="mb-2">酸性洗剤に弱い（変色・白化のリスク）</li>
         </ul>
-        <p className="text-gray-600">
-          このページでは、ユーザーが誤解しやすいポイントを丁寧に整理し、正しい取り扱い方法と商品選びの基準を提供します。
-        </p>
+
       </section>
 
       <section className="py-10 md:py-16">
