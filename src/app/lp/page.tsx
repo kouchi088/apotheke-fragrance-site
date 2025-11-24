@@ -24,27 +24,27 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="antialiased bg-white selection:bg-gray-300 selection:text-gray-900">
+    <div className="antialiased bg-background selection:bg-accent selection:text-foreground">
       <main>
         {/* --- Hero Section (adapted from sohso/components/Hero.tsx) --- */}
-        <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-gray-100">
-          <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-gray-50 z-10 relative">
+        <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-background">
+          <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-background z-10 relative">
             <div>
-              <span className="text-xs font-bold tracking-[0.3em] text-gray-400 uppercase mb-4 block">
+              <span className="text-xs font-bold tracking-[0.3em] text-secondary uppercase mb-4 block">
                 Handcrafted Concrete
               </span>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-gray-900 leading-tight mb-8">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-foreground leading-tight mb-8">
                 静寂を、<br />
                 形にする。
               </h1>
-              <p className="text-gray-600 mb-10 leading-relaxed font-sans max-w-md">
+              <p className="text-primary mb-10 leading-relaxed font-sans max-w-md">
                 都市の素材であるコンクリートに、手仕事の温かみを。
                 不揃いな気泡、独特の質感、経年変化。
                 SOHSOは、日常に静かな重みをもたらすインテリアオブジェを提案します。
               </p>
               <Link
                 href="/online-store"
-                className="group inline-flex items-center space-x-3 text-gray-900 border-b border-gray-900 pb-1 hover:text-gray-600 hover:border-gray-600 transition-all"
+                className="group inline-flex items-center space-x-3 text-foreground border-b border-foreground pb-1 hover:text-primary hover:border-primary transition-all"
               >
                 <span className="text-sm tracking-widest uppercase">View Collection</span>
                 <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -64,7 +64,7 @@ export default async function LandingPage() {
         </section>
 
         {/* --- Concept Section (adapted from sohso/components/Concept.tsx) --- */}
-        <section id="concept" className="py-24 md:py-32 bg-gray-800 text-gray-50">
+        <section id="concept" className="py-24 md:py-32 bg-primary text-background">
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center gap-16">
               <div className="w-full md:w-1/2">
@@ -82,7 +82,7 @@ export default async function LandingPage() {
                 <h2 className="text-3xl md:text-4xl font-serif mb-8 leading-snug">
                   偶然が生み出す、<br />唯一無二の表情。
                 </h2>
-                <div className="space-y-6 text-gray-300 font-sans leading-loose">
+                <div className="space-y-6 text-accent font-sans leading-loose">
                   <p>
                     コンクリートは、水、砂、セメントが混ざり合い、化学反応を起こして固まる素材です。その過程で生まれる気泡（ボイド）や色むらは、決して欠陥ではありません。
                   </p>
@@ -100,21 +100,21 @@ export default async function LandingPage() {
 
         {/* --- Featured Products Section (adapted from sohso/components/FeaturedProducts.tsx) --- */}
         {products && products.length > 0 && (
-          <section id="products" className="py-24 bg-gray-50">
+          <section id="products" className="py-24 bg-background">
             <div className="container mx-auto px-6">
               <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
-                  <h2 className="text-3xl font-serif text-gray-900 mb-2">Collection</h2>
-                  <p className="text-gray-500 text-sm">Latest arrivals from the studio.</p>
+                  <h2 className="text-3xl font-serif text-foreground mb-2">Collection</h2>
+                  <p className="text-secondary text-sm">Latest arrivals from the studio.</p>
                 </div>
-                <Link href="/online-store" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-gray-300 pb-1 hover:border-gray-900 transition-colors mt-8 md:mt-0">
+                <Link href="/online-store" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 hover:border-primary transition-colors mt-8 md:mt-0">
                   View All Items
                 </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                 {products.map((product) => (
                   <Link href={`/products/${product.id}`} key={product.id} className="block group">
-                    <div className="relative w-full aspect-square overflow-hidden bg-gray-200 rounded-lg shadow-md">
+                    <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
                       {product.images && product.images.length > 0 && (
                         <Image
                           src={product.images[0]}
@@ -125,13 +125,13 @@ export default async function LandingPage() {
                         />
                       )}
                     </div>
-                    <h3 className="mt-4 text-lg font-semibold text-gray-900">{product.name}</h3>
-                    <p className="mt-1 text-sm text-gray-700">¥{product.price.toLocaleString()}</p>
+                    <h3 className="mt-4 text-lg font-semibold text-foreground">{product.name}</h3>
+                    <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
                   </Link>
                 ))}
               </div>
               <div className="mt-16 text-center md:hidden">
-                <Link href="/online-store" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-300 pb-1">
+                <Link href="/online-store" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1">
                   View All Items
                 </Link>
               </div>
