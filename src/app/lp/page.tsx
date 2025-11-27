@@ -23,6 +23,25 @@ export default async function LandingPage() {
     console.error('Error fetching products for LP:', error);
   }
 
+  const { data: reviews, error: reviewsError } = await supabase
+    .from('user_content')
+    .select(`
+      id,
+      user_name,
+      rating,
+      review_text,
+      created_at,
+      content_images (image_path),
+      products (name)
+    `)
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  if (reviewsError) {
+    console.error('Error fetching reviews for LP:', reviewsError);
+  }
+
   return (
     <div className="antialiased bg-background selection:bg-accent selection:text-foreground">
       <main>
@@ -101,6 +120,7 @@ export default async function LandingPage() {
         {/* --- Featured Products Section (adapted from sohso/components/FeaturedProducts.tsx) --- */}
         {products && products.length > 0 && (
           <section id="products" className="py-24 bg-background">
+            {/* ... existing product section content ... */}
             <div className="container mx-auto px-6">
               <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
@@ -133,6 +153,71 @@ export default async function LandingPage() {
               <div className="mt-16 text-center md:hidden">
                 <Link href="/online-store" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1">
                   View All Items
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* --- Voices Section (User Reviews) --- */}
+        {reviews && reviews.length > 0 && (
+          <section id="voices" className="py-24 bg-primary text-background">
+            <div className="container mx-auto px-6">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+                <div>
+                  <h2 className="text-3xl font-serif text-background mb-2">Voices</h2>
+                  <p className="text-accent text-sm">Stories from our community.</p>
+                </div>
+                <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 hover:border-background transition-colors mt-8 md:mt-0 text-accent">
+                  View Gallery
+                </Link>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {reviews.map((review: any) => (
+                  <div key={review.id} className="flex flex-col bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                    <div className="flex items-center mb-4">
+                      <div className="flex text-yellow-500 text-sm">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i}>{i < (review.rating || 5) ? '★' : '☆'}</span>
+                        ))}
+                      </div>
+                      <span className="ml-3 text-xs text-gray-400 uppercase tracking-wider">
+                        {review.user_name || 'Guest'}
+                      </span>
+                    </div>
+                    
+                    <p className="text-sm text-gray-300 leading-relaxed mb-6 flex-grow">
+                      "{review.review_text}"
+                    </p>
+
+                    {/* Product Name Reference */}
+                    {review.products && (
+                      <div className="mb-4">
+                        <p className="text-xs text-gray-500 uppercase tracking-widest">Item</p>
+                        <p className="text-xs text-gray-300">{review.products.name}</p>
+                      </div>
+                    )}
+
+                    {/* Review Image */}
+                    {review.content_images && review.content_images.length > 0 && (
+                      <div className="relative w-full h-48 mt-auto overflow-hidden rounded-md bg-gray-700">
+                         <Image
+                            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ugc-images/${review.content_images[0].image_path}`}
+                            alt="User review image"
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            className="hover:scale-105 transition-transform duration-500"
+                          />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-16 text-center md:hidden">
+                <Link href="/gallery" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 text-accent">
+                  View Gallery
                 </Link>
               </div>
             </div>
