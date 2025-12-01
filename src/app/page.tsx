@@ -43,11 +43,11 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="antialiased bg-background selection:bg-accent selection:text-foreground">
+    <div className="antialiased bg-white selection:bg-accent selection:text-foreground">
       <main>
         {/* --- Hero Section (Main Visual) --- */}
-        <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-background">
-          <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-background z-10 relative">
+        <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-white">
+          <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-white z-10 relative">
             <div>
               <span className="text-xs font-bold tracking-[0.3em] text-secondary uppercase mb-4 block">
                 Handcrafted Concrete
@@ -84,7 +84,7 @@ export default async function LandingPage() {
 
         {/* --- New Arrivals Section (formerly Collection) --- */}
         {products && products.length > 0 && (
-          <section id="new-arrivals" className="py-24 bg-background">
+          <section id="new-arrivals" className="py-24 bg-white">
             <div className="container mx-auto px-6">
               <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
@@ -124,7 +124,7 @@ export default async function LandingPage() {
         )}
 
         {/* --- Featured / Best Sellers Section (Placeholder) --- */}
-        <section id="featured" className="py-24 bg-background">
+        <section id="featured" className="py-24 bg-white">
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
             <p className="text-secondary text-sm mb-12">Curated selection of our signature items.</p>
@@ -135,7 +135,7 @@ export default async function LandingPage() {
         </section>
 
         {/* --- Journal Section (formerly Concept) --- */}
-        <section id="journal" className="py-24 md:py-32 bg-background text-foreground">
+        <section id="journal" className="py-24 md:py-32 bg-white text-foreground">
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center gap-16">
               <div className="w-full md:w-1/2">
@@ -178,7 +178,7 @@ export default async function LandingPage() {
         </section>
 
         {/* --- Life with MEGURID Section (UGC) --- */}
-        <section id="life-with-megurid" className="py-24 bg-background text-foreground">
+        <section id="life-with-megurid" className="py-24 bg-white text-foreground">
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16">
               <div>
@@ -193,7 +193,7 @@ export default async function LandingPage() {
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {reviews.map((review: any) => (
-                  <div key={review.id} className="flex flex-col bg-white p-6 rounded-lg border border-accent shadow-sm">
+                  <div key={review.id} className="flex flex-col bg-accent p-6 rounded-lg border border-accent shadow-sm">
                     <div className="flex items-center mb-4">
                       <div className="flex text-yellow-500 text-sm">
                         {[...Array(5)].map((_, i) => (
