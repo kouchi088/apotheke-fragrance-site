@@ -17,7 +17,7 @@ export default async function LandingPage() {
   const { data: products, error } = await supabase
     .from('products')
     .select('id, name, price, images')
-    .limit(6);
+    .limit(3);
 
   if (error) {
     console.error('Error fetching products for LP:', error);
@@ -167,8 +167,8 @@ export default async function LandingPage() {
                     時が経つにつれて深まる手触りと、空間に馴染んでいく静かな佇まいをお楽しみください。
                   </p>
                   <div className="pt-4">
-                    <Link href="/concept" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 hover:border-background transition-colors text-accent">
-                      Read More about Our Concept
+                    <Link href="/lp/concrete-guide" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 hover:border-background transition-colors text-accent">
+                      コンクリート雑貨 完全ガイド
                     </Link>
                   </div>
                 </div>
