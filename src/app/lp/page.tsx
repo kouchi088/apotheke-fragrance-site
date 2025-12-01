@@ -17,7 +17,7 @@ export default async function LandingPage() {
   const { data: products, error } = await supabase
     .from('products')
     .select('id, name, price, images')
-    .limit(3);
+    .limit(6);
 
   if (error) {
     console.error('Error fetching products for LP:', error);
