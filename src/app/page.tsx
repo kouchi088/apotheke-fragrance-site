@@ -177,20 +177,20 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* --- Voices Section (User Reviews) --- */}
-        {reviews && reviews.length > 0 && (
-          <section id="voices" className="py-24 bg-background text-foreground">
-            <div className="container mx-auto px-6">
-              <div className="flex flex-col md:flex-row justify-between items-end mb-16">
-                <div>
-                  <h2 className="text-3xl font-serif text-foreground mb-2">Voices</h2>
-                  <p className="text-secondary text-sm">Stories from our community.</p>
-                </div>
-                <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 hover:border-primary transition-colors mt-8 md:mt-0 text-primary">
-                  View Gallery
-                </Link>
+        {/* --- Life with MEGURID Section (UGC) --- */}
+        <section id="life-with-megurid" className="py-24 bg-background text-foreground">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+              <div>
+                <h2 className="text-3xl font-serif text-foreground mb-2">MEGURIDのある暮らし</h2>
+                <p className="text-secondary text-sm">Life with MEGURID</p>
               </div>
-              
+              <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 hover:border-primary transition-colors mt-8 md:mt-0 text-primary">
+                View Gallery
+              </Link>
+            </div>
+            
+            {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {reviews.map((review: any) => (
                   <div key={review.id} className="flex flex-col bg-white p-6 rounded-lg border border-accent shadow-sm">
@@ -232,15 +232,23 @@ export default async function LandingPage() {
                   </div>
                 ))}
               </div>
-
-              <div className="mt-16 text-center md:hidden">
-                <Link href="/gallery" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 text-primary">
-                  View Gallery
+            ) : (
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 flex flex-col items-center justify-center bg-white text-center">
+                <p className="text-gray-400 mb-4">User Posts & Reviews Placeholder</p>
+                <p className="text-sm text-gray-400">あなたのMEGURIDのある暮らしをシェアしてください。</p>
+                <Link href="/submit-review" className="mt-6 text-xs uppercase tracking-[0.2em] border-b border-gray-400 pb-1 hover:text-primary hover:border-primary transition-colors text-gray-500">
+                  Post a Review
                 </Link>
               </div>
+            )}
+
+            <div className="mt-16 text-center md:hidden">
+              <Link href="/gallery" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 text-primary">
+                View Gallery
+              </Link>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
       </main>
     </div>
   );
