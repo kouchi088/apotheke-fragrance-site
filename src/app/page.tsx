@@ -45,7 +45,7 @@ export default async function LandingPage() {
   return (
     <div className="antialiased bg-background selection:bg-accent selection:text-foreground">
       <main>
-        {/* --- Hero Section (adapted from sohso/components/Hero.tsx) --- */}
+        {/* --- Hero Section (Main Visual) --- */}
         <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-background">
           <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-background z-10 relative">
             <div>
@@ -82,50 +82,14 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* --- Concept Section (adapted from sohso/components/Concept.tsx) --- */}
-        <section id="concept" className="py-24 md:py-32 bg-primary text-background">
-          <div className="container mx-auto px-6">
-            <div className="flex flex-col md:flex-row items-center gap-16">
-              <div className="w-full md:w-1/2">
-                <div className="aspect-[4/5] relative overflow-hidden bg-gray-700">
-                  <Image
-                    src="https://picsum.photos/800/1000?blur=2&grayscale"
-                    alt="Process of making concrete"
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    className="hover:scale-105 transition-transform duration-700 opacity-80"
-                  />
-                </div>
-              </div>
-              <div className="w-full md:w-1/2 md:pl-12">
-                <h2 className="text-3xl md:text-4xl font-serif mb-8 leading-snug">
-                  偶然が生み出す、<br />唯一無二の表情。
-                </h2>
-                <div className="space-y-6 text-accent font-sans leading-loose">
-                  <p>
-                    コンクリートは、水、砂、セメントが混ざり合い、化学反応を起こして固まる素材です。その過程で生まれる気泡（ボイド）や色むらは、決して欠陥ではありません。
-                  </p>
-                  <p>
-                    それは、素材が呼吸をした証であり、二つとして同じものが存在しないことの証明です。私たちは機械的な均一さよりも、手仕事による偶然性を大切にしています。
-                  </p>
-                  <p>
-                    時が経つにつれて深まる手触りと、空間に馴染んでいく静かな佇まいをお楽しみください。
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* --- Featured Products Section (adapted from sohso/components/FeaturedProducts.tsx) --- */}
+        {/* --- New Arrivals Section (formerly Collection) --- */}
         {products && products.length > 0 && (
-          <section id="products" className="py-24 bg-background">
-            {/* ... existing product section content ... */}
+          <section id="new-arrivals" className="py-24 bg-background">
             <div className="container mx-auto px-6">
               <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
-                  <h2 className="text-3xl font-serif text-foreground mb-2">Collection</h2>
-                  <p className="text-secondary text-sm">Latest arrivals from the studio.</p>
+                  <h2 className="text-3xl font-serif text-foreground mb-2">New Arrivals</h2>
+                  <p className="text-secondary text-sm">Latest creations from our studio.</p>
                 </div>
                 <Link href="/online-store" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 hover:border-primary transition-colors mt-8 md:mt-0">
                   View All Items
@@ -159,49 +123,103 @@ export default async function LandingPage() {
           </section>
         )}
 
+        {/* --- Featured / Best Sellers Section (Placeholder) --- */}
+        <section id="featured" className="py-24 bg-gray-50">
+          <div className="container mx-auto px-6 text-center">
+            <h2 className="text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
+            <p className="text-secondary text-sm mb-12">Curated selection of our signature items.</p>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 flex items-center justify-center bg-white">
+              <p className="text-gray-400">Featured Products / Best Sellers Layout Placeholder</p>
+            </div>
+          </div>
+        </section>
+
+        {/* --- Journal Section (formerly Concept) --- */}
+        <section id="journal" className="py-24 md:py-32 bg-primary text-background">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-col md:flex-row items-center gap-16">
+              <div className="w-full md:w-1/2">
+                <div className="aspect-[4/5] relative overflow-hidden bg-gray-700">
+                  <Image
+                    src="https://picsum.photos/800/1000?blur=2&grayscale"
+                    alt="Process of making concrete"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="hover:scale-105 transition-transform duration-700 opacity-80"
+                  />
+                </div>
+              </div>
+              <div className="w-full md:w-1/2 md:pl-12">
+                <h2 className="text-3xl md:text-4xl font-serif mb-8 leading-snug">
+                  Journal
+                </h2>
+                <p className="text-accent font-serif italic mb-6 text-lg">
+                  The Philosophy of Imperfection
+                </p>
+                <div className="space-y-6 text-accent font-sans leading-loose">
+                  <p>
+                    コンクリートは、水、砂、セメントが混ざり合い、化学反応を起こして固まる素材です。その過程で生まれる気泡（ボイド）や色むらは、決して欠陥ではありません。
+                  </p>
+                  <p>
+                    それは、素材が呼吸をした証であり、二つとして同じものが存在しないことの証明です。私たちは機械的な均一さよりも、手仕事による偶然性を大切にしています。
+                  </p>
+                  <p>
+                    時が経つにつれて深まる手触りと、空間に馴染んでいく静かな佇まいをお楽しみください。
+                  </p>
+                  <div className="pt-4">
+                    <Link href="/concept" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 hover:border-background transition-colors text-accent">
+                      Read More about Our Concept
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* --- Voices Section (User Reviews) --- */}
         {reviews && reviews.length > 0 && (
-          <section id="voices" className="py-24 bg-primary text-background">
+          <section id="voices" className="py-24 bg-background text-foreground">
             <div className="container mx-auto px-6">
               <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
-                  <h2 className="text-3xl font-serif text-background mb-2">Voices</h2>
-                  <p className="text-accent text-sm">Stories from our community.</p>
+                  <h2 className="text-3xl font-serif text-foreground mb-2">Voices</h2>
+                  <p className="text-secondary text-sm">Stories from our community.</p>
                 </div>
-                <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 hover:border-background transition-colors mt-8 md:mt-0 text-accent">
+                <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 hover:border-primary transition-colors mt-8 md:mt-0 text-primary">
                   View Gallery
                 </Link>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {reviews.map((review: any) => (
-                  <div key={review.id} className="flex flex-col bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                  <div key={review.id} className="flex flex-col bg-white p-6 rounded-lg border border-accent shadow-sm">
                     <div className="flex items-center mb-4">
                       <div className="flex text-yellow-500 text-sm">
                         {[...Array(5)].map((_, i) => (
                           <span key={i}>{i < (review.rating || 5) ? '★' : '☆'}</span>
                         ))}
                       </div>
-                      <span className="ml-3 text-xs text-gray-400 uppercase tracking-wider">
+                      <span className="ml-3 text-xs text-secondary uppercase tracking-wider">
                         {review.user_name || 'Guest'}
                       </span>
                     </div>
                     
-                    <p className="text-sm text-gray-300 leading-relaxed mb-6 flex-grow">
+                    <p className="text-sm text-primary leading-relaxed mb-6 flex-grow">
                       "{review.review_text}"
                     </p>
 
                     {/* Product Name Reference */}
                     {review.products && (
                       <div className="mb-4">
-                        <p className="text-xs text-gray-500 uppercase tracking-widest">Item</p>
-                        <p className="text-xs text-gray-300">{review.products.name}</p>
+                        <p className="text-xs text-secondary uppercase tracking-widest">Item</p>
+                        <p className="text-xs text-primary font-medium">{review.products.name}</p>
                       </div>
                     )}
 
                     {/* Review Image */}
                     {review.content_images && review.content_images.length > 0 && (
-                      <div className="relative w-full h-48 mt-auto overflow-hidden rounded-md bg-gray-700">
+                      <div className="relative w-full h-48 mt-auto overflow-hidden rounded-md bg-accent">
                          <Image
                             src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ugc-images/${review.content_images[0].image_path}`}
                             alt="User review image"
@@ -216,7 +234,7 @@ export default async function LandingPage() {
               </div>
 
               <div className="mt-16 text-center md:hidden">
-                <Link href="/gallery" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 text-accent">
+                <Link href="/gallery" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-accent pb-1 text-primary">
                   View Gallery
                 </Link>
               </div>
