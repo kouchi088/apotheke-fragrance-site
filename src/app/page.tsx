@@ -43,27 +43,27 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="antialiased bg-gray-800 selection:bg-gray-300 selection:text-gray-900">
+    <div className="antialiased bg-background selection:bg-accent selection:text-foreground">
       <main>
         {/* --- Hero Section (Main Visual) --- */}
-        <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-gray-800">
-          <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-gray-800 z-10 relative">
+        <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-background">
+          <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-background z-10 relative">
             <div>
-              <span className="text-xs font-bold tracking-[0.3em] text-gray-400 uppercase mb-4 block">
+              <span className="text-xs font-bold tracking-[0.3em] text-secondary uppercase mb-4 block">
                 Handcrafted Concrete
               </span>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white leading-tight mb-8">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-foreground leading-tight mb-8">
                 静寂を、<br />
                 形にする。
               </h1>
-              <p className="text-gray-200 mb-10 leading-relaxed font-sans max-w-md">
+              <p className="text-primary mb-10 leading-relaxed font-sans max-w-md">
                 都市の素材であるコンクリートに、手仕事の温かみを。
                 不揃いな気泡、独特の質感、経年変化。
                 SOHSOは、日常に静かな重みをもたらすインテリアオブジェを提案します。
               </p>
               <Link
                 href="/online-store"
-                className="group inline-flex items-center space-x-3 text-white border-b border-white pb-1 hover:text-gray-400 hover:border-gray-400 transition-all"
+                className="group inline-flex items-center space-x-3 text-foreground border-b border-foreground pb-1 hover:text-primary hover:border-primary transition-all"
               >
                 <span className="text-sm tracking-widest uppercase">View Collection</span>
                 <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -84,21 +84,21 @@ export default async function LandingPage() {
 
         {/* --- New Arrivals Section (formerly Collection) --- */}
         {products && products.length > 0 && (
-          <section id="new-arrivals" className="py-24 bg-gray-800">
+          <section id="new-arrivals" className="py-24 bg-background">
             <div className="container mx-auto px-6">
               <div className="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
-                  <h2 className="text-3xl font-serif text-white mb-2">New Arrivals</h2>
-                  <p className="text-gray-400 text-sm">Latest creations from our studio.</p>
+                  <h2 className="text-3xl font-serif text-foreground mb-2">New Arrivals</h2>
+                  <p className="text-secondary text-sm">Latest creations from our studio.</p>
                 </div>
-                <Link href="/online-store" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-gray-400 pb-1 hover:border-white transition-colors mt-8 md:mt-0">
+                <Link href="/online-store" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors mt-8 md:mt-0">
                   View All Items
                 </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                 {products.map((product) => (
                   <Link href={`/products/${product.id}`} key={product.id} className="block group">
-                    <div className="relative w-full aspect-square overflow-hidden bg-gray-700 rounded-lg shadow-md">
+                    <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
                       {product.images && product.images.length > 0 && (
                         <Image
                           src={product.images[0]}
@@ -109,13 +109,13 @@ export default async function LandingPage() {
                         />
                       )}
                     </div>
-                    <h3 className="mt-4 text-lg font-semibold text-white">{product.name}</h3>
-                    <p className="mt-1 text-sm text-gray-300">¥{product.price.toLocaleString()}</p>
+                    <h3 className="mt-4 text-lg font-semibold text-foreground">{product.name}</h3>
+                    <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
                   </Link>
                 ))}
               </div>
               <div className="mt-16 text-center md:hidden">
-                <Link href="/online-store" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-400 pb-1">
+                <Link href="/online-store" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1">
                   View All Items
                 </Link>
               </div>
@@ -124,22 +124,22 @@ export default async function LandingPage() {
         )}
 
         {/* --- Featured / Best Sellers Section (Placeholder) --- */}
-        <section id="featured" className="py-24 bg-gray-800">
+        <section id="featured" className="py-24 bg-background">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-serif text-white mb-4">Featured Collections</h2>
-            <p className="text-gray-400 text-sm mb-12">Curated selection of our signature items.</p>
-            <div className="border-2 border-dashed border-gray-600 rounded-lg p-12 flex items-center justify-center bg-gray-700">
-              <p className="text-gray-400">Featured Products / Best Sellers Layout Placeholder</p>
+            <h2 className="text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
+            <p className="text-secondary text-sm mb-12">Curated selection of our signature items.</p>
+            <div className="border-2 border-dashed border-primary rounded-lg p-12 flex items-center justify-center bg-accent">
+              <p className="text-primary">Featured Products / Best Sellers Layout Placeholder</p>
             </div>
           </div>
         </section>
 
         {/* --- Journal Section (formerly Concept) --- */}
-        <section id="journal" className="py-24 md:py-32 bg-gray-800 text-white">
+        <section id="journal" className="py-24 md:py-32 bg-background text-foreground">
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center gap-16">
               <div className="w-full md:w-1/2">
-                <div className="aspect-[4/5] relative overflow-hidden bg-gray-700">
+                <div className="aspect-[4/5] relative overflow-hidden bg-accent">
                   <Image
                     src="https://picsum.photos/800/1000?blur=2&grayscale"
                     alt="Process of making concrete"
@@ -150,13 +150,13 @@ export default async function LandingPage() {
                 </div>
               </div>
               <div className="w-full md:w-1/2 md:pl-12">
-                <h2 className="text-3xl md:text-4xl font-serif mb-8 leading-snug">
+                <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-8 leading-snug">
                   Journal
                 </h2>
-                <p className="text-gray-300 font-serif italic mb-6 text-lg">
+                <p className="text-primary font-serif italic mb-6 text-lg">
                   The Philosophy of Imperfection
                 </p>
-                <div className="space-y-6 text-gray-300 font-sans leading-loose">
+                <div className="space-y-6 text-primary font-sans leading-loose">
                   <p>
                     コンクリートは、水、砂、セメントが混ざり合い、化学反応を起こして固まる素材です。その過程で生まれる気泡（ボイド）や色むらは、決して欠陥ではありません。
                   </p>
@@ -167,7 +167,7 @@ export default async function LandingPage() {
                     時が経つにつれて深まる手触りと、空間に馴染んでいく静かな佇まいをお楽しみください。
                   </p>
                   <div className="pt-4">
-                    <Link href="/lp/concrete-guide" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 hover:border-white transition-colors text-gray-400">
+                    <Link href="/lp/concrete-guide" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-secondary">
                       コンクリート雑貨 完全ガイド
                     </Link>
                   </div>
@@ -178,14 +178,14 @@ export default async function LandingPage() {
         </section>
 
         {/* --- Life with MEGURID Section (UGC) --- */}
-        <section id="life-with-megurid" className="py-24 bg-gray-800 text-white">
+        <section id="life-with-megurid" className="py-24 bg-background text-foreground">
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16">
               <div>
-                <h2 className="text-3xl font-serif text-white mb-2">MEGURIDのある暮らし</h2>
-                <p className="text-gray-400 text-sm">Life with MEGURID</p>
+                <h2 className="text-3xl font-serif text-foreground mb-2">MEGURIDのある暮らし</h2>
+                <p className="text-secondary text-sm">Life with MEGURID</p>
               </div>
-              <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-gray-400 pb-1 hover:border-white transition-colors mt-8 md:mt-0 text-gray-300">
+              <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors mt-8 md:mt-0 text-secondary">
                 View Gallery
               </Link>
             </div>
@@ -193,33 +193,33 @@ export default async function LandingPage() {
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {reviews.map((review: any) => (
-                  <div key={review.id} className="flex flex-col bg-gray-700 p-6 rounded-lg border border-gray-600 shadow-sm">
+                  <div key={review.id} className="flex flex-col bg-white p-6 rounded-lg border border-accent shadow-sm">
                     <div className="flex items-center mb-4">
-                      <div className="flex text-yellow-400 text-sm">
+                      <div className="flex text-yellow-500 text-sm">
                         {[...Array(5)].map((_, i) => (
                           <span key={i}>{i < (review.rating || 5) ? '★' : '☆'}</span>
                         ))}
                       </div>
-                      <span className="ml-3 text-xs text-gray-400 uppercase tracking-wider">
+                      <span className="ml-3 text-xs text-secondary uppercase tracking-wider">
                         {review.user_name || 'Guest'}
                       </span>
                     </div>
                     
-                    <p className="text-gray-200 text-sm leading-relaxed mb-6 flex-grow">
+                    <p className="text-primary text-sm leading-relaxed mb-6 flex-grow">
                       "{review.review_text}"
                     </p>
 
                     {/* Product Name Reference */}
                     {review.products && (
                       <div className="mb-4">
-                        <p className="text-xs text-gray-400 uppercase tracking-widest">Item</p>
-                        <p className="text-xs text-gray-200 font-medium">{review.products.name}</p>
+                        <p className="text-xs text-secondary uppercase tracking-widest">Item</p>
+                        <p className="text-xs text-primary font-medium">{review.products.name}</p>
                       </div>
                     )}
 
                     {/* Review Image */}
                     {review.content_images && review.content_images.length > 0 && (
-                      <div className="relative w-full h-48 mt-auto overflow-hidden rounded-md bg-gray-600">
+                      <div className="relative w-full h-48 mt-auto overflow-hidden rounded-md bg-accent">
                          <Image
                             src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ugc-images/${review.content_images[0].image_path}`}
                             alt="User review image"
@@ -233,17 +233,17 @@ export default async function LandingPage() {
                 ))}
               </div>
             ) : (
-              <div className="border-2 border-dashed border-gray-600 rounded-lg p-12 flex flex-col items-center justify-center bg-gray-700 text-center">
-                <p className="text-gray-400 mb-4">User Posts & Reviews Placeholder</p>
-                <p className="text-sm text-gray-400">あなたのMEGURIDのある暮らしをシェアしてください。</p>
-                <Link href="/submit-review" className="mt-6 text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 hover:border-white transition-colors text-gray-400">
+              <div className="border-2 border-dashed border-primary rounded-lg p-12 flex flex-col items-center justify-center bg-accent text-center">
+                <p className="text-primary mb-4">User Posts & Reviews Placeholder</p>
+                <p className="text-sm text-primary">あなたのMEGURIDのある暮らしをシェアしてください。</p>
+                <Link href="/submit-review" className="mt-6 text-xs uppercase tracking-[0.2em] border-b border-secondary pb-1 hover:border-foreground transition-colors text-primary">
                   Post a Review
                 </Link>
               </div>
             )}
 
             <div className="mt-16 text-center md:hidden">
-              <Link href="/gallery" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-gray-500 pb-1 text-gray-300">
+              <Link href="/gallery" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 text-secondary">
                 View Gallery
               </Link>
             </div>
