@@ -19,7 +19,7 @@ export default async function LandingPage() {
 
   const { data: products, error } = await supabase
     .from('products')
-    .select('id, name, price, images')
+    .select('id, name, price, images, description, stock_quantity')
     .limit(3);
 
   if (error) {
@@ -55,15 +55,16 @@ function ClientLandingPage({ products, reviews }: { products: any[]; reviews: an
   const { addToCart } = useCart();
 
   const handleAddToCart = (product: any) => {
-    // Assuming product has id, name, price, images (first image)
-    const item = {
+    const productToAdd = {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg', // Use a placeholder if no image
-      quantity: 1, // Default to 1 for adding from LP
+      image: product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg',
+      images: product.images || [],
+      description: product.description || '',
+      stock_quantity: product.stock_quantity || 0,
     };
-    addToCart(item);
+    addToCart(productToAdd, 1);
   };
 
   return (
