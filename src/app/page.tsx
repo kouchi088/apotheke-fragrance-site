@@ -1,7 +1,10 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabaseClient';
+import { useCart } from '@/context/CartContext'; // Import useCart
 
 // --- Helper Components (adapted from sohso/components/Icons.tsx) ---
 const ArrowRight = ({ className }: { className?: string }) => (
@@ -41,6 +44,27 @@ export default async function LandingPage() {
   if (reviewsError) {
     console.error('Error fetching reviews for LP:', reviewsError);
   }
+
+  return (
+    <ClientLandingPage products={products || []} reviews={reviews || []} />
+  );
+}
+
+// Client Component Wrapper
+function ClientLandingPage({ products, reviews }: { products: any[]; reviews: any[] }) {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (product: any) => {
+    // Assuming product has id, name, price, images (first image)
+    const item = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg', // Use a placeholder if no image
+      quantity: 1, // Default to 1 for adding from LP
+    };
+    addToCart(item);
+  };
 
   return (
     <div className="antialiased bg-white selection:bg-accent selection:text-foreground">
@@ -97,21 +121,29 @@ export default async function LandingPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                 {products.map((product) => (
-                  <Link href={`/products/${product.id}`} key={product.id} className="block group">
-                    <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
-                      {product.images && product.images.length > 0 && (
-                        <Image
-                          src={product.images[0]}
-                          alt={product.name}
-                          fill
-                          style={{ objectFit: 'cover' }}
-                          className="transition-transform duration-300 group-hover:scale-105"
-                        />
-                      )}
-                    </div>
-                    <h3 className="mt-4 text-lg font-semibold text-foreground">{product.name}</h3>
+                  <div key={product.id} className="block group"> {/* Changed Link to div for cart button */}
+                    <Link href={`/products/${product.id}`} className="block"> {/* Image and title remain linked */}
+                      <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
+                        {product.images && product.images.length > 0 && (
+                          <Image
+                            src={product.images[0]}
+                            alt={product.name}
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            className="transition-transform duration-300 group-hover:scale-105"
+                          />
+                        )}
+                      </div>
+                      <h3 className="mt-4 text-lg font-semibold text-foreground">{product.name}</h3>
+                    </Link> {/* End of Link for image/title */}
                     <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
-                  </Link>
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="mt-4 px-4 py-2 bg-foreground text-white text-xs uppercase tracking-widest rounded-md hover:bg-primary transition-colors w-full"
+                    >
+                      カートに追加
+                    </button>
+                  </div>
                 ))}
               </div>
               <div className="mt-16 text-center md:hidden">
