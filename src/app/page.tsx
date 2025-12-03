@@ -9,6 +9,7 @@ export default async function LandingPage() {
   const { data: products, error } = await supabase
     .from('products')
     .select('id, name, price, images, description, stock_quantity')
+    .order('created_at', { ascending: false })
     .limit(3);
 
   if (error) {
