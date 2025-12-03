@@ -102,7 +102,7 @@ export default function LandingPageClient({ products, reviews }: { products: any
                     <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className="mt-4 px-4 py-2 bg-foreground text-white text-xs uppercase tracking-widest rounded-md hover:bg-primary transition-colors w-full"
+                      className="mt-4 px-4 py-2 border border-primary text-primary text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
                     >
                       カートに追加
                     </button>
