@@ -13,7 +13,7 @@ const ArrowRight = ({ className }: { className?: string }) => (
 );
 
 // --- Client Component ---
-export default function LandingPageClient({ products, reviews }: { products: any[]; reviews: any[] }) {
+export default function LandingPageClient({ products, reviews, featuredProducts }: { products: any[]; reviews: any[]; featuredProducts: any[] }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = (product: any) => {
@@ -118,16 +118,43 @@ export default function LandingPageClient({ products, reviews }: { products: any
           </section>
         )}
 
-        {/* --- Featured / Best Sellers Section (Placeholder) --- */}
-        <section id="featured" className="py-24 bg-white">
-          <div className="container mx-auto px-6 text-center">
-            <h2 className="text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
-            <p className="text-secondary text-sm mb-12">Curated selection of our signature items.</p>
-            <div className="border-2 border-dashed border-primary rounded-lg p-12 flex items-center justify-center bg-accent">
-              <p className="text-primary">Featured Products / Best Sellers Layout Placeholder</p>
+        {/* --- Featured / Best Sellers Section --- */}
+        {featuredProducts && featuredProducts.length > 0 && (
+          <section id="featured" className="py-24 bg-white">
+            <div className="container mx-auto px-6 text-center">
+              <h2 className="text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
+              <p className="text-secondary text-sm mb-12">Curated selection of our signature items.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                {featuredProducts.map((product: any) => (
+                  <div key={product.id} className="group">
+                    <Link href={`/products/${product.id}`} className="block">
+                      <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
+                        {product.images && product.images.length > 0 && (
+                          <Image
+                            src={product.images[0]}
+                            alt={product.name}
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            className="transition-transform duration-300 group-hover:scale-105"
+                          />
+                        )}
+                      </div>
+                      <h3 className="mt-4 text-lg font-semibold text-foreground">{product.name}</h3>
+                    </Link>
+                    <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="mt-4 px-4 py-2 border border-primary text-primary text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
+                    >
+                      カートに追加
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* --- Journal Section (formerly Concept) --- */}
         <section id="journal" className="py-24 md:py-32 bg-white text-foreground">
