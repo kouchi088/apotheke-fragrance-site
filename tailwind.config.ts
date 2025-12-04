@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         'background': '#F5F1EC', // User-specified color
-        'foreground': '#111827', // Dark gray for text
+        'foreground': '#4B5563', // Dark gray for text, now a medium-dark gray
         'primary': '#374151',    // Medium gray for primary elements
         'secondary': '#9CA3AF',  // Lighter gray for secondary text
         'accent': '#F3F4F6',     // Very light gray for accents, borders
