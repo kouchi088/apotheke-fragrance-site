@@ -15,6 +15,7 @@ const config: Config = {
         'secondary': '#9CA3AF',  // Lighter gray for secondary text
         'accent': '#F3F4F6',     // Very light gray for accents, borders
         'gray-button': '#808080', // Custom gray for Add to Cart button
+        'button-fill': '#DADBDD', // Custom gray for filled buttons (10% darker than accent)
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans JP', 'sans-serif'],

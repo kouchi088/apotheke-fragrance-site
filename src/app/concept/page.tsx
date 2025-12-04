@@ -10,7 +10,7 @@ const Button = ({ variant = 'primary', className = '', children, ...props }: any
   const baseStyle = "px-8 py-4 text-sm tracking-widest transition-all duration-300 ease-out font-medium inline-block text-center";
   
   const variants: any = {
-    primary: "bg-accent text-foreground hover:bg-gray-200 border border-transparent", // Modified here
+    primary: "bg-button-fill text-foreground hover:bg-primary border border-transparent", // Modified here
     outline: "bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-white",
   };
 
