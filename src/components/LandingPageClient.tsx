@@ -102,7 +102,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                     <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className="mt-4 px-4 py-2 border border-primary text-primary text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
+                      className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
                     >
                       カートに追加
                     </button>
@@ -116,6 +116,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
               </div>
             </div>
           </section>
+        )}
 
         {/* --- Featured / Best Sellers Section --- */}
         {featuredProducts && featuredProducts.length > 0 && (
