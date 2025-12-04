@@ -189,7 +189,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                     時が経つにつれて深まる手触りと、空間に馴染んでいく静かな佇まいをお楽しみください。
                   </p>
                   <div className="pt-4">
-                    <Link href="/" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-primary">
+                    <Link href="/lp/concrete-guide" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-primary">
                       Read More about Our Concept
                     </Link>
                   </div>
