@@ -1,245 +1,205 @@
-"use client";
-
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import FadeIn from '@/components/FadeIn';
 
-// --- Button Component ---
-const Button = ({ variant = 'primary', className = '', children, ...props }: any) => {
-  const baseStyle = "px-8 py-4 text-sm tracking-widest transition-all duration-300 ease-out font-medium inline-block text-center";
-  
-  const variants: any = {
-    primary: "bg-foreground text-white hover:bg-primary border border-transparent",
-    outline: "bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-white",
-  };
-
+export default function ConcreteGuideLP() {
   return (
-    <button className={`${baseStyle} ${variants[variant]} ${className}`} {...props}>
-      {children}
-    </button>
-  );
-};
-
-export default function ConcreteGuidePage() {
-  return (
-    <div className="min-h-screen bg-white text-foreground font-sans selection:bg-gray-200 selection:text-foreground">
+    <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">ハブ①｜コンクリート雑貨 完全ガイド</h1>
       
-      {/* --- Hero Section --- */}
-      <section className="relative min-h-screen w-full flex items-center pt-20">
-        <div className="absolute inset-0 z-0">
-          {/* Abstract concrete texture background */}
-          <div className="w-full h-full bg-gray-100 relative overflow-hidden">
-               <div className="absolute right-0 top-0 w-3/4 h-full bg-cover bg-center opacity-80 grayscale mix-blend-multiply">
-                  <Image 
-                    src="https://picsum.photos/1600/1200?grayscale&blur=1" 
-                    alt="Background texture" 
-                    fill 
-                    style={{ objectFit: 'cover' }}
-                    className="grayscale"
-                  />
-               </div>
-               <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
-          </div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="order-2 md:order-1">
-            <FadeIn>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-8 text-foreground">
-                ただ、そこに<br />
-                い続けるためのもの。
-              </h2>
-            </FadeIn>
-            
-            <FadeIn delay={200}>
-              <div className="space-y-6 text-sm md:text-base leading-loose text-gray-600 font-light tracking-wide max-w-lg">
-                <p>
-                  MEGURIDは、コンクリートという素朴な素材で、日常の風景に「静けさ」と「落ち着き」を添えるプロダクトを作っています。
-                </p>
-                <p>
-                  強く主張するのではなく、ただそこにいる。<br />
-                  ふと目が止まった時、コンクリートの重さが、強さが、部屋を整える存在であること。
-                </p>
-                <p>
-                  そのささやかな役割を、一つ一つの形に任せています。
-                </p>
-              </div>
-            </FadeIn>
-
-            <FadeIn delay={400} className="mt-12">
-              <Link href="/online-store">
-                <Button variant="primary">ラインナップを見る</Button>
-              </Link>
-            </FadeIn>
-          </div>
-          
-          <div className="order-1 md:order-2 flex justify-center md:justify-end">
-              <FadeIn direction='left' delay={300}>
-                  <div className="relative w-72 h-96 md:w-96 md:h-[32rem] bg-gray-200 shadow-2xl">
-                      <Image 
-                          src="https://picsum.photos/800/1000?random=1" 
-                          alt="Concrete Vase" 
-                          fill
-                          style={{ objectFit: 'cover' }}
-                          className="grayscale brightness-110"
-                      />
-                  </div>
-              </FadeIn>
-          </div>
-        </div>
+      <section className="py-10 md:py-16">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 1. コンクリートという素材を正しく理解する</h2>
+        <p className="mb-4 text-gray-600">主な理由は以下の3点です。</p>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">
+            <span className="font-semibold">重さ（比重）</span>：安定性があり、鍵・アクセサリーなどの小物を置いてもズレない。
+          </li>
+          <li className="mb-2">
+            <span className="font-semibold">表面テクスチャ</span>：マットで静かな質感。光を反射しにくく、空間に馴染む。
+          </li>
+          <li className="mb-2">
+            <span className="font-semibold">経年変化</span>：使い込むほどに“濃淡”が生き、表情が豊かになる。
+          </li>
+        </ul>
+        <p className="mb-4 text-gray-600">
+          ただし、メリットだけでなく以下のような「雑貨として扱う際の特性」も存在します。
+        </p>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">吸水性がある（飲み物の輪じみ・水跡が残りやすい）</li>
+          <li className="mb-2">白華（エフロレッセンス） が起こり得る</li>
+          <li className="mb-2">微細な気孔・個体差 が本質的にある</li>
+          <li className="mb-2">酸性洗剤に弱い（変色・白化のリスク）</li>
+        </ul>
         
-        <div className="absolute bottom-8 left-6 md:left-1/2 md:-translate-x-1/2 flex flex-col items-center animate-bounce opacity-50">
-          <span className="text-[10px] tracking-widest uppercase mb-2">Scroll</span>
-          <div className="w-[1px] h-12 bg-foreground"></div>
+      </section>
+      
+      <section className="py-10 md:py-16">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 2. コンクリート雑貨の“魅力”が生まれる理由</h2>
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 2-1. ミニマルで“ノイズが少ない”素材</h3>
+        <p className="mb-4 text-gray-600">
+          コンクリートの表面は反射を抑えた微細な凹凸で構成され、光沢を主張しません。
+          金属やガラスと比べて、空間の中で主張しすぎず、背景と自然に融けるのが特徴です。
+        </p>
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 2-2. 重さが生み出す「安心感」</h3>
+        <p className="mb-4 text-gray-600">
+          建築由来の素材のため比重が大きく、雑貨になっても重さが残ります。
+          この重量が “安定” を生み、トレイやコースターとして機能性を高めます。
+        </p>
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 2-3. 個体差・色むらが“一点物らしさ”になる</h3>
+        <p className="mb-4 text-gray-600">
+          完全均一を求める素材ではないからこそ、微細なテクスチャの違い・濃淡の変化 が、使用者だけの表情となります。
+        </p>
+      </section>
+      
+      <section className="py-10 md:py-16">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 3. コンクリート雑貨の弱点と、その“設計による解消”</h2>
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 3-1. 吸水性と輪染み</h3>
+        <p className="mb-4 text-gray-600">
+          コンクリートは本質的に吸水性があります。そのため、
+        </p>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">水滴</li>
+          <li className="mb-2">冷たいグラス</li>
+          <li className="mb-2">手汗の跡</li>
+        </ul>
+        <p className="mb-4 text-gray-600">
+          などが残る場合があります。
+        </p>
+        <p className="mb-2 font-semibold text-gray-700">対策：撥水仕上げ / シーラー処理</p>
+        <p className="mb-4 text-gray-600">
+          表面に浸透・または薄い皮膜を作ることで、吸水を大幅に軽減できます。
+        </p>
+        <p className="mb-4 text-gray-600">
+          あなたのプロダクトでは、
+        </p>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">半艶仕上げ（軽い皮膜で輪じみを抑える）</li>
+          <li className="mb-2">マット仕上げ（浸透系で自然な質感を残す）</li>
+        </ul>
+        <p className="mb-4 text-gray-600">
+          など仕上げ違いで対策が取れます。
+        </p>
+
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 3-2. 白華（エフロレッセンス）</h3>
+        <p className="mb-4 text-gray-600">
+          白華とは、コンクリート内部の可溶成分が表面に移動し、乾燥時に白い析出物になる現象です。
+          <span className="font-bold">建築でも数十年以上語られる“非常に一般的な現象”</span>で、強度に影響はありません。
+          雑貨では、美観上の問題として認識されます。
+        </p>
+        <p className="mb-2 font-semibold text-gray-700">対策：</p>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">乾湿差を減らす（長時間の水濡れを避ける）</li>
+          <li className="mb-2">撥水処理で表面の水浸透を抑える</li>
+          <li className="mb-2">出た場合は乾拭き、または非常に薄い再仕上げで軽減</li>
+        </ul>
+
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 3-3. 酸性洗剤・研磨による変色</h3>
+        <p className="mb-4 text-gray-600">
+          酸性の強い洗剤（クエン酸・酢など）は、内部のカルシウム成分と反応し、白化・エッジのぼけ を発生させる可能性があります。
+        </p>
+        <p className="text-gray-600">
+          → 日常管理では「中性洗剤＋柔らかい布」を推奨。
+        </p>
+      </section>
+      
+      <section className="py-10 md:py-16">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 4. コンクリート雑貨の選び方（サイズ・仕上げ・使用場所）</h2>
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 4-1. サイズの選び方</h3>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">玄関：鍵・印鑑・カード類 → 小〜中サイズの浅いトレイ</li>
+          <li className="mb-2">デスク：文具・アクセサリー → 中〜長方形タイプ</li>
+          <li className="mb-2">ベッドサイド：指輪・時計 → 小型の丸形・角形</li>
+          <li className="mb-2">リビング：リモコン、小物 → 中サイズで安定感重視</li>
+        </ul>
+
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 4-2. 仕上げの選び方</h3>
+        <div className="overflow-x-auto mb-4">
+          <table className="w-full border-collapse text-left rounded-lg overflow-hidden shadow-sm">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-3 px-4 border-b border-gray-200 text-gray-700 font-semibold">仕上げ</th>
+                <th className="py-3 px-4 border-b border-gray-200 text-gray-700 font-semibold">特徴</th>
+                <th className="py-3 px-4 border-b border-gray-200 text-gray-700 font-semibold">向いている人</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">マット</td>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">素材の質感が最も自然／色むらが出やすい</td>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">無垢な表情を楽しみたい人</td>
+              </tr>
+              <tr>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">半艶</td>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">水跡に強い／輪じみ軽減</td>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">実用性と美観の両立を求める人</td>
+              </tr>
+              <tr>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">フルシーラー</td>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">汚れに最も強い／質感がやや変わる</td>
+                <td className="py-3 px-4 border-b border-gray-200 text-gray-600">実用性優先の人</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
+      
+      <section className="py-10 md:py-16">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 5. 日々のお手入れと長期的なメンテナンス</h2>
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 5-1. 日常ケア</h3>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">柔らかい布で乾拭き</li>
+          <li className="mb-2">汚れた場合は中性洗剤を薄めて拭き取り</li>
+          <li className="mb-2">グラス類は長時間置きっぱなしにしない</li>
+        </ul>
 
-      {/* --- Values Section --- */}
-      <section id="philosophy" className="py-24 md:py-32 bg-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row gap-16 md:gap-24">
-            
-            <div className="md:w-5/12 pt-12">
-              <FadeIn>
-                <span className="block text-xs font-bold tracking-[0.2em] text-gray-400 mb-6 uppercase">
-                  Philosophy
-                </span>
-                <h3 className="text-2xl md:text-3xl font-serif mb-10 text-foreground">
-                  MEGURIDが<br />大切にしていること
-                </h3>
-              </FadeIn>
-              
-              <FadeIn delay={200}>
-                <div className="text-sm md:text-base leading-loose text-gray-600 font-light space-y-8 tracking-wide text-justify">
-                  <p>
-                    メグリッドが目指しているもの。<br/>
-                    生活の中で使う物は、便利さや分かりやすい機能だけで選ぶこともできます。しかし、部屋の中で長く付き合っていきたいものには、もう少し違う基準があってもいいと私たちは考えています。
-                  </p>
-                  <p>
-                    毎日見るからこそ落ち着きがとる。そこにあるだけで、空気が少し落ち着いて感じられること。使い込むほど、持ち主の時間がゆっくりと刻まれていくこと。
-                  </p>
-                  <p>
-                    MEGURIDのプロダクトは、そうした「長くそばに置いておきたい感覚」を軸にデザインされています。何かを主張するためではなく、生活の背景に静かに居続けることで、持ち主の時間を支えるような存在でありたいと考えています。
-                  </p>
-                </div>
-              </FadeIn>
-            </div>
-
-            <div className="md:w-7/12 relative h-[600px]">
-               <FadeIn direction="left" delay={300} className="h-full w-full">
-                  <div className="grid grid-cols-2 gap-4 h-full">
-                      <div className="relative w-full h-full">
-                        <Image 
-                            src="https://picsum.photos/600/800?random=2" 
-                            alt="Lifestyle close up" 
-                            fill
-                            style={{ objectFit: 'cover' }}
-                            className="grayscale rounded-sm"
-                        />
-                      </div>
-                       <div className="flex flex-col gap-4 mt-12 h-full">
-                          <div className="relative w-full h-64">
-                            <Image 
-                                src="https://picsum.photos/600/600?random=3" 
-                                alt="Texture detail" 
-                                fill
-                                style={{ objectFit: 'cover' }}
-                                className="grayscale rounded-sm"
-                            />
-                          </div>
-                          <div className="p-6 bg-gray-50 h-full flex items-center justify-center">
-                              <p className="text-xs tracking-widest text-gray-400 leading-relaxed italic">
-                                  &quot;Silence in the noise.&quot;
-                              </p>
-                          </div>
-                      </div>
-                  </div>
-               </FadeIn>
-            </div>
-
-          </div>
-        </div>
+        <h3 className="text-xl font-medium mb-3 text-gray-700">● 5-2. 定期メンテナンス</h3>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">撥水効果が薄れたら、軽い再施工で復活</li>
+          <li className="mb-2">白華が出た場合は、乾拭き→再仕上げでほぼ解消</li>
+        </ul>
       </section>
-
-      {/* --- Material Section --- */}
-      <section id="material" className="py-32 bg-foreground text-white relative">
-        <div className="max-w-5xl mx-auto px-6">
-          
-          <FadeIn className="mb-20 text-center">
-               <span className="block text-xs font-bold tracking-[0.2em] text-gray-500 mb-6 uppercase">
-                  Material
-                </span>
-              <h3 className="text-3xl md:text-4xl font-serif tracking-wide">
-                  なぜ、コンクリートなのか。
-              </h3>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-              <FadeIn delay={200}>
-                  <div className="aspect-square bg-gray-800 relative overflow-hidden group">
-                       <Image 
-                          src="https://picsum.photos/800/800?random=4" 
-                          alt="Concrete texture macro" 
-                          fill
-                          style={{ objectFit: 'cover' }}
-                          className="opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                      <div className="absolute inset-0 border border-gray-700 m-4"></div>
-                  </div>
-              </FadeIn>
-
-              <FadeIn delay={400}>
-                  <div className="space-y-8 text-sm md:text-base leading-loose font-light text-gray-300 tracking-wide text-justify">
-                      <p>
-                          コンクリートの物質は多くの魅力を孕んでいます。私たちが建築を学ぶなかで、図面の中の記号としてだけでなく、この素材に向き合い多くのことを感じてきました。
-                      </p>
-                      <p>
-                          実際の建築を見に行ったときに感じる質量や、自分たちの手で小さな試験体を打ったときの冷たさ・ざらつきに、強さ、重さ、硬さに少しずつ魅了されてきました。
-                      </p>
-                      <p>
-                          コンクリートという派手さより「在り方」で印象を変える素材は無機質でありながら、どこか落ち着きをとい、そっと背景に回ることも、空間の芯として佇むこともできる。そのかっこよさと静けさが同居している感じが、今の生活にこそ必要なものだと私たちは感じています。
-                      </p>
-                      <p>
-                          MEGURIDのプロダクトは、建築の中でコンクリートと出会い、触れ合いながらその魅力に惹かれてきた延長線上に生まれたものです。「かっこいい」と「落ち着いていられる」を同時に叶えられる素材として、私たちはコンクリートを選び続けています。
-                      </p>
-                  </div>
-              </FadeIn>
-          </div>
-
-        </div>
+      
+      <section className="py-10 md:py-16">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 6. コンクリート雑貨のQ&A（FAQ）</h2>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-4">
+            <p className="font-semibold text-gray-700">Q1. 白華は不良ですか？</p>
+            <p className="text-gray-600">→ 不良ではありません。コンクリートの性質による「自然現象」で、強度にも影響しません。</p>
+          </li>
+          <li className="mb-4">
+            <p className="font-semibold text-gray-700">Q2. 水跡は必ず残りますか？</p>
+            <p className="text-gray-600">→ 撥水仕上げにより大幅に軽減できます。完全に“ゼロ”にはできませんが、実用上はほぼ問題なし。</p>
+          </li>
+          <li className="mb-4">
+            <p className="font-semibold text-gray-700">Q3. 食品を置けますか？</p>
+            <p className="text-gray-600">→ 基本は推奨しません（雑貨・インテリア用途のため）。</p>
+          </li>
+          <li className="mb-4">
+            <p className="font-semibold text-gray-700">Q4. 落としても割れませんか？</p>
+            <p className="text-gray-600">→ 一般的な使用では十分な耐久性がありますが、薄肉デザイン・角部への衝撃には注意。</p>
+          </li>
+        </ul>
       </section>
-
-      {/* --- Footer CTA Section --- */}
-      <section className="py-32 bg-white flex flex-col items-center justify-center text-center px-6">
-        <FadeIn direction="up">
-          <div className="max-w-2xl mx-auto space-y-8 mb-16">
-            <p className="text-lg md:text-xl font-serif text-foreground leading-relaxed">
-              部屋の中で、特別に目立つわけではないけれど、<br />
-              いないと少し物足りなく感じるもの。
-            </p>
-            <p className="text-base text-gray-600 leading-relaxed font-light">
-              MEGURID のプロダクトが、そんなポジションを引き受けられたら嬉しく思います。<br /><br />
-              ひとつの形を選び、手元に迎え入れるところから、<br />
-              このブランドとの時間が始まります。
-            </p>
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={200} className="flex flex-col md:flex-row gap-6">
-          <Link href="/online-store">
-            <Button variant="outline" className="min-w-[200px]">
-              ラインナップを見る
-            </Button>
-          </Link>
-          <Link href="/online-store">
-            <Button variant="primary" className="min-w-[200px] shadow-lg shadow-gray-200">
-              オンラインストアへ
-            </Button>
-          </Link>
-        </FadeIn>
+      
+      <section className="py-10 md:py-16">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">■ 7. まとめ：コンクリート雑貨は「素材理解」で最大の魅力が引き出せる</h2>
+        <p className="mb-4 text-gray-600">コンクリートは、</p>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">温度のない静かな佇まい</li>
+          <li className="mb-2">経年で深まる質感</li>
+          <li className="mb-2">適度な重さによる機能性</li>
+        </ul>
+        <p className="mb-4 text-gray-600">が特徴の素材です。</p>
+        <p className="mb-4 text-gray-600">その一方で、</p>
+        <ul className="list-disc list-inside mb-4 text-gray-600">
+          <li className="mb-2">吸水性</li>
+          <li className="mb-2">白華</li>
+          <li className="mb-2">個体差</li>
+        </ul>
+        <p className="mb-4 text-gray-600">といった“素材としての自然な性格”があります。</p>
+        <p className="text-gray-600">
+          これらを理解して選び、適切に使えば、他の素材にはない落ち着きと空気感を持つ雑貨として長く楽しむことができます。
+        </p>
       </section>
-
     </div>
   );
 }
