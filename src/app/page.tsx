@@ -9,7 +9,6 @@ export default async function LandingPage() {
   const { data: products, error } = await supabase
     .from('products')
     .select('id, name, price, images, description, stock_quantity')
-    .order('created_at', { ascending: false })
     .limit(3);
 
   if (error) {
@@ -39,8 +38,7 @@ export default async function LandingPage() {
     .from('products')
     .select('id, name, price, images, description, stock_quantity')
     .eq('is_featured', true)
-    .order('created_at', { ascending: false }) // 任意でおすすめの中でも新着順
-    .limit(3); // おすすめ商品は3つまで表示
+    .limit(3);
 
   if (featuredProductsError) {
     console.error('Error fetching featured products for LP:', featuredProductsError);

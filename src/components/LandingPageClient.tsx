@@ -189,8 +189,29 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                     時が経つにつれて深まる手触りと、空間に馴染んでいく静かな佇まいをお楽しみください。
                   </p>
                   <div className="pt-4">
-                    <Link href="/lp/concrete-guide" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-secondary">
-                      コンクリート雑貨 完全ガイド
+                    <Link href="/" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-secondary">
+                      Read More about Our Concept
+                    </Link>
+                  </div>
+
+                  {/* --- Column Section (Kurasu Style) --- */}
+                  <div className="mt-12 pt-12 border-t border-gray-200">
+                    <h3 className="text-sm font-serif text-foreground mb-6">Latest Column</h3>
+                    <Link href="/lp/concrete-guide" className="block group">
+                      <div className="flex gap-6 items-start">
+                        <div className="w-24 h-24 bg-gray-200 flex-shrink-0 relative overflow-hidden">
+                           {/* Placeholder for Column Image */}
+                           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-[10px]">
+                             Image
+                           </div>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-400 mb-2">2023.11.22</p>
+                          <h4 className="text-sm text-foreground font-medium leading-relaxed group-hover:text-primary transition-colors">
+                            コンクリート雑貨 完全ガイド：素材の特性からお手入れまで
+                          </h4>
+                        </div>
+                      </div>
                     </Link>
                   </div>
                 </div>
