@@ -14,6 +14,7 @@ const config: Config = {
         'primary': '#374151',    // Medium gray for primary elements
         'secondary': '#9CA3AF',  // Lighter gray for secondary text
         'accent': '#F3F4F6',     // Very light gray for accents, borders
+        'gray-button': '#808080', // Custom gray for Add to Cart button
       },
       fontFamily: {
         sans: ['Inter', 'Noto Sans JP', 'sans-serif'],

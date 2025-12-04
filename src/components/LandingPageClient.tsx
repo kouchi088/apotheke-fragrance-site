@@ -116,7 +116,6 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
               </div>
             </div>
           </section>
-        )}
 
         {/* --- Featured / Best Sellers Section --- */}
         {featuredProducts && featuredProducts.length > 0 && (
@@ -145,7 +144,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                     <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className="mt-4 px-4 py-2 border border-primary text-primary text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
+                      className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
                     >
                       カートに追加
                     </button>
@@ -189,24 +188,24 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                     時が経つにつれて深まる手触りと、空間に馴染んでいく静かな佇まいをお楽しみください。
                   </p>
                   <div className="pt-4">
-                    <Link href="/" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-secondary">
+                    <Link href="/" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-primary">
                       Read More about Our Concept
                     </Link>
                   </div>
 
                   {/* --- Column Section (Kurasu Style) --- */}
-                  <div className="mt-12 pt-12 border-t border-gray-200">
+                  <div className="mt-12 pt-12 border-t border-secondary">
                     <h3 className="text-sm font-serif text-foreground mb-6">Latest Column</h3>
                     <Link href="/lp/concrete-guide" className="block group">
                       <div className="flex gap-6 items-start">
-                        <div className="w-24 h-24 bg-gray-200 flex-shrink-0 relative overflow-hidden">
+                        <div className="w-24 h-24 bg-accent flex-shrink-0 relative overflow-hidden">
                            {/* Placeholder for Column Image */}
-                           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-[10px]">
+                           <div className="absolute inset-0 flex items-center justify-center text-secondary text-[10px]">
                              Image
                            </div>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-400 mb-2">2023.11.22</p>
+                          <p className="text-xs text-secondary mb-2">2023.11.22</p>
                           <h4 className="text-sm text-foreground font-medium leading-relaxed group-hover:text-primary transition-colors">
                             コンクリート雑貨 完全ガイド：素材の特性からお手入れまで
                           </h4>
@@ -236,7 +235,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {reviews.map((review: any) => (
-                  <div key={review.id} className="flex flex-col bg-accent p-6 rounded-lg border border-accent shadow-sm">
+                  <div key={review.id} className="flex flex-col bg-white p-6 rounded-lg border border-accent shadow-sm">
                     <div className="flex items-center mb-4">
                       <div className="flex text-yellow-500 text-sm">
                         {[...Array(5)].map((_, i) => (
