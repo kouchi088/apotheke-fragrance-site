@@ -35,13 +35,19 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
         {/* --- Hero Section (Main Visual) --- */}
         <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-white">
           <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-white z-10 relative">
+            <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
+              <p className="text-lg md:text-xl font-serif text-foreground tracking-widest">
+                MEGURID<br/>
+                <span className="pl-4">巡り出会う</span>
+              </p>
+            </div>
             <div>
               <span className="text-xs font-bold tracking-[0.3em] text-secondary uppercase mb-4 block">
                 Handcrafted Concrete
               </span>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-foreground leading-tight mb-8">
-                MEGURID
-                <span className="block pl-10 md:pl-16">巡り出会う</span>
+                静寂を、<br />
+                形にする。
               </h1>
               <p className="text-primary mb-10 leading-relaxed font-sans max-w-md">
                 都市の素材であるコンクリートに、手仕事の温かみを。
