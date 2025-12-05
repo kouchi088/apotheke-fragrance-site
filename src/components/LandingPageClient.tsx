@@ -40,8 +40,8 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                 Handcrafted Concrete
               </span>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-foreground leading-tight mb-8">
-                静寂を、<br />
-                形にする。
+                MEGURID <br />
+                巡り出会う
               </h1>
               <p className="text-primary mb-10 leading-relaxed font-sans max-w-md">
                 都市の素材であるコンクリートに、手仕事の温かみを。
