@@ -72,68 +72,93 @@ export default function ProfilePage() {
   };
 
   if (loading) {
-    return <div className="text-center py-10">Loading profile...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white text-primary">
+        <div className="animate-pulse tracking-widest uppercase text-sm">Loading...</div>
+      </div>
+    );
   }
 
   if (!user) {
-    return <div className="text-center py-10">Please log in to view your profile.</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white text-primary">
+        <div className="text-center">
+          <p className="mb-4 tracking-widest text-sm">Please log in to view your profile.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto max-w-lg py-12 px-4">
-      <h1 className="text-3xl font-bold text-center mb-8">Your Profile</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-secondary">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={user.email || ''}
-            disabled
-            className="mt-1 block w-full px-3 py-2 bg-accent border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-          />
+    <div className="min-h-screen bg-white text-foreground py-24 px-6 font-sans">
+      <div className="max-w-xl mx-auto">
+        <div className="text-center mb-12">
+          <span className="block text-xs font-bold tracking-[0.2em] text-gray-button mb-4 uppercase">Account</span>
+          <h1 className="text-3xl md:text-4xl font-serif text-foreground">Your Profile</h1>
         </div>
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-secondary">Name</label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-white border border-accent rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-          />
+
+        <div className="bg-white border border-accent p-8 md:p-12 shadow-sm rounded-sm">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div>
+              <label htmlFor="email" className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={user.email || ''}
+                disabled
+                className="block w-full px-4 py-3 bg-accent border border-transparent text-primary text-sm focus:outline-none cursor-not-allowed"
+              />
+              <p className="mt-2 text-[10px] text-secondary">Email address cannot be changed.</p>
+            </div>
+
+            <div>
+              <label htmlFor="name" className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">Name</label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="John Doe"
+                className="block w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="address" className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">Address</label>
+              <input
+                id="address"
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="123 Main St, City, Country"
+                className="block w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">Phone Number</label>
+              <input
+                id="phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+1 (555) 123-4567"
+                className="block w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-4 px-6 border border-gray-button bg-transparent text-gray-button hover:bg-gray-button hover:text-white text-xs uppercase tracking-widest transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </form>
         </div>
-        <div>
-          <label htmlFor="address" className="block text-sm font-medium text-secondary">Address</label>
-          <input
-            id="address"
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-white border border-accent rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-          />
-        </div>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-secondary">Phone Number</label>
-          <input
-            id="phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-white border border-accent rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-          />
-        </div>
-        <div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:bg-secondary"
-          >
-            {loading ? 'Saving...' : 'Save Profile'}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
-

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabaseClient';
 
@@ -11,7 +12,7 @@ const supabase = createClient();
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-full pt-20">
-    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-foreground"></div>
   </div>
 );
 
@@ -37,33 +38,33 @@ const LoginForm = ({ onLogin }: { onLogin: (email: string, pass: string) => Prom
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-background">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center text-foreground">Admin Login</h1>
+    <div className="flex justify-center items-center min-h-screen bg-background text-foreground font-sans">
+      <div className="w-full max-w-md p-10 bg-white border border-accent shadow-sm rounded-sm">
+        <h1 className="text-3xl font-serif font-bold text-center mb-8">Admin Login</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-foreground">Email</label>
+            <label className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              className="w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground">Password</label>
+            <label className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary"
+              className="w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
               required
             />
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>}
           <div>
-            <button type="submit" disabled={loading} className="w-full px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-foreground transition-colors duration-300 disabled:bg-secondary">
+            <button type="submit" disabled={loading} className="w-full py-3 px-6 bg-foreground text-white text-xs uppercase tracking-widest hover:bg-primary transition-colors disabled:opacity-50">
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </div>
@@ -85,18 +86,18 @@ const Sidebar = ({ activeView, setActiveView }: { activeView: string, setActiveV
   ];
 
   return (
-    <aside className="w-64 bg-accent/50 p-4 border-r border-accent">
-      <h2 className="text-lg font-semibold mb-4 text-foreground">管理メニュー</h2>
+    <aside className="w-64 bg-white border-r border-accent p-6 hidden md:block">
+      <h2 className="text-xs font-bold tracking-widest uppercase mb-8 text-primary">Admin Menu</h2>
       <nav>
-        <ul>
+        <ul className="space-y-2">
           {navItems.map(item => (
             <li key={item.id}>
               <button
                 onClick={() => setActiveView(item.id)}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                className={`w-full text-left px-4 py-3 text-sm transition-colors duration-200 border-l-2 ${
                   activeView === item.id
-                    ? 'bg-primary text-white'
-                    : 'text-foreground hover:bg-accent'
+                    ? 'border-foreground text-foreground font-bold bg-accent/30'
+                    : 'border-transparent text-secondary hover:text-foreground hover:bg-accent/10'
                 }`}
               >
                 {item.name}
@@ -151,57 +152,59 @@ const DashboardView = () => {
   }, []);
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>;
+  if (error) return <p className="text-red-500 bg-red-50 p-4 border border-red-100">{error}</p>;
 
   const StatCard = ({ title, value, extra = '' }: { title: string, value: string | number, extra?: string }) => (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-accent">
-      <h4 className="text-sm font-medium text-secondary uppercase tracking-wider">{title}</h4>
-      <p className="text-3xl font-bold text-foreground mt-2">{value} <span className="text-lg font-medium">{extra}</span></p>
+    <div className="bg-white p-6 border border-accent shadow-sm">
+      <h4 className="text-xs font-bold text-secondary uppercase tracking-widest mb-2">{title}</h4>
+      <p className="text-3xl font-serif text-foreground">{value} <span className="text-base font-sans text-primary">{extra}</span></p>
     </div>
   );
 
   return (
-    <div>
-      <h3 className="text-2xl font-bold mb-6 text-foreground">ダッシュボード</h3>
+    <div className="space-y-8">
+      <h3 className="text-2xl font-serif text-foreground">ダッシュボード</h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard title="合計クリック数" value={stats.clicks.toLocaleString()} extra="回" />
         <StatCard title="コンバージョン数" value={stats.conversions.toLocaleString()} extra="件" />
         <StatCard title="合計報酬額" value={`¥${Math.round(stats.totalCommission).toLocaleString()}`} />
       </div>
 
-      <h4 className="text-xl font-semibold mb-4 text-foreground">最近のコンバージョン</h4>
-      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-accent">
-        <table className="min-w-full divide-y divide-accent text-sm">
-          <thead className="bg-accent/50">
-            <tr>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">日時</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">アフィリエイター</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">報酬額</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">支払い状況</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-accent">
-            {recentConversions.length > 0 ? (
-              recentConversions.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{new Date(item.created_at).toLocaleString()}</td>
-                  <td className="px-4 py-4 whitespace-nowrap font-medium text-foreground">{item.affiliates?.name || 'N/A'}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">¥{Math.round(item.commission_amount).toLocaleString()}</td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ item.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="px-6 py-10 text-center text-secondary">まだコンバージョンはありません。</td>
+      <div>
+        <h4 className="text-lg font-serif mb-4 text-foreground">最近のコンバージョン</h4>
+        <div className="overflow-x-auto bg-white border border-accent">
+          <table className="min-w-full text-sm text-left">
+            <thead>
+              <tr className="bg-accent/30 border-b border-accent text-primary">
+                <th className="px-6 py-3 font-medium">日時</th>
+                <th className="px-6 py-3 font-medium">アフィリエイター</th>
+                <th className="px-6 py-3 font-medium">報酬額</th>
+                <th className="px-6 py-3 font-medium">支払い状況</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-accent">
+              {recentConversions.length > 0 ? (
+                recentConversions.map((item) => (
+                  <tr key={item.id} className="hover:bg-accent/10 transition-colors">
+                    <td className="px-6 py-4 text-foreground">{new Date(item.created_at).toLocaleString()}</td>
+                    <td className="px-6 py-4 font-medium text-foreground">{item.affiliates?.name || 'N/A'}</td>
+                    <td className="px-6 py-4 text-foreground">¥{Math.round(item.commission_amount).toLocaleString()}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-3 py-1 text-xs font-bold rounded-full ${ item.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-6 py-10 text-center text-secondary">まだコンバージョンはありません。</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -251,41 +254,43 @@ const OrderHistoryView = () => {
   };
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>;
+  if (error) return <p className="text-red-500 bg-red-50 p-4 border border-red-100">{error}</p>;
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-4 text-foreground">注文履歴</h3>
-      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-accent">
-        <table className="min-w-full divide-y divide-accent text-sm">
-          <thead className="bg-accent/50">
-            <tr>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">日付</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">注文者</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">連絡先</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">住所</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">値段</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">配送状況</th>
+      <h3 className="text-2xl font-serif mb-6 text-foreground">注文履歴</h3>
+      <div className="overflow-x-auto bg-white border border-accent">
+        <table className="min-w-full text-sm text-left">
+          <thead>
+            <tr className="bg-accent/30 border-b border-accent text-primary">
+              <th className="px-6 py-3 font-medium">日付</th>
+              <th className="px-6 py-3 font-medium">注文者</th>
+              <th className="px-6 py-3 font-medium">連絡先</th>
+              <th className="px-6 py-3 font-medium">住所</th>
+              <th className="px-6 py-3 font-medium">値段</th>
+              <th className="px-6 py-3 font-medium">配送状況</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-accent">
+          <tbody className="divide-y divide-accent">
             {orders.length > 0 ? (
               orders.map((order) => (
-                <tr key={order.id}>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{new Date(order.created_at).toLocaleDateString()}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{order.shipping_address?.name || 'N/A'}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-secondary">{order.customer_email || 'N/A'}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-secondary">{formatAddress(order.shipping_address?.address)}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">¥{(order.total || 0).toLocaleString()}</td>
-                  <td className="px-4 py-4 whitespace-nowrap">
+                <tr key={order.id} className="hover:bg-accent/10 transition-colors">
+                  <td className="px-6 py-4 text-foreground">{new Date(order.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-foreground">{order.shipping_address?.name || 'N/A'}</td>
+                  <td className="px-6 py-4 text-secondary">{order.customer_email || 'N/A'}</td>
+                  <td className="px-6 py-4 text-secondary max-w-xs truncate">{formatAddress(order.shipping_address?.address)}</td>
+                  <td className="px-6 py-4 text-foreground font-medium">¥{(order.total || 0).toLocaleString()}</td>
+                  <td className="px-6 py-4">
                     <label className="flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={order.shipped || false}
                         onChange={() => handleShippingToggle(order.id, order.shipped || false)}
-                        className="h-5 w-5 text-primary border-accent rounded focus:ring-primary"
+                        className="h-4 w-4 text-primary border-accent rounded focus:ring-primary"
                       />
-                      <span className="ml-2 text-foreground">{order.shipped ? 'Shipped' : 'Pending'}</span>
+                      <span className={`ml-2 text-xs font-bold uppercase ${order.shipped ? 'text-green-600' : 'text-yellow-600'}`}>
+                        {order.shipped ? 'Shipped' : 'Pending'}
+                      </span>
                     </label>
                   </td>
                 </tr>
@@ -368,77 +373,77 @@ const AffiliateView = () => {
   };
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>;
+  if (error) return <p className="text-red-500 bg-red-50 p-4 border border-red-100">{error}</p>;
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-6 text-foreground">アフィリエイト管理</h3>
+      <h3 className="text-2xl font-serif mb-6 text-foreground">アフィリエイト管理</h3>
       
       {/* Add New Affiliate Form */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-accent mb-8">
-        <h4 className="text-xl font-semibold mb-4 text-foreground">新規紹介者登録</h4>
-        <form onSubmit={handleAddAffiliate} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+      <div className="bg-white p-8 border border-accent mb-12">
+        <h4 className="text-lg font-bold text-foreground mb-6">新規紹介者登録</h4>
+        <form onSubmit={handleAddAffiliate} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
           <div className="md:col-span-1">
-            <label className="block text-sm font-medium text-foreground">名前</label>
-            <input type="text" value={newName} onChange={e => setNewName(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary" />
+            <label className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">名前</label>
+            <input type="text" value={newName} onChange={e => setNewName(e.target.value)} required className="w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary" />
           </div>
           <div className="md:col-span-1">
-            <label className="block text-sm font-medium text-foreground">Email</label>
-            <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary" />
+            <label className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">Email</label>
+            <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} required className="w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary" />
           </div>
-          <div className="flex gap-2">
-            <div>
-                <label className="block text-sm font-medium text-foreground">報酬タイプ</label>
-                <select value={newRateType} onChange={e => setNewRateType(e.target.value as any)} className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary">
+          <div className="flex gap-4 md:col-span-1">
+            <div className="flex-1">
+                <label className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">タイプ</label>
+                <select value={newRateType} onChange={e => setNewRateType(e.target.value as any)} className="w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary h-[46px]">
                     <option value="percentage">割合 (%)</option>
                     <option value="fixed">固定額 (¥)</option>
                 </select>
             </div>
-            <div>
-                <label className="block text-sm font-medium text-foreground">報酬</label>
-                <input type="number" value={newRateValue} onChange={e => setNewRateValue(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary" />
+            <div className="flex-1">
+                <label className="block text-xs font-bold tracking-widest text-primary uppercase mb-2">報酬</label>
+                <input type="number" value={newRateValue} onChange={e => setNewRateValue(e.target.value)} required className="w-full px-4 py-3 bg-white border border-accent text-foreground text-sm focus:outline-none focus:border-primary" />
             </div>
           </div>
           <div className="md:col-span-1">
-            <button type="submit" disabled={formLoading} className="w-full px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-foreground transition-colors duration-300 disabled:bg-secondary">
+            <button type="submit" disabled={formLoading} className="w-full py-3 px-6 bg-foreground text-white text-xs uppercase tracking-widest hover:bg-primary transition-colors disabled:opacity-50 h-[46px]">
               {formLoading ? '登録中...' : '登録'}
             </button>
           </div>
         </form>
-        {formError && <p className="text-sm text-red-600 mt-2">{formError}</p>}
+        {formError && <p className="text-sm text-red-600 mt-4">{formError}</p>}
       </div>
 
       {/* Affiliate List */}
-      <h4 className="text-xl font-semibold mb-4 text-foreground">紹介者一覧</h4>
-      <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-accent">
-        <table className="min-w-full divide-y divide-accent text-sm">
-          <thead className="bg-accent/50">
-            <tr>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">名前</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">クリック</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">CV</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">報酬額</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider">ステータス</th>
-              <th className="px-4 py-3 text-left font-medium text-secondary uppercase tracking-wider"></th>
+      <h4 className="text-lg font-bold text-foreground mb-4">紹介者一覧</h4>
+      <div className="overflow-x-auto bg-white border border-accent">
+        <table className="min-w-full text-sm text-left">
+          <thead>
+            <tr className="bg-accent/30 border-b border-accent text-primary">
+              <th className="px-6 py-3 font-medium">名前</th>
+              <th className="px-6 py-3 font-medium">クリック</th>
+              <th className="px-6 py-3 font-medium">CV</th>
+              <th className="px-6 py-3 font-medium">報酬額</th>
+              <th className="px-6 py-3 font-medium">ステータス</th>
+              <th className="px-6 py-3 font-medium"></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-accent">
+          <tbody className="divide-y divide-accent">
             {affiliates.length > 0 ? (
               affiliates.map((aff) => (
-                <tr key={aff.id}>
-                  <td className="px-4 py-4 whitespace-nowrap">
+                <tr key={aff.id} className="hover:bg-accent/10 transition-colors">
+                  <td className="px-6 py-4">
                     <div className="font-medium text-foreground">{aff.name}</div>
-                    <div className="text-secondary">{aff.email}</div>
+                    <div className="text-xs text-secondary">{aff.email}</div>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{aff.total_clicks}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">{aff.total_conversions}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-foreground">¥{Math.round(aff.total_commission).toLocaleString()}</td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ aff.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                  <td className="px-6 py-4 text-foreground">{aff.total_clicks}</td>
+                  <td className="px-6 py-4 text-foreground">{aff.total_conversions}</td>
+                  <td className="px-6 py-4 text-foreground">¥{Math.round(aff.total_commission).toLocaleString()}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 text-xs font-bold rounded-full ${ aff.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                       {aff.status}
                     </span>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-6 py-4 text-right text-sm font-medium">
                     <Link href={`/admin/affiliates/${aff.id}`} className="text-primary hover:text-foreground underline">
                       詳細
                     </Link>
@@ -491,7 +496,6 @@ const UgcModerationView = () => {
   }, []);
 
   const handleDecision = async (submissionId: string, newStatus: 'approved' | 'rejected') => {
-    // Optimistically update UI
     setSubmissions(submissions.filter(s => s.id !== submissionId));
 
     const { error } = await supabase
@@ -502,61 +506,64 @@ const UgcModerationView = () => {
     if (error) {
       console.error(`Error updating submission status to ${newStatus}:`, error);
       alert(`Failed to ${newStatus} submission. It may have been processed already. Refreshing the list.`);
-      // Re-fetch to get the correct state
       fetchPendingSubmissions();
     }
   };
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <p className="text-red-500 bg-red-100 p-4 rounded-md">{error}</p>;
+  if (error) return <p className="text-red-500 bg-red-50 p-4 border border-red-100">{error}</p>;
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-6 text-foreground">UGC審査</h3>
+      <h3 className="text-2xl font-serif mb-6 text-foreground">UGC審査</h3>
       {submissions.length > 0 ? (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {submissions.map(submission => (
-            <div key={submission.id} className="bg-white rounded-lg shadow-sm border border-accent overflow-hidden">
-              <div className="p-5 border-b border-accent">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-semibold text-foreground">{submission.product?.name || '商品不明'}</p>
-                    <p className="text-sm text-secondary">
-                      投稿者: {submission.nickname || '匿名'} ({submission.email})
-                    </p>
-                    <p className="text-sm text-secondary">
-                      投稿日: {new Date(submission.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => handleDecision(submission.id, 'approved')}
-                      className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                    >
-                      承認
-                    </button>
-                    <button
-                      onClick={() => handleDecision(submission.id, 'rejected')}
-                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    >
-                      却下
-                    </button>
-                  </div>
+            <div key={submission.id} className="bg-white border border-accent p-6 rounded-sm shadow-sm">
+              <div className="flex justify-between items-start mb-4 border-b border-accent pb-4">
+                <div>
+                  <p className="font-bold text-foreground text-lg">{submission.product?.name || '商品不明'}</p>
+                  <p className="text-sm text-primary mt-1">
+                    投稿者: {submission.nickname || '匿名'} <span className="text-secondary">({submission.email})</span>
+                  </p>
+                  <p className="text-xs text-secondary mt-1">
+                    投稿日: {new Date(submission.created_at).toLocaleString()}
+                  </p>
                 </div>
-                {submission.caption && (
-                  <p className="mt-4 text-foreground bg-accent/50 p-3 rounded-md">{submission.caption}</p>
-                )}
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => handleDecision(submission.id, 'approved')}
+                    className="px-4 py-2 text-xs font-bold text-white bg-green-600 hover:bg-green-700 uppercase tracking-widest transition-colors"
+                  >
+                    承認
+                  </button>
+                  <button
+                    onClick={() => handleDecision(submission.id, 'rejected')}
+                    className="px-4 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 uppercase tracking-widest transition-colors"
+                  >
+                    却下
+                  </button>
+                </div>
               </div>
+              
+              {submission.caption && (
+                <div className="mb-6 bg-accent/30 p-4 border-l-4 border-primary">
+                  <p className="text-foreground text-sm leading-relaxed">{submission.caption}</p>
+                </div>
+              )}
+
               {submission.images && submission.images.length > 0 && (
-                <div className="p-5">
-                  <p className="text-sm font-medium text-foreground mb-3">投稿画像:</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div>
+                  <p className="text-xs font-bold text-secondary uppercase tracking-widest mb-3">Images</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     {submission.images.map((image: any) => (
-                      <a key={image.id} href={image.cdn_url} target="_blank" rel="noopener noreferrer">
-                        <img 
+                      <a key={image.id} href={image.cdn_url} target="_blank" rel="noopener noreferrer" className="block relative aspect-square group overflow-hidden bg-accent">
+                        <Image
                           src={image.cdn_url} 
                           alt="User submitted content" 
-                          className="rounded-md object-cover h-32 w-full shadow-sm hover:shadow-lg transition-shadow"
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          className="transition-transform duration-500 group-hover:scale-105"
                         />
                       </a>
                     ))}
@@ -567,8 +574,8 @@ const UgcModerationView = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-secondary">審査待ちの投稿はありません。</p>
+        <div className="text-center py-24 bg-accent/10 border border-dashed border-accent">
+          <p className="text-secondary">現在、審査待ちの投稿はありません。</p>
         </div>
       )}
     </div>
@@ -599,17 +606,19 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background font-sans">
       <Sidebar activeView={activeView} setActiveView={setActiveView} />
-      <main className="flex-grow p-6 sm:p-8">
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Admin</h1>
-          <button onClick={handleLogout} className="px-4 py-2 font-semibold text-white bg-red-600 rounded-md hover:bg-red-700">
-            Logout
-          </button>
+      <main className="flex-grow p-8">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-8 pb-4 border-b border-accent">
+          <h1 className="text-2xl font-serif font-bold text-foreground">Admin Console</h1>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-secondary hidden sm:inline">{user?.email}</span>
+            <button onClick={handleLogout} className="px-4 py-2 text-xs font-bold text-foreground border border-foreground hover:bg-foreground hover:text-white transition-colors uppercase tracking-widest">
+              Logout
+            </button>
+          </div>
         </div>
-        <p className="mb-8 text-secondary">Welcome, {user?.email}!</p>
-        <div className="bg-background p-6 rounded-lg">
+        <div className="bg-white p-8 border border-accent shadow-sm min-h-[600px]">
           {renderActiveView()}
         </div>
       </main>
@@ -626,6 +635,7 @@ const AdminPage = () => {
 
   useEffect(() => {
     if (user) {
+      // 簡易的な管理者判定（本番ではRLS等で制御推奨）
       if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         setView('DASHBOARD');
       } else {
@@ -657,7 +667,7 @@ const AdminPage = () => {
     }
   };
 
-  return <div className="min-h-screen">{renderView()}</div>;
+  return <div className="min-h-screen bg-background">{renderView()}</div>;
 };
 
 export default AdminPage;
