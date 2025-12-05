@@ -46,7 +46,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
               <p className="text-primary mb-10 leading-relaxed font-sans max-w-md">
                 都市の素材であるコンクリートに、手仕事の温かみを。
                 不揃いな気泡、独特の質感、経年変化。
-                SOHSOは、日常に静かな重みをもたらすインテリアオブジェを提案します。
+                MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。
               </p>
               <Link
                 href="/online-store"
