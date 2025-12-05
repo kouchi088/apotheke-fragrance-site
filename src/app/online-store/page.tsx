@@ -16,8 +16,8 @@ async function getProducts(): Promise<Product[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('products')
-    .select('id, name, price, images, description, stock_quantity')
-    .order('created_at', { ascending: false });
+    .select('id, name, price, images, description, stock_quantity');
+    //.order('created_at', { ascending: false }); // Commented out due to potential missing column
 
   if (error) {
     console.error('Error fetching products:', error);
