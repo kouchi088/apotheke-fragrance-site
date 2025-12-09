@@ -33,9 +33,18 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
     <div className="antialiased bg-white selection:bg-accent selection:text-foreground">
       <main>
         {/* --- Hero Section (Main Visual) --- */}
-        <section className="relative h-screen w-full overflow-hidden flex flex-col md:flex-row bg-white">
-          <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-24 bg-white z-10 relative">
-            <div>
+        <section className="relative h-screen w-full overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="https://picsum.photos/1600/1200?grayscale"
+              alt="Concrete vase detail"
+              fill
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          </div>
+          <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center items-start">
+            <div className="bg-white/90 p-8 md:p-12 max-w-xl backdrop-blur-sm border border-white/50">
               <span className="text-xs font-bold tracking-[0.3em] text-secondary uppercase mb-4 block">
                 Handcrafted Concrete
               </span>
@@ -43,9 +52,9 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                 MEGURID <br />
                 巡り出会う
               </h1>
-              <p className="text-primary mb-10 leading-relaxed font-sans max-w-md">
-                都市の素材であるコンクリートに、手仕事の温かみを。
-                不揃いな気泡、独特の質感、経年変化。
+              <p className="text-primary mb-10 leading-relaxed font-sans">
+                都市の素材であるコンクリートに、手仕事の温かみを。<br />
+                不揃いな気泡、独特の質感、経年変化。<br />
                 MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。
               </p>
               <Link
@@ -56,16 +65,6 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                 <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-          </div>
-          <div className="w-full md:w-1/2 h-1/2 md:h-full relative">
-            <div className="absolute inset-0 bg-black/5 z-10"></div>
-            <Image
-              src="https://picsum.photos/1000/1200?grayscale"
-              alt="Concrete vase detail"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
-            />
           </div>
         </section>
 
