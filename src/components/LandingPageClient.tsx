@@ -48,7 +48,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
               <span className="text-xs font-bold tracking-[0.3em] text-secondary uppercase mb-4 block">
                 Handcrafted Concrete
               </span>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-foreground leading-tight mb-8">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-foreground leading-tight mb-8">
                 MEGURID <br />
                 巡り出会う
               </h1>
@@ -72,7 +72,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
         {products && products.length > 0 && (
           <section id="new-arrivals" className="py-24 bg-white">
             <div className="container mx-auto px-6">
-              <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
                 <div>
                   <h2 className="text-3xl font-serif text-foreground mb-2">New Arrivals</h2>
                   <p className="text-secondary text-sm">Latest creations from our studio.</p>
@@ -222,7 +222,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
         {/* --- Life with MEGURID Section (UGC) --- */}
         <section id="life-with-megurid" className="py-24 bg-white text-foreground">
           <div className="container mx-auto px-6">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
               <div>
                 <h2 className="text-3xl font-serif text-foreground mb-2">MEGURIDのある暮らし</h2>
                 <p className="text-secondary text-sm">Life with MEGURID</p>
