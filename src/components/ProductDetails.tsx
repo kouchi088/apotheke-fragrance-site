@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
@@ -26,6 +26,11 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   const { addToCart } = useCart();
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Force scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!product) {
     return <div className="text-center py-20">商品が見つかりませんでした。</div>;
