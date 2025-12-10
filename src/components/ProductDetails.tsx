@@ -27,9 +27,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Loading and error states are no longer needed here, as data is fetched by the server component
   if (!product) {
-    // This should ideally not be reached if the parent server component handles it
     return <div className="text-center py-20">商品が見つかりませんでした。</div>;
   }
 
@@ -76,9 +74,10 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   };
 
   return (
-    <div className="container mx-auto max-w-5xl py-16 px-4">
+    <div className="container mx-auto max-w-5xl py-12 px-6 font-sans">
       <div className="grid md:grid-cols-2 gap-12 items-start">
-        <div className="relative w-full aspect-square">
+        {/* Image Section */}
+        <div className="relative w-full aspect-square bg-accent">
           {product.images && product.images.length > 0 ? (
             <>
               <Image
@@ -93,13 +92,13 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                 <div className="absolute inset-0 flex items-center justify-between px-4">
                   <button
                     onClick={prevImage}
-                    className="bg-black bg-opacity-50 text-white p-2 rounded-full focus:outline-none"
+                    className="bg-white/50 hover:bg-white text-primary p-2 rounded-full focus:outline-none transition-colors"
                   >
                     &lt;
                   </button>
                   <button
                     onClick={nextImage}
-                    className="bg-black bg-opacity-50 text-white p-2 rounded-full focus:outline-none"
+                    className="bg-white/50 hover:bg-white text-primary p-2 rounded-full focus:outline-none transition-colors"
                   >
                     &gt;
                   </button>
@@ -108,7 +107,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
             </>
           ) : (
             <Image
-              src={product.image} // Fallback to single image
+              src={product.image}
               alt={product.name}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -118,47 +117,52 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           )}
         </div>
 
-        <div className="flex flex-col pt-8">
-          <h1 className="text-3xl font-bold mb-2 text-foreground">{product.name}</h1>
-          <p className="text-2xl text-primary mb-6">¥{product.price.toLocaleString()}</p>
+        {/* Details Section */}
+        <div className="flex flex-col pt-4 md:pt-0">
+          <h1 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-foreground">{product.name}</h1>
+          <p className="text-xl text-primary mb-8">¥{product.price.toLocaleString()}</p>
           
-          <div className="text-secondary leading-relaxed mb-8">
+          {/* Quantity & Buttons moved above description for mobile UX */}
+          <div className="mb-10">
+            <div className="flex items-center mb-6">
+              <label htmlFor="quantity" className="mr-4 text-xs font-bold tracking-widest text-secondary uppercase">Quantity</label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                max={product.stock_quantity}
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                className="w-20 p-2 border border-accent text-center bg-white text-foreground focus:outline-none focus:border-primary"
+              />
+            </div>
+
+            <div className="w-full max-w-sm flex flex-col gap-4">
+              <button 
+                onClick={handleAddToCart}
+                className="w-full py-3 px-6 border border-gray-button text-gray-button text-xs font-bold tracking-widest hover:bg-gray-button hover:text-white transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed uppercase"
+                disabled={product.stock_quantity === 0}
+              >
+                {product.stock_quantity > 0 ? 'Add to Cart' : 'Sold Out'}
+              </button>
+              <button 
+                onClick={handleBuyNow}
+                className="w-full py-3 px-6 bg-button-fill text-foreground text-xs font-bold tracking-widest hover:bg-primary hover:text-white transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed uppercase border border-transparent"
+                disabled={product.stock_quantity === 0 || isBuyingNow}
+              >
+                {isBuyingNow ? 'Processing...' : (product.stock_quantity > 0 ? 'Buy Now' : 'Sold Out')}
+              </button>
+            </div>
+          </div>
+
+          <div className="text-primary text-sm leading-loose mb-8 border-t border-accent pt-8">
             <p className="whitespace-pre-line">{product.description}</p>
           </div>
           
-          <div className="flex items-center mb-8">
-            <label htmlFor="quantity" className="mr-4 font-medium text-sm text-secondary">QUANTITY</label>
-            <input
-              type="number"
-              id="quantity"
-              name="quantity"
-              min="1"
-              max={product.stock_quantity}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              className="w-20 p-2 border border-accent rounded-md text-center bg-white focus:ring-1 focus:ring-primary focus:border-primary"
-            />
-          </div>
-
-          <div className="w-full max-w-sm flex flex-col gap-4">
-            <button 
-              onClick={handleAddToCart}
-              className="w-full py-3 px-6 bg-primary text-white font-bold tracking-wider hover:bg-foreground transition-colors duration-300 disabled:bg-secondary"
-              disabled={product.stock_quantity === 0}
-            >
-              {product.stock_quantity > 0 ? 'ADD TO CART' : 'SOLD OUT'}
-            </button>
-            <button 
-              onClick={handleBuyNow}
-              className="w-full py-3 px-6 bg-transparent border border-primary text-primary font-bold tracking-wider hover:bg-primary hover:text-white transition-colors duration-300 disabled:bg-secondary disabled:text-white disabled:border-secondary"
-              disabled={product.stock_quantity === 0 || isBuyingNow}
-            >
-              {isBuyingNow ? 'PROCESSING...' : (product.stock_quantity > 0 ? 'BUY NOW' : 'SOLD OUT')}
-            </button>
-          </div>
-          <div className="w-full max-w-sm mt-6 text-center">
-            <Link href="/submit-review" className="text-sm text-gray-600 hover:text-black underline">
-              この商品のレビューを書く
+          <div className="w-full max-w-sm mt-2 text-center">
+            <Link href="/gallery" className="text-xs text-secondary hover:text-foreground underline decoration-1 underline-offset-4 transition-colors">
+              この商品のレビューを見る
             </Link>
           </div>
         </div>
