@@ -42,14 +42,14 @@ export default function ConceptPage() {
 
         <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6">
           <FadeIn>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-8 text-foreground bg-white/80 p-6 backdrop-blur-sm inline-block">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-8 text-foreground bg-white/70 p-6 backdrop-blur-sm inline-block">
               ただ、そこに<br />
-              い続けるためのもの。
+              居続けるためのもの。
             </h2>
           </FadeIn>
           
           <FadeIn delay={200}>
-            <div className="space-y-6 text-sm md:text-base leading-loose text-foreground font-light tracking-wide max-w-lg mx-auto bg-white/80 p-8 backdrop-blur-sm mt-8">
+            <div className="space-y-6 text-sm md:text-base leading-loose text-foreground font-light tracking-wide max-w-lg mx-auto bg-white/70 p-8 backdrop-blur-sm mt-8">
               <p>
                 MEGURIDは、コンクリートという素朴な素材で、日常の風景に「静けさ」と「落ち着き」を添えるプロダクトを作っています。
               </p>
@@ -65,7 +65,7 @@ export default function ConceptPage() {
 
           <FadeIn delay={400} className="mt-12">
             <Link href="/online-store">
-              <Button variant="primary" className="bg-white/80 hover:bg-gray-button hover:text-white">ラインナップを見る</Button>
+              <Button variant="primary" className="bg-white/70 hover:bg-gray-button hover:text-white">ラインナップを見る</Button>
             </Link>
           </FadeIn>
         </div>
