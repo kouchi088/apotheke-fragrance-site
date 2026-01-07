@@ -70,10 +70,7 @@ export default function ConceptPage() {
           </FadeIn>
         </div>
         
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-50 text-foreground z-20">
-          <span className="text-[10px] tracking-widest uppercase mb-2">Scroll</span>
-          <div className="w-[1px] h-12 bg-foreground"></div>
-        </div>
+
       </section>
 
       {/* --- Values Section (Philosophy) --- */}
