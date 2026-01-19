@@ -85,7 +85,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
         <div className="flex flex-col-reverse md:flex-row gap-4 w-full">
           {/* Thumbnails */}
           {product.images && product.images.length > 0 && (
-            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto md:w-[120px] md:h-[600px] scrollbar-hide py-1">
+            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto md:w-1/5 md:h-[600px] scrollbar-hide py-1">
               {product.images.map((img, index) => (
                 <button
                   key={index}
@@ -107,7 +107,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           )}
 
           {/* Main Image */}
-          <div className="relative w-full flex-1 aspect-square bg-accent">
+          <div className="relative w-full md:w-4/5 aspect-square bg-accent">
             {product.images && product.images.length > 0 ? (
               <>
                 <Image
