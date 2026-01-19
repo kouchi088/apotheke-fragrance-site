@@ -11,23 +11,22 @@ interface Product {
   stock_quantity?: number;
 }
 
-async function getProducts(): Promise<Product[]> {
+async function getProducts() {
   unstable_noStore();
   const supabase = createClient();
   const { data, error } = await supabase
     .from('products')
     .select('id, name, price, images, description, stock_quantity');
-    //.order('created_at', { ascending: false }); // Commented out due to potential missing column
 
   if (error) {
     console.error('Error fetching products:', error);
-    return [];
+    return { products: [], error };
   }
-  return data as Product[];
+  return { products: data as Product[], error: null };
 }
 
 export default async function OnlineStore() {
-  const products = await getProducts();
+  const { products, error } = await getProducts();
 
   return (
     <div className="bg-white min-h-screen text-foreground font-sans">
@@ -37,7 +36,15 @@ export default async function OnlineStore() {
           <p className="text-secondary text-sm tracking-widest uppercase">Collection</p>
         </div>
 
-        <StoreProductGrid products={products} />
+        {error ? (
+          <div className="text-center text-red-600 p-4 border border-red-200 bg-red-50 rounded">
+            <p className="font-bold">Error loading products:</p>
+            <p>{error.message || JSON.stringify(error)}</p>
+            <p className="text-sm mt-2 text-gray-600">Please check your database connection and RLS policies.</p>
+          </div>
+        ) : (
+          <StoreProductGrid products={products} />
+        )}
       </div>
     </div>
   );
