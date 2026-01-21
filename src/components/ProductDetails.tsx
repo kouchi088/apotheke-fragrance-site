@@ -82,44 +82,70 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     <div className="container mx-auto max-w-5xl py-12 px-6 font-sans">
       <div className="grid md:grid-cols-2 gap-12 items-start">
         {/* Image Section */}
-        <div className="relative w-full aspect-square bg-accent">
-          {product.images && product.images.length > 0 ? (
-            <>
+        <div className="flex flex-col-reverse md:flex-row gap-4">
+          {/* Thumbnails */}
+          {product.images && product.images.length > 0 && (
+            <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto w-full md:w-24 max-h-[500px] scrollbar-hide py-1">
+              {product.images.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`relative w-20 h-20 flex-shrink-0 cursor-pointer border transition-all duration-200 ${
+                    currentImageIndex === index ? 'border-foreground' : 'border-transparent opacity-75 hover:opacity-100'
+                  }`}
+                >
+                  <Image
+                    src={img}
+                    alt={`${product.name} thumbnail ${index + 1}`}
+                    fill
+                    sizes="80px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Main Image */}
+          <div className="relative flex-1 aspect-square bg-accent w-full md:w-auto">
+            {product.images && product.images.length > 0 ? (
+              <>
+                <Image
+                  src={product.images[currentImageIndex]}
+                  alt={product.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  style={{ objectFit: 'cover' }}
+                  priority
+                />
+                {product.images.length > 1 && (
+                  <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
+                    <button
+                      onClick={prevImage}
+                      className="bg-white/50 hover:bg-white text-primary p-2 rounded-full focus:outline-none transition-colors pointer-events-auto"
+                    >
+                      &lt;
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="bg-white/50 hover:bg-white text-primary p-2 rounded-full focus:outline-none transition-colors pointer-events-auto"
+                    >
+                      &gt;
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
               <Image
-                src={product.images[currentImageIndex]}
+                src={product.image}
                 alt={product.name}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 style={{ objectFit: 'cover' }}
                 priority
               />
-              {product.images.length > 1 && (
-                <div className="absolute inset-0 flex items-center justify-between px-4">
-                  <button
-                    onClick={prevImage}
-                    className="bg-white/50 hover:bg-white text-primary p-2 rounded-full focus:outline-none transition-colors"
-                  >
-                    &lt;
-                  </button>
-                  <button
-                    onClick={nextImage}
-                    className="bg-white/50 hover:bg-white text-primary p-2 rounded-full focus:outline-none transition-colors"
-                  >
-                    &gt;
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              style={{ objectFit: 'cover' }}
-              priority
-            />
-          )}
+            )}
+          </div>
         </div>
 
         {/* Details Section */}
