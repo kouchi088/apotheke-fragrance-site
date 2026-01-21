@@ -85,12 +85,12 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
         <div className="flex flex-col-reverse md:flex-row gap-4">
           {/* Thumbnails */}
           {product.images && product.images.length > 0 && (
-            <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto w-full md:w-24 max-h-[500px] scrollbar-hide py-1">
+            <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto w-full md:w-12 max-h-[500px] scrollbar-hide py-1">
               {product.images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
-                  className={`relative w-20 h-20 flex-shrink-0 cursor-pointer border transition-all duration-200 ${
+                  className={`relative w-10 h-10 flex-shrink-0 cursor-pointer border transition-all duration-200 ${
                     currentImageIndex === index ? 'border-foreground' : 'border-transparent opacity-75 hover:opacity-100'
                   }`}
                 >
@@ -98,7 +98,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                     src={img}
                     alt={`${product.name} thumbnail ${index + 1}`}
                     fill
-                    sizes="80px"
+                    sizes="40px"
                     style={{ objectFit: 'cover' }}
                   />
                 </button>
@@ -150,8 +150,8 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
         {/* Details Section */}
         <div className="flex flex-col pt-4 md:pt-0">
-          <h1 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-foreground">{product.name}</h1>
-          <p className="text-xl text-primary mb-8">¥{product.price.toLocaleString()}</p>
+          <h1 className="text-xl md:text-2xl font-serif font-medium mb-2 text-foreground">{product.name}</h1>
+          <p className="text-lg text-primary mb-8">¥{product.price.toLocaleString()}</p>
           
           {/* Quantity & Buttons moved above description for mobile UX */}
           <div className="mb-10">
