@@ -36,35 +36,21 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
         <section className="relative h-screen w-full overflow-hidden">
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://picsum.photos/1600/1200?grayscale"
+              src="/tophero.png"
               alt="Concrete vase detail"
               fill
               style={{ objectFit: 'cover' }}
               priority
             />
           </div>
-          <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center items-start">
-            <div className="bg-white/90 p-8 md:p-12 max-w-xl backdrop-blur-sm border border-white/50">
-              <span className="text-xs font-bold tracking-[0.3em] text-secondary uppercase mb-4 block">
-                Handcrafted Concrete
-              </span>
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-foreground leading-tight mb-8">
-                MEGURID <br />
-                巡り出会う
-              </h1>
-              <p className="text-primary mb-10 leading-relaxed font-sans">
-                都市の素材であるコンクリートに、手仕事の温かみを。<br />
-                不揃いな気泡、独特の質感、経年変化。<br />
-                MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。
-              </p>
-              <Link
-                href="/online-store"
-                className="group inline-flex items-center space-x-3 text-foreground border-b border-foreground pb-1 hover:text-primary hover:border-primary transition-all"
-              >
-                <span className="text-sm tracking-widest uppercase">View Collection</span>
-                <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
+          <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 opacity-85">
+            <Image
+              src="/logo2.png"
+              alt="MEGURID Logo"
+              width={346}
+              height={461}
+              priority
+            />
           </div>
         </section>
 
