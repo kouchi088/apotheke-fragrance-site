@@ -45,3 +45,5 @@ next-env.d.ts
 *.jpg
 *.jpeg
 *.gif
+!public/logo2.png
+!public/tophero.png
