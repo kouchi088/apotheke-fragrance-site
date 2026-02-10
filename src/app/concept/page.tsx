@@ -5,10 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import FadeIn from '@/components/FadeIn';
 
-// --- Button Component ---
 const Button = ({ variant = 'primary', className = '', children, ...props }: any) => {
   const baseStyle = "px-8 py-4 text-sm tracking-widest transition-all duration-300 ease-out font-medium inline-block text-center";
-  
+
   const variants: any = {
     primary: "bg-transparent border border-gray-button text-foreground hover:bg-gray-button hover:text-white",
     outline: "bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-white",
@@ -21,189 +20,229 @@ const Button = ({ variant = 'primary', className = '', children, ...props }: any
   );
 };
 
-export default function ConceptPage() {
+export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-foreground font-sans selection:bg-gray-200 selection:text-foreground">
-      
       {/* --- Hero Section --- */}
-      <section className="relative h-screen w-full overflow-hidden">
+      <section className="relative -mt-[78px] h-[calc(100vh+78px)] w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image 
-            src="https://picsum.photos/1600/1200?grayscale&blur=1" 
-            alt="Background texture" 
-            fill 
+          <Image
+            src="https://picsum.photos/1600/1200?grayscale&blur=1"
+            alt="MEGURID ヒーロー"
+            fill
             style={{ objectFit: 'cover' }}
             className="grayscale"
             priority
           />
-          {/* Overlay for readability */}
           <div className="absolute inset-0 bg-white/30"></div>
         </div>
 
         <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6">
           <FadeIn>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-8 text-foreground bg-white/70 p-6 backdrop-blur-sm inline-block">
-              ただ、そこに<br />
-              居続けるためのもの。
-            </h2>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-8 text-foreground tracking-[0.15em] text-center">
+              MEGURI 出会う
+            </h1>
           </FadeIn>
-          
+
           <FadeIn delay={200}>
-            <div className="space-y-6 text-sm md:text-base leading-loose text-foreground font-light tracking-wide max-w-lg mx-auto bg-white/70 p-8 backdrop-blur-sm mt-8">
-              <p>
-                MEGURIDは、コンクリートという素朴な素材で、日常の風景に「静けさ」と「落ち着き」を添えるプロダクトを作っています。
-              </p>
-              <p>
-                強く主張するのではなく、ただそこにいる。<br />
-                ふと目が止まった時、コンクリートの重さが、強さが、部屋を整える存在であること。
-              </p>
-              <p>
-                そのささやかな役割を、一つ一つの形に任せています。
-              </p>
+            <div className="space-y-0 text-[0.8rem] md:text-sm leading-loose text-foreground font-light tracking-wide max-w-lg mx-auto mt-4">
+              <p>都市の素材であるコンクリートに、手仕事の温かみを。</p>
+              <p className="mt-[50px]">不揃いな気泡、独特の質感、経年変化。MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。</p>
             </div>
           </FadeIn>
 
-          <FadeIn delay={400} className="mt-12">
-            <Link href="/online-store">
-              <Button variant="primary" className="bg-white/70 hover:bg-gray-button hover:text-white">ラインナップを見る</Button>
-            </Link>
-          </FadeIn>
         </div>
-        
-
       </section>
 
-      {/* --- Values Section (Philosophy) --- */}
-      <section id="philosophy" className="py-24 md:py-32 bg-white">
+      {/* --- About us --- */}
+      <section id="about" className="py-24 md:py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
-            
             <div className="md:w-1/2">
               <FadeIn>
-                <span className="block text-xs font-bold tracking-[0.2em] text-gray-400 mb-6 uppercase">
-                  Philosophy
-                </span>
-                <h3 className="text-2xl md:text-3xl font-serif mb-10 text-foreground">
-                  MEGURIDが<br />大切にしていること
-                </h3>
+                <h2 className="text-2xl md:text-3xl font-serif mb-10 text-foreground">私たちについて</h2>
               </FadeIn>
-              
               <FadeIn delay={200}>
                 <div className="text-sm md:text-base leading-loose text-gray-600 font-light space-y-8 tracking-wide text-justify">
+                  <p>私たちは建築家集団です。</p>
                   <p>
-                    メグリッドが目指しているもの。<br/>
-                    生活の中で使う物は、便利さや分かりやすい機能だけで選ぶこともできます。しかし、部屋の中で長く付き合っていきたいものには、もう少し違う基準があってもいいと私たちは考えています。
+                    形をつくる前に、問いを立てることから始めます。
+                    光とは何か。壁とは何か。人が落ち着くとはどういうことか。
                   </p>
                   <p>
-                    毎日見るからこそ落ち着きがとる。そこにあるだけで、空気が少し落ち着いて感じられること。使い込むほど、持ち主の時間がゆっくりと刻まれていくこと。
+                    建築で培った視点を、手のひらに収まるスケールへ。
+                    コンクリートという素朴な素材に思考を沈め、
+                    生活の一角に、静かに効くプロダクトを立ち上げています。
                   </p>
                   <p>
-                    MEGURIDのプロダクトは、そうした「長くそばに置いておきたい感覚」を軸にデザインされています。何かを主張するためではなく、生活の背景に静かに居続けることで、持ち主の時間を支えるような存在でありたいと考えています。
+                    目立つためではなく、空間の芯として佇むために。
+                    MEGURID は、暮らしの背景に長く残るものをつくります。
                   </p>
                 </div>
               </FadeIn>
             </div>
 
             <div className="md:w-1/2 relative h-[500px] w-full">
-               <FadeIn direction="left" delay={300} className="h-full w-full">
-                  <div className="relative w-full h-full bg-gray-100">
-                    <Image 
-                        src="https://picsum.photos/800/1000?random=2" 
-                        alt="Lifestyle image" 
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        className="grayscale"
-                    />
-                    <div className="absolute bottom-0 right-0 bg-white p-6 shadow-sm max-w-xs hidden md:block">
-                        <p className="text-xs tracking-widest text-gray-400 leading-relaxed italic">
-                            &quot;Silence in the noise.&quot;
-                        </p>
-                    </div>
-                  </div>
-               </FadeIn>
+              <FadeIn direction="left" delay={300} className="h-full w-full">
+                <div className="relative w-full h-full bg-gray-100">
+                  <Image
+                    src="https://picsum.photos/800/1000?random=2"
+                    alt="制作風景"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="grayscale"
+                  />
+                </div>
+              </FadeIn>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* --- Material Section --- */}
+      {/* --- Why Concrete --- */}
       <section id="material" className="py-32 bg-accent text-foreground relative">
         <div className="max-w-5xl mx-auto px-6">
-          
           <FadeIn className="mb-20 text-center">
-               <span className="block text-xs font-bold tracking-[0.2em] text-gray-500 mb-6 uppercase">
-                  Material
-                </span>
-              <h3 className="text-3xl md:text-4xl font-serif tracking-wide">
-                  なぜ、コンクリートなのか。
-              </h3>
+            <h2 className="text-3xl md:text-4xl font-serif tracking-wide">なぜ、コンクリートなのか。</h2>
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-              <FadeIn delay={200}>
-                  <div className="aspect-square bg-gray-200 relative overflow-hidden group shadow-lg">
-                       <Image 
-                          src="https://picsum.photos/800/800?random=4" 
-                          alt="Concrete texture macro" 
-                          fill
-                          style={{ objectFit: 'cover' }}
-                          className="grayscale group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                  </div>
-              </FadeIn>
+            <FadeIn delay={200}>
+              <div className="aspect-square bg-gray-200 relative overflow-hidden group shadow-lg">
+                <Image
+                  src="https://picsum.photos/800/800?random=4"
+                  alt="コンクリートの質感"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="grayscale group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
+            </FadeIn>
 
-              <FadeIn delay={400}>
-                  <div className="space-y-8 text-sm md:text-base leading-loose font-light text-gray-600 tracking-wide text-justify">
-                      <p>
-                          コンクリートの物質は多くの魅力を孕んでいます。私たちが建築を学ぶなかで、図面の中の記号としてだけでなく、この素材に向き合い多くのことを感じてきました。
-                      </p>
-                      <p>
-                          実際の建築を見に行ったときに感じる質量や、自分たちの手で小さな試験体を打ったときの冷たさ・ざらつきに、強さ、重さ、硬さに少しずつ魅了されてきました。
-                      </p>
-                      <p>
-                          コンクリートという派手さより「在り方」で印象を変える素材は無機質でありながら、どこか落ち着きをとい、そっと背景に回ることも、空間の芯として佇むこともできる。そのかっこよさと静けさが同居している感じが、今の生活にこそ必要なものだと私たちは感じています。
-                      </p>
-                      <p>
-                          MEGURIDのプロダクトは、建築の中でコンクリートと出会い、触れ合いながらその魅力に惹かれてきた延長線上に生まれたものです。「かっこいい」と「落ち着いていられる」を同時に叶えられる素材として、私たちはコンクリートを選び続けています。
-                      </p>
-                  </div>
-              </FadeIn>
+            <FadeIn delay={400}>
+              <div className="space-y-8 text-sm md:text-base leading-loose font-light text-gray-600 tracking-wide text-justify">
+                <p>
+                  コンクリートには、強さと静けさが同居しています。
+                  私たちは建築の中でこの素材に出会い、図面上の記号ではなく、
+                  質量や冷たさ、ざらつきといった手触りとして向き合ってきました。
+                </p>
+                <p>
+                  コンクリートは、派手さよりも「在り方」で印象が変わる素材です。
+                  背景にまわることも、空間の芯として佇むこともできる。
+                  そのかっこよさと落ち着きが、いまの生活にこそ必要だと感じています。
+                </p>
+                <p>
+                  MEGURID は、「かっこいい」と「落ち着いていられる」を同時に叶える素材として、
+                  コンクリートを選び続けています。
+                </p>
+              </div>
+            </FadeIn>
           </div>
-
         </div>
       </section>
 
-      {/* --- Footer CTA Section --- */}
-      <section className="py-32 bg-white flex flex-col items-center justify-center text-center px-6">
-        <FadeIn direction="up">
-          <div className="max-w-2xl mx-auto space-y-8 mb-16">
-            <p className="text-lg md:text-xl font-serif text-foreground leading-relaxed">
-              部屋の中で、特別に目立つわけではないけれど、<br />
-              いないと少し物足りなく感じるもの。
-            </p>
-            <p className="text-base text-gray-600 leading-relaxed font-light">
-              MEGURID のプロダクトが、そんなポジションを引き受けられたら嬉しく思います。<br /><br />
-              ひとつの形を選び、手元に迎え入れるところから、<br />
-              このブランドとの時間が始まります。
-            </p>
-          </div>
-        </FadeIn>
+      {/* --- Featured Products --- */}
+      <section id="featured" className="py-24 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <FadeIn>
+            <h2 className="text-2xl md:text-3xl font-serif mb-12 text-foreground">主要商品</h2>
+          </FadeIn>
 
-        <FadeIn delay={200} className="flex flex-col md:flex-row gap-6">
-          <Link href="/online-store">
-            <Button variant="outline" className="min-w-[200px]">
-              ラインナップを見る
-            </Button>
-          </Link>
-          <Link href="/online-store">
-            <Button variant="primary" className="min-w-[200px] shadow-lg shadow-gray-200">
-              オンラインストアへ
-            </Button>
-          </Link>
-        </FadeIn>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <FadeIn delay={100}>
+              <div className="group">
+                <Link href="/online-store" className="block">
+                  <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                    <Image
+                      src="https://picsum.photos/800/800?random=6"
+                      alt="Incense Holder"
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                </Link>
+                <div className="mt-6">
+                  <h3 className="text-lg font-serif text-foreground">Incense Holder</h3>
+                  <p className="text-primary mt-2 text-sm leading-relaxed">
+                    香りの時間を、部屋の静けさとして定着させる。
+                  </p>
+                  <Link
+                    href="/online-store"
+                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-sm tracking-widest hover:text-primary hover:border-primary transition-colors"
+                  >
+                    商品を見る
+                  </Link>
+                </div>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={200}>
+              <div className="group">
+                <Link href="/online-store" className="block">
+                  <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                    <Image
+                      src="/about_ash.png"
+                      alt="Tray"
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                </Link>
+                <div className="mt-6">
+                  <h3 className="text-lg font-serif text-foreground">Tray</h3>
+                  <p className="text-primary mt-2 text-sm leading-relaxed">
+                    散らかり方にルールを与え、視界を整えるための面。
+                  </p>
+                  <Link
+                    href="/online-store"
+                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-sm tracking-widest hover:text-primary hover:border-primary transition-colors"
+                  >
+                    商品を見る
+                  </Link>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+        </div>
       </section>
 
+      {/* --- CTA --- */}
+      <section className="py-24 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
+            <div className="md:w-1/2">
+              <FadeIn>
+                <p className="text-lg md:text-xl font-serif text-foreground leading-relaxed mb-8">
+                  オンラインストアで、現在のラインナップをご覧ください。
+                </p>
+              </FadeIn>
+              <FadeIn delay={200}>
+                <Link href="/online-store">
+                  <Button variant="outline" className="min-w-[220px]">
+                    オンラインストアを見る
+                  </Button>
+                </Link>
+              </FadeIn>
+            </div>
+
+            <div className="md:w-1/2 relative h-[500px] w-full">
+              <FadeIn direction="left" delay={300} className="h-full w-full">
+                <div className="relative w-full h-full bg-gray-100">
+                  <Image
+                    src="https://picsum.photos/800/1000?random=8"
+                    alt="使用イメージ"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="grayscale"
+                  />
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
