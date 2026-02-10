@@ -78,6 +78,7 @@ const Header = () => {
             </svg>
           </button>
           <Link href="/concept" className="hover:text-primary" onClick={toggleMobileMenu}>About</Link>
+          <Link href="/lp" className="hover:text-primary" onClick={toggleMobileMenu}>abou2</Link>
           <Link href="/online-store" className="hover:text-primary" onClick={toggleMobileMenu}>Online Store</Link>
           {user && (
             <>

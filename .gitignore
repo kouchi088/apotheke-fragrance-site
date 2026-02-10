@@ -47,3 +47,4 @@ next-env.d.ts
 *.gif
 !public/logo2.png
 !public/tophero.png
+!public/about_ash.png
