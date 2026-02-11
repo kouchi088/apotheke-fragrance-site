@@ -113,7 +113,7 @@ export default function LandingPage() {
             <FadeIn delay={200}>
               <div className="aspect-square bg-gray-200 relative overflow-hidden group shadow-lg">
                 <Image
-                  src="/concrete.png"
+                  src="/concrete.png?v=20260211"
                   alt="コンクリートの質感"
                   fill
                   style={{ objectFit: 'cover' }}
