@@ -15,48 +15,63 @@ const FadeIn: React.FC<FadeInProps> = ({
   className = "", 
   direction = 'up' 
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
   const domRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (domRef.current) observer.unobserve(domRef.current);
-        }
-      });
-    }, { threshold: 0.1 });
+    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            setProgress(0);
+            return;
+          }
+
+          // Amplify low intersection ratios so large blocks still reach full visibility.
+          const normalized = Math.min(1, entry.intersectionRatio * 2.4);
+          setProgress(normalized);
+        });
+      },
+      {
+        threshold: thresholds,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
 
     const currentRef = domRef.current;
     if (currentRef) observer.observe(currentRef);
 
     return () => {
       if (currentRef) observer.unobserve(currentRef);
+      observer.disconnect();
     };
   }, []);
 
-  const getTransform = () => {
-    if (!isVisible) {
-      switch (direction) {
-        case 'up': return 'translateY(20px)';
-        case 'down': return 'translateY(-20px)';
-        case 'left': return 'translateX(20px)';
-        case 'right': return 'translateX(-20px)';
-        default: return 'none';
-      }
+  const getTransform = (value: number) => {
+    const distance = (1 - value) * 28;
+    switch (direction) {
+      case 'up':
+        return `translateY(${distance}px)`;
+      case 'down':
+        return `translateY(${-distance}px)`;
+      case 'left':
+        return `translateX(${distance}px)`;
+      case 'right':
+        return `translateX(${-distance}px)`;
+      default:
+        return 'none';
     }
-    return 'none';
   };
 
   return (
     <div
       ref={domRef}
-      className={`transition-all duration-1000 ease-out ${className}`}
+      className={`transition-all duration-500 ease-out will-change-transform ${className}`}
       style={{
-        opacity: isVisible ? 1 : 0,
-        transform: getTransform(),
-        transitionDelay: `${delay}ms`
+        opacity: Math.max(0, Math.min(1, progress)),
+        transform: getTransform(progress),
+        transitionDelay: `${delay}ms`,
       }}
     >
       {children}

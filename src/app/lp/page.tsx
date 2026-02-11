@@ -30,14 +30,14 @@ export default function LandingPage() {
       <section className="relative -mt-[78px] h-[calc(100vh+78px)] w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/LP_hero.png"
+            src="/LP_hero.png?v=20260211"
             alt="MEGURID ヒーロー"
             fill
             style={{ objectFit: 'cover' }}
             className="grayscale"
             priority
           />
-          <div className="absolute inset-0 bg-white/30"></div>
+          <div className="absolute inset-0 bg-white/25"></div>
         </div>
 
         <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6">
@@ -58,10 +58,10 @@ export default function LandingPage() {
       </section>
 
       {/* --- About us --- */}
-      <section id="about" className="py-24 md:py-32 bg-white">
+      <section id="about" className="py-28 md:py-36 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
-            <div className="md:w-1/2">
+            <div className="md:w-1/2 md:pl-10 lg:pl-16">
               <FadeIn>
                 <h2 className="text-2xl md:text-3xl font-serif mb-10 text-foreground">私たちについて</h2>
               </FadeIn>
@@ -103,7 +103,7 @@ export default function LandingPage() {
       </section>
 
       {/* --- Why Concrete --- */}
-      <section id="material" className="py-32 bg-accent text-foreground relative">
+      <section id="material" className="py-36 bg-white text-foreground relative">
         <div className="max-w-5xl mx-auto px-6">
           <FadeIn className="mb-20 text-center">
             <h2 className="text-3xl md:text-4xl font-serif tracking-wide">なぜ、コンクリートなのか。</h2>
@@ -113,7 +113,7 @@ export default function LandingPage() {
             <FadeIn delay={200}>
               <div className="aspect-square bg-gray-200 relative overflow-hidden group shadow-lg">
                 <Image
-                  src="https://picsum.photos/800/800?random=4"
+                  src="/concrete.png"
                   alt="コンクリートの質感"
                   fill
                   style={{ objectFit: 'cover' }}
@@ -145,7 +145,7 @@ export default function LandingPage() {
       </section>
 
       {/* --- Featured Products --- */}
-      <section id="featured" className="py-24 md:py-32 bg-white">
+      <section id="featured" className="py-28 md:py-36 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <FadeIn>
             <h2 className="text-2xl md:text-3xl font-serif mb-12 text-foreground">主要商品</h2>
@@ -212,7 +212,7 @@ export default function LandingPage() {
       </section>
 
       {/* --- CTA --- */}
-      <section className="py-24 md:py-32 bg-white">
+      <section className="py-28 md:py-36 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center">
             <FadeIn>
