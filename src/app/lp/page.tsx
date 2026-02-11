@@ -67,7 +67,7 @@ export default function LandingPage() {
               </FadeIn>
               <FadeIn delay={200}>
                 <div className="text-[10pt] leading-normal text-gray-600 font-light space-y-8 tracking-wide text-justify">
-                  <p>私たちは建築家集団です。</p>
+                  <p>私たちは若手建築家集団です。</p>
                   <p>
                     形をつくる前に、問いを立てることから始めます。
                     光とは何か。壁とは何か。人が落ち着くとはどういうことか。
