@@ -6,6 +6,24 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif;
+    color: rgb(51 51 51 / 80%);
+    font-weight: 300;
+    letter-spacing: 0.018em;
+    line-height: 1.8;
   }
+}
+
+.c-textarea__text {
+  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif;
+  color: rgb(51 51 51 / 80%);
+  font-weight: 300;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  letter-spacing: 0.018em;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  cursor: default;
 }

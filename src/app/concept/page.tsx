@@ -22,7 +22,7 @@ const Button = ({ variant = 'primary', className = '', children, ...props }: any
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white text-foreground font-sans selection:bg-gray-200 selection:text-foreground">
+    <div className="min-h-screen bg-white text-foreground selection:bg-gray-200 selection:text-foreground" style={{ fontFamily: "'Noto Serif JP', 'Times New Roman', serif" }}>
       {/* --- Hero Section --- */}
       <section className="relative -mt-[78px] h-[calc(100vh+78px)] w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -63,7 +63,7 @@ export default function LandingPage() {
                 <h2 className="text-2xl md:text-3xl font-serif mb-10 text-foreground">私たちについて</h2>
               </FadeIn>
               <FadeIn delay={200}>
-                <div className="text-sm md:text-base leading-loose text-gray-600 font-light space-y-8 tracking-wide text-justify">
+                <div className="text-[10pt] leading-normal text-gray-600 font-light space-y-8 tracking-wide text-justify">
                   <p>私たちは建築家集団です。</p>
                   <p>
                     形をつくる前に、問いを立てることから始めます。
@@ -120,7 +120,7 @@ export default function LandingPage() {
             </FadeIn>
 
             <FadeIn delay={400}>
-              <div className="space-y-8 text-sm md:text-base leading-loose font-light text-gray-600 tracking-wide text-justify">
+              <div className="space-y-8 text-[10pt] leading-normal font-light text-gray-600 tracking-wide text-justify">
                 <p>
                   コンクリートには、強さと静けさが同居しています。
                   私たちは建築の中でこの素材に出会い、図面上の記号ではなく、
@@ -164,7 +164,7 @@ export default function LandingPage() {
                 </Link>
                 <div className="mt-6">
                   <h3 className="text-lg font-serif text-foreground">Incense Holder</h3>
-                  <p className="text-primary mt-2 text-sm leading-relaxed">
+                  <p className="text-primary mt-2 text-[10pt] leading-normal">
                     香りの時間を、部屋の静けさとして定着させる。
                   </p>
                   <Link
@@ -192,7 +192,7 @@ export default function LandingPage() {
                 </Link>
                 <div className="mt-6">
                   <h3 className="text-lg font-serif text-foreground">Tray</h3>
-                  <p className="text-primary mt-2 text-sm leading-relaxed">
+                  <p className="text-primary mt-2 text-[10pt] leading-normal">
                     散らかり方にルールを与え、視界を整えるための面。
                   </p>
                   <Link
@@ -214,7 +214,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
             <div className="md:w-1/2">
               <FadeIn>
-                <p className="text-lg md:text-xl font-serif text-foreground leading-relaxed mb-8">
+                <p className="text-[10pt] font-serif text-foreground leading-normal mb-8">
                   オンラインストアで、現在のラインナップをご覧ください。
                 </p>
               </FadeIn>
