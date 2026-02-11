@@ -39,7 +39,7 @@ const Header = () => {
 
         {/* Right Section: All Links - Hidden on mobile, shown on md+ */}
         <div className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 items-center space-x-6 text-sm justify-end">
-          <Link href="/concept" className="hover:text-primary">About</Link>
+          <Link href="/lp" className="hover:text-primary">About</Link>
           <Link href="/online-store" className="hover:text-primary">Online Store</Link>
           {user && (
             <>
@@ -77,8 +77,7 @@ const Header = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
-          <Link href="/concept" className="hover:text-primary" onClick={toggleMobileMenu}>About</Link>
-          <Link href="/lp" className="hover:text-primary" onClick={toggleMobileMenu}>abou2</Link>
+          <Link href="/lp" className="hover:text-primary" onClick={toggleMobileMenu}>About</Link>
           <Link href="/online-store" className="hover:text-primary" onClick={toggleMobileMenu}>Online Store</Link>
           {user && (
             <>
