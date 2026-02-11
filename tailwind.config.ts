@@ -18,11 +18,11 @@ const config: Config = {
         'button-fill': '#DADBDD', // Custom gray for filled buttons
       },
       fontFamily: {
-        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+        sans: ['"Noto Serif JP"', '"Hiragino Mincho ProN"', '"Yu Mincho"', '"MS Mincho"', 'serif'],
+        serif: ['"Noto Serif JP"', '"Hiragino Mincho ProN"', '"Yu Mincho"', '"MS Mincho"', 'serif'],
       },
     },
   },
   plugins: [],
 };
 export default config;
-

@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
@@ -12,9 +12,20 @@ const ArrowRight = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const HERO_IMAGES = ['/tophero.png', '/tophero2.png'];
+
 // --- Client Component ---
 export default function LandingPageClient({ products, reviews, featuredProducts }: { products: any[]; reviews: any[]; featuredProducts: any[] }) {
   const { addToCart } = useCart();
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleAddToCart = (product: any) => {
     const productToAdd = {
@@ -35,13 +46,22 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
         {/* --- Hero Section (Main Visual) --- */}
         <section className="relative h-screen w-full overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <Image
-              src="/tophero.png"
-              alt="Concrete vase detail"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
-            />
+            {HERO_IMAGES.map((src, index) => (
+              <div
+                key={src}
+                className={`absolute inset-0 transition-opacity duration-1000 ${
+                  index === currentHeroIndex ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <Image
+                  src={src}
+                  alt="Concrete vase detail"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority={index === 0}
+                />
+              </div>
+            ))}
           </div>
           <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 opacity-85">
             <Image
