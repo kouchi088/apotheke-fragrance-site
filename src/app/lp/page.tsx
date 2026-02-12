@@ -28,18 +28,18 @@ export default function LandingPage() {
     >
       {/* --- Hero Section --- */}
       <section className="relative -mt-[78px] w-full overflow-hidden md:h-[calc(100vh+78px)]">
-        <div className="relative z-0 w-full aspect-[43/24] bg-[#f6f6f4] md:absolute md:inset-0">
+        <div className="relative z-0 w-full aspect-[4/3] bg-[#f6f6f4] md:absolute md:inset-0">
           <Image
             src="/LP_hero.png?v=20260211"
             alt="MEGURID ヒーロー"
             fill
-            className="grayscale object-contain object-top"
+            className="grayscale object-cover object-top"
             priority
           />
           <div className="absolute inset-0 bg-white/15"></div>
         </div>
 
-        <div className="absolute inset-0 z-10 h-full flex flex-col justify-start md:justify-center items-center text-center px-5 sm:px-6 pt-24 sm:pt-28 md:pt-0">
+        <div className="absolute inset-0 z-10 h-full flex flex-col justify-center items-center text-center px-5 sm:px-6 pt-[78px] md:pt-0">
           <FadeIn>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-6 sm:mb-8 text-foreground tracking-[0.12em] sm:tracking-[0.15em] text-center">
               MEGURI 出会う
@@ -47,12 +47,27 @@ export default function LandingPage() {
           </FadeIn>
 
           <FadeIn delay={200}>
-            <div className="space-y-0 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal text-foreground font-[300] tracking-wide max-w-lg mx-auto mt-2 sm:mt-4 px-[1em] md:px-0">
-              <p>都市の素材であるコンクリートに、手仕事の温かみを。</p>
-              <p className="mt-8 sm:mt-[50px]">不揃いな気泡、独特の質感、経年変化。MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。</p>
+            <div className="hidden md:block text-[9.5pt] sm:text-[10pt] leading-[2rem] text-foreground font-[300] tracking-wide max-w-lg mx-auto mt-2 sm:mt-4 px-[1em] md:px-0 text-center">
+              <p>都市の素材であるコンクリートに</p>
+              <p>手仕事の温かみを。</p>
+              <p>不揃いな気泡、独特の質感、経年変化。</p>
+              <p>MEGURIDは、日常に静かな重みをもたらす</p>
+              <p>インテリアオブジェを提案します。</p>
             </div>
           </FadeIn>
 
+        </div>
+      </section>
+
+      <section className="md:hidden pt-10 pb-8 bg-white">
+        <div className="max-w-7xl mx-auto px-5">
+          <div className="text-[9.5pt] leading-[2rem] text-foreground font-[300] tracking-wide max-w-lg mx-auto px-[1em] text-center">
+            <p>都市の素材であるコンクリートに</p>
+            <p>手仕事の温かみを。</p>
+            <p>不揃いな気泡、独特の質感、経年変化。</p>
+            <p>MEGURIDは、日常に静かな重みをもたらす</p>
+            <p>インテリアオブジェを提案します。</p>
+          </div>
         </div>
       </section>
 

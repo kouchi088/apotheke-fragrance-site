@@ -88,9 +88,9 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                   View All Items
                 </Link>
               </div>
-              <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
                 {products.map((product: any) => (
-                  <div key={product.id} className="group">
+                  <div key={product.id} className="group h-full flex flex-col">
                     <Link href={`/products/${product.id}`} className="block">
                       <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
                         {product.images && product.images.length > 0 && (
@@ -105,13 +105,15 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                       </div>
                       <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
                     </Link>
-                    <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
-                    <button
-                      onClick={() => handleAddToCart(product)}
-                      className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
-                    >
-                      カートに追加
-                    </button>
+                    <div className="mt-auto pt-2">
+                      <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
+                      <button
+                        onClick={() => handleAddToCart(product)}
+                        className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
+                      >
+                        カートに追加
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -131,9 +133,9 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
               <h2 className="text-2xl sm:text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
               <p className="text-secondary text-sm mb-10 sm:mb-12">Curated selection of our signature items.</p>
               
-              <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
                 {featuredProducts.map((product: any) => (
-                  <div key={product.id} className="group">
+                  <div key={product.id} className="group h-full flex flex-col">
                     <Link href={`/products/${product.id}`} className="block">
                       <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
                         {product.images && product.images.length > 0 && (
@@ -148,13 +150,15 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                       </div>
                       <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
                     </Link>
-                    <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
-                    <button
-                      onClick={() => handleAddToCart(product)}
-                      className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
-                    >
-                      カートに追加
-                    </button>
+                    <div className="mt-auto pt-2">
+                      <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
+                      <button
+                        onClick={() => handleAddToCart(product)}
+                        className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
+                      >
+                        カートに追加
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
