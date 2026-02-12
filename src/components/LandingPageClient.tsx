@@ -44,7 +44,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
     <div className="antialiased bg-white selection:bg-accent selection:text-foreground">
       <main>
         {/* --- Hero Section (Main Visual) --- */}
-        <section className="relative h-screen w-full overflow-hidden">
+        <section className="relative -mt-[78px] w-full aspect-[4/3] md:aspect-[43/24] overflow-hidden">
           <div className="absolute inset-0 z-0">
             {HERO_IMAGES.map((src, index) => (
               <div
@@ -69,6 +69,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
               alt="MEGURID Logo"
               width={346}
               height={461}
+              className="w-[150px] sm:w-[220px] md:w-[346px] h-auto"
               priority
             />
           </div>
@@ -76,18 +77,18 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
 
         {/* --- New Arrivals Section (formerly Collection) --- */}
         {products && products.length > 0 && (
-          <section id="new-arrivals" className="py-24 bg-white">
-            <div className="container mx-auto px-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
+          <section id="new-arrivals" className="py-20 sm:py-24 bg-white">
+            <div className="container mx-auto px-8 sm:px-9">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 sm:mb-16">
                 <div>
-                  <h2 className="text-3xl font-serif text-foreground mb-2">New Arrivals</h2>
+                  <h2 className="text-2xl sm:text-3xl font-serif text-foreground mb-2">New Arrivals</h2>
                   <p className="text-secondary text-sm">Latest creations from our studio.</p>
                 </div>
                 <Link href="/online-store" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors mt-8 md:mt-0">
                   View All Items
                 </Link>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+              <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
                 {products.map((product: any) => (
                   <div key={product.id} className="group">
                     <Link href={`/products/${product.id}`} className="block">
@@ -102,7 +103,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                           />
                         )}
                       </div>
-                      <h3 className="mt-4 text-lg font-semibold text-foreground">{product.name}</h3>
+                      <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
                     </Link>
                     <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
                     <button
@@ -114,7 +115,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                   </div>
                 ))}
               </div>
-              <div className="mt-16 text-center md:hidden">
+              <div className="mt-12 sm:mt-16 text-center md:hidden">
                 <Link href="/online-store" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1">
                   View All Items
                 </Link>
@@ -125,12 +126,12 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
 
         {/* --- Featured / Best Sellers Section --- */}
         {featuredProducts && featuredProducts.length > 0 && (
-          <section id="featured" className="py-24 bg-white">
-            <div className="container mx-auto px-6 text-center">
-              <h2 className="text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
-              <p className="text-secondary text-sm mb-12">Curated selection of our signature items.</p>
+          <section id="featured" className="py-20 sm:py-24 bg-white">
+            <div className="container mx-auto px-8 sm:px-9 text-center">
+              <h2 className="text-2xl sm:text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
+              <p className="text-secondary text-sm mb-10 sm:mb-12">Curated selection of our signature items.</p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+              <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
                 {featuredProducts.map((product: any) => (
                   <div key={product.id} className="group">
                     <Link href={`/products/${product.id}`} className="block">
@@ -145,7 +146,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                           />
                         )}
                       </div>
-                      <h3 className="mt-4 text-lg font-semibold text-foreground">{product.name}</h3>
+                      <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
                     </Link>
                     <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
                     <button
@@ -162,11 +163,11 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
         )}
 
         {/* --- Journal Section (formerly Concept) --- */}
-        <section id="journal" className="py-24 md:py-32 bg-white text-foreground">
-          <div className="container mx-auto px-6">
-            <div className="flex flex-col md:flex-row items-center gap-16">
+        <section id="journal" className="py-20 sm:py-24 md:py-32 bg-white text-foreground">
+          <div className="container mx-auto px-5 sm:px-6">
+            <div className="flex flex-col md:flex-row items-center gap-12 sm:gap-16">
               <div className="w-full md:w-1/2">
-                <div className="aspect-[4/5] relative overflow-hidden bg-accent">
+                <div className="aspect-square relative overflow-hidden bg-accent">
                   <Image
                     src="https://picsum.photos/800/1000?blur=2&grayscale"
                     alt="Process of making concrete"
@@ -177,7 +178,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                 </div>
               </div>
               <div className="w-full md:w-1/2 md:pl-12">
-                <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-8 leading-snug">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-foreground mb-6 sm:mb-8 leading-snug">
                   Journal
                 </h2>
                 <p className="text-primary font-serif italic mb-6 text-lg">
@@ -226,11 +227,11 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
         </section>
 
         {/* --- Life with MEGURID Section (UGC) --- */}
-        <section id="life-with-megurid" className="py-24 bg-white text-foreground">
-          <div className="container mx-auto px-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
+        <section id="life-with-megurid" className="py-20 sm:py-24 bg-white text-foreground">
+          <div className="container mx-auto px-5 sm:px-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 sm:mb-16">
               <div>
-                <h2 className="text-3xl font-serif text-foreground mb-2">MEGURIDのある暮らし</h2>
+                <h2 className="text-2xl sm:text-3xl font-serif text-foreground mb-2">MEGURIDのある暮らし</h2>
                 <p className="text-secondary text-sm">Life with MEGURID</p>
               </div>
               <Link href="/gallery" className="hidden md:block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors mt-8 md:mt-0 text-secondary">
@@ -239,7 +240,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
             </div>
             
             {reviews && reviews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                 {reviews.map((review: any) => (
                   <div key={review.id} className="flex flex-col bg-white p-6 rounded-lg border border-accent shadow-sm">
                     <div className="flex items-center mb-4">
