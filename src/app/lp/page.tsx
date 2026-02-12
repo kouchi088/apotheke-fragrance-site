@@ -27,20 +27,19 @@ export default function LandingPage() {
       style={{ fontFamily: '"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif' }}
     >
       {/* --- Hero Section --- */}
-      <section className="relative -mt-[78px] min-h-[calc(100svh+78px)] md:h-[calc(100vh+78px)] w-full overflow-hidden">
-        <div className="absolute inset-0 z-0">
+      <section className="relative -mt-[78px] w-full overflow-hidden md:h-[calc(100vh+78px)]">
+        <div className="relative z-0 w-full aspect-[43/24] bg-[#f6f6f4] md:absolute md:inset-0">
           <Image
             src="/LP_hero.png?v=20260211"
             alt="MEGURID ヒーロー"
             fill
-            style={{ objectFit: 'cover' }}
-            className="grayscale"
+            className="grayscale object-contain object-top"
             priority
           />
-          <div className="absolute inset-0 bg-white/25"></div>
+          <div className="absolute inset-0 bg-white/15"></div>
         </div>
 
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-5 sm:px-6">
+        <div className="absolute inset-0 z-10 h-full flex flex-col justify-start md:justify-center items-center text-center px-5 sm:px-6 pt-24 sm:pt-28 md:pt-0">
           <FadeIn>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-6 sm:mb-8 text-foreground tracking-[0.12em] sm:tracking-[0.15em] text-center">
               MEGURI 出会う
@@ -48,7 +47,7 @@ export default function LandingPage() {
           </FadeIn>
 
           <FadeIn delay={200}>
-            <div className="space-y-0 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal text-foreground font-[300] tracking-wide max-w-lg mx-auto mt-2 sm:mt-4">
+            <div className="space-y-0 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal text-foreground font-[300] tracking-wide max-w-lg mx-auto mt-2 sm:mt-4 px-[1em] md:px-0">
               <p>都市の素材であるコンクリートに、手仕事の温かみを。</p>
               <p className="mt-8 sm:mt-[50px]">不揃いな気泡、独特の質感、経年変化。MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。</p>
             </div>
@@ -66,7 +65,7 @@ export default function LandingPage() {
                 <h2 className="text-2xl md:text-3xl font-serif mb-8 md:mb-10 text-foreground">私たちについて</h2>
               </FadeIn>
               <FadeIn delay={200}>
-                <div className="text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal text-gray-600 font-light space-y-6 sm:space-y-8 tracking-wide text-justify">
+                <div className="text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal text-gray-600 font-light space-y-6 sm:space-y-8 tracking-wide text-justify px-[1em] md:px-0">
                   <p>私たちは若手建築家集団です。</p>
                   <p>
                     形をつくる前に、問いを立てることから始めます。
@@ -123,7 +122,7 @@ export default function LandingPage() {
             </FadeIn>
 
             <FadeIn delay={400}>
-              <div className="space-y-6 sm:space-y-8 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light text-gray-600 tracking-wide text-justify">
+              <div className="space-y-6 sm:space-y-8 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light text-gray-600 tracking-wide text-justify px-[1em] md:px-0">
                 <p>
                   コンクリートには、強さと静けさが同居しています。
                   私たちは建築の中でこの素材に出会い、図面上の記号ではなく、
@@ -151,7 +150,7 @@ export default function LandingPage() {
             <h2 className="text-2xl md:text-3xl font-serif mb-10 sm:mb-12 text-foreground">主要商品</h2>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12">
+          <div className="grid grid-cols-2 gap-5 sm:gap-8 md:gap-12">
             <FadeIn delay={100}>
               <div className="group">
                 <Link href="/products/01cfccda-596a-4b45-9548-30f114b0f08c" className="block">
@@ -165,8 +164,8 @@ export default function LandingPage() {
                     />
                   </div>
                 </Link>
-                <div className="mt-5 sm:mt-6">
-                  <h3 className="text-lg font-serif text-foreground">Incense Holder</h3>
+                <div className="mt-4 sm:mt-6">
+                  <h3 className="text-base sm:text-lg font-serif text-foreground">Incense Holder</h3>
                   <p className="text-primary mt-2 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light">
                     香りの時間を、部屋の静けさとして定着させる。
                   </p>
@@ -193,8 +192,8 @@ export default function LandingPage() {
                     />
                   </div>
                 </Link>
-                <div className="mt-5 sm:mt-6">
-                  <h3 className="text-lg font-serif text-foreground">Tray</h3>
+                <div className="mt-4 sm:mt-6">
+                  <h3 className="text-base sm:text-lg font-serif text-foreground">Tray</h3>
                   <p className="text-primary mt-2 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light">
                     散らかり方にルールを与え、視界を整えるための面。
                   </p>
