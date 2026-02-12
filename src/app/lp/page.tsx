@@ -6,7 +6,7 @@ import Link from 'next/link';
 import FadeIn from '@/components/FadeIn';
 
 const Button = ({ variant = 'primary', className = '', children, ...props }: any) => {
-  const baseStyle = "px-8 py-4 text-sm tracking-widest transition-all duration-300 ease-out font-medium inline-block text-center";
+  const baseStyle = "px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest transition-all duration-300 ease-out font-medium inline-block text-center";
 
   const variants: any = {
     primary: "bg-transparent border border-gray-button text-foreground hover:bg-gray-button hover:text-white",
@@ -27,7 +27,7 @@ export default function LandingPage() {
       style={{ fontFamily: '"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif' }}
     >
       {/* --- Hero Section --- */}
-      <section className="relative -mt-[78px] h-[calc(100vh+78px)] w-full overflow-hidden">
+      <section className="relative -mt-[78px] min-h-[calc(100svh+78px)] md:h-[calc(100vh+78px)] w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src="/LP_hero.png?v=20260211"
@@ -40,17 +40,17 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-white/25"></div>
         </div>
 
-        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6">
+        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-5 sm:px-6">
           <FadeIn>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-8 text-foreground tracking-[0.15em] text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-6 sm:mb-8 text-foreground tracking-[0.12em] sm:tracking-[0.15em] text-center">
               MEGURI 出会う
             </h1>
           </FadeIn>
 
           <FadeIn delay={200}>
-            <div className="space-y-0 text-[10pt] leading-normal text-foreground font-[300] tracking-wide max-w-lg mx-auto mt-4">
+            <div className="space-y-0 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal text-foreground font-[300] tracking-wide max-w-lg mx-auto mt-2 sm:mt-4">
               <p>都市の素材であるコンクリートに、手仕事の温かみを。</p>
-              <p className="mt-[50px]">不揃いな気泡、独特の質感、経年変化。MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。</p>
+              <p className="mt-8 sm:mt-[50px]">不揃いな気泡、独特の質感、経年変化。MEGURIDは、日常に静かな重みをもたらすインテリアオブジェを提案します。</p>
             </div>
           </FadeIn>
 
@@ -58,15 +58,15 @@ export default function LandingPage() {
       </section>
 
       {/* --- About us --- */}
-      <section id="about" className="py-28 md:py-36 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row gap-16 md:gap-24 items-center">
+      <section id="about" className="py-20 sm:py-24 md:py-36 bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6">
+          <div className="flex flex-col md:flex-row gap-12 md:gap-24 items-center">
             <div className="md:w-1/2 md:pl-10 lg:pl-16">
               <FadeIn>
-                <h2 className="text-2xl md:text-3xl font-serif mb-10 text-foreground">私たちについて</h2>
+                <h2 className="text-2xl md:text-3xl font-serif mb-8 md:mb-10 text-foreground">私たちについて</h2>
               </FadeIn>
               <FadeIn delay={200}>
-                <div className="text-[10pt] leading-normal text-gray-600 font-light space-y-8 tracking-wide text-justify">
+                <div className="text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal text-gray-600 font-light space-y-6 sm:space-y-8 tracking-wide text-justify">
                   <p>私たちは若手建築家集団です。</p>
                   <p>
                     形をつくる前に、問いを立てることから始めます。
@@ -85,7 +85,7 @@ export default function LandingPage() {
               </FadeIn>
             </div>
 
-            <div className="md:w-1/2 relative h-[500px] w-full">
+            <div className="md:w-1/2 relative h-[340px] sm:h-[420px] md:h-[500px] w-full">
               <FadeIn direction="left" delay={300} className="h-full w-full">
                 <div className="relative w-full h-full bg-gray-100">
                   <Image
@@ -103,13 +103,13 @@ export default function LandingPage() {
       </section>
 
       {/* --- Why Concrete --- */}
-      <section id="material" className="py-36 bg-white text-foreground relative">
-        <div className="max-w-5xl mx-auto px-6">
-          <FadeIn className="mb-20 text-center">
-            <h2 className="text-3xl md:text-4xl font-serif tracking-wide">なぜ、コンクリートなのか。</h2>
+      <section id="material" className="py-20 sm:py-24 md:py-36 bg-white text-foreground relative">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6">
+          <FadeIn className="mb-12 sm:mb-16 md:mb-20 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-wide">なぜ、コンクリートなのか。</h2>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12 md:gap-16 items-center">
             <FadeIn delay={200}>
               <div className="aspect-square bg-gray-200 relative overflow-hidden group shadow-lg">
                 <Image
@@ -123,7 +123,7 @@ export default function LandingPage() {
             </FadeIn>
 
             <FadeIn delay={400}>
-              <div className="space-y-8 text-[10pt] leading-normal font-light text-gray-600 tracking-wide text-justify">
+              <div className="space-y-6 sm:space-y-8 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light text-gray-600 tracking-wide text-justify">
                 <p>
                   コンクリートには、強さと静けさが同居しています。
                   私たちは建築の中でこの素材に出会い、図面上の記号ではなく、
@@ -145,16 +145,16 @@ export default function LandingPage() {
       </section>
 
       {/* --- Featured Products --- */}
-      <section id="featured" className="py-28 md:py-36 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="featured" className="py-20 sm:py-24 md:py-36 bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6">
           <FadeIn>
-            <h2 className="text-2xl md:text-3xl font-serif mb-12 text-foreground">主要商品</h2>
+            <h2 className="text-2xl md:text-3xl font-serif mb-10 sm:mb-12 text-foreground">主要商品</h2>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12">
             <FadeIn delay={100}>
               <div className="group">
-                <Link href="/online-store" className="block">
+                <Link href="/products/01cfccda-596a-4b45-9548-30f114b0f08c" className="block">
                   <div className="relative aspect-square bg-gray-100 overflow-hidden">
                     <Image
                       src="/insence_LP.png"
@@ -165,14 +165,14 @@ export default function LandingPage() {
                     />
                   </div>
                 </Link>
-                <div className="mt-6">
+                <div className="mt-5 sm:mt-6">
                   <h3 className="text-lg font-serif text-foreground">Incense Holder</h3>
-                  <p className="text-primary mt-2 text-[10pt] leading-normal font-light">
+                  <p className="text-primary mt-2 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light">
                     香りの時間を、部屋の静けさとして定着させる。
                   </p>
                   <Link
-                    href="/online-store"
-                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-sm tracking-widest hover:text-primary hover:border-primary transition-colors"
+                    href="/products/01cfccda-596a-4b45-9548-30f114b0f08c"
+                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
                   >
                     商品を見る
                   </Link>
@@ -182,7 +182,7 @@ export default function LandingPage() {
 
             <FadeIn delay={200}>
               <div className="group">
-                <Link href="/online-store" className="block">
+                <Link href="/products/89b6acc2-858b-4eab-b337-d9852ff2cc9a" className="block">
                   <div className="relative aspect-square bg-gray-100 overflow-hidden">
                     <Image
                       src="/about_ash.png"
@@ -193,14 +193,14 @@ export default function LandingPage() {
                     />
                   </div>
                 </Link>
-                <div className="mt-6">
+                <div className="mt-5 sm:mt-6">
                   <h3 className="text-lg font-serif text-foreground">Tray</h3>
-                  <p className="text-primary mt-2 text-[10pt] leading-normal font-light">
+                  <p className="text-primary mt-2 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light">
                     散らかり方にルールを与え、視界を整えるための面。
                   </p>
                   <Link
-                    href="/online-store"
-                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-sm tracking-widest hover:text-primary hover:border-primary transition-colors"
+                    href="/products/89b6acc2-858b-4eab-b337-d9852ff2cc9a"
+                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
                   >
                     商品を見る
                   </Link>
@@ -212,17 +212,17 @@ export default function LandingPage() {
       </section>
 
       {/* --- CTA --- */}
-      <section className="py-28 md:py-36 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-20 sm:py-24 md:py-36 bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6">
           <div className="max-w-3xl mx-auto text-center">
             <FadeIn>
-              <p className="text-[10pt] text-foreground leading-normal font-light mb-8">
+              <p className="text-[9.5pt] sm:text-[10pt] text-foreground leading-relaxed sm:leading-normal font-light mb-7 sm:mb-8">
                 オンラインストアで、現在のラインナップをご覧ください。
               </p>
             </FadeIn>
             <FadeIn delay={200}>
               <Link href="/online-store">
-                <Button variant="outline" className="min-w-[220px]">
+                <Button variant="outline" className="min-w-[190px] sm:min-w-[220px]">
                   オンラインストアを見る
                 </Button>
               </Link>
