@@ -36,6 +36,33 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     return <div className="text-center py-20">商品が見つかりませんでした。</div>;
   }
 
+  const normalizeImageSrc = (src?: string) => {
+    if (!src) return '';
+    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) {
+      return src;
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+    // Relative Supabase Storage path like "/storage/v1/object/public/..."
+    if (src.startsWith('/storage/v1/object/public/')) {
+      return supabaseUrl ? `${supabaseUrl}${src}` : src;
+    }
+
+    // Public folder assets
+    if (src.startsWith('/')) {
+      return src;
+    }
+
+    // Bare storage path like "product-images/xxx.jpg"
+    return supabaseUrl ? `${supabaseUrl}/storage/v1/object/public/${src.replace(/^\/+/, '')}` : src;
+  };
+
+  const normalizedImages = (product.images || [])
+    .map((img) => normalizeImageSrc(img))
+    .filter((img) => img.length > 0);
+  const fallbackImage = normalizeImageSrc(product.image);
+
   const handleAddToCart = () => {
     addToCart(product, quantity);
     toast.success(`${product.name}をカートに追加しました。`);
@@ -67,14 +94,14 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   };
 
   const nextImage = () => {
-    if (product.images && product.images.length > 0) {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.images.length);
+    if (normalizedImages.length > 0) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % normalizedImages.length);
     }
   };
 
   const prevImage = () => {
-    if (product.images && product.images.length > 0) {
-      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + product.images.length) % product.images.length);
+    if (normalizedImages.length > 0) {
+      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + normalizedImages.length) % normalizedImages.length);
     }
   };
 
@@ -84,9 +111,9 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
         {/* Image Section */}
         <div className="flex flex-col-reverse md:flex-row gap-4">
           {/* Thumbnails */}
-          {product.images && product.images.length > 0 && (
+          {normalizedImages.length > 0 && (
             <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto w-full md:w-12 max-h-[500px] scrollbar-hide py-1">
-              {product.images.map((img, index) => (
+              {normalizedImages.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
@@ -108,17 +135,17 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
           {/* Main Image */}
           <div className="relative flex-1 aspect-square bg-accent w-full md:w-auto">
-            {product.images && product.images.length > 0 ? (
+            {normalizedImages.length > 0 ? (
               <>
                 <Image
-                  src={product.images[currentImageIndex]}
+                  src={normalizedImages[currentImageIndex]}
                   alt={product.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   style={{ objectFit: 'cover' }}
                   priority
                 />
-                {product.images.length > 1 && (
+                {normalizedImages.length > 1 && (
                   <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
                     <button
                       onClick={prevImage}
@@ -137,7 +164,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
               </>
             ) : (
               <Image
-                src={product.image}
+                src={fallbackImage || '/placeholder.jpg'}
                 alt={product.name}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"

@@ -2,6 +2,9 @@ import React from 'react';
 import { createClient } from '@/lib/supabaseClient';
 import LandingPageClient from '@/components/LandingPageClient';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // --- Page Component (Server Component) ---
 export default async function LandingPage() {
   const supabase = createClient();
