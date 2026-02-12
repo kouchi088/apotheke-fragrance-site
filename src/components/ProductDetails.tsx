@@ -73,6 +73,11 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     .map((img: unknown) => normalizeImageSrc(img))
     .filter((img) => img.length > 0);
   const fallbackImage = normalizeImageSrc(product.image);
+  const formattedDescription = (product.description || '')
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\r\n/g, '\n')
+    .replace(/\u2028|\u2029/g, '\n');
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
@@ -226,7 +231,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           </div>
 
           <div className="text-primary text-sm leading-loose mb-8 border-t border-accent pt-8">
-            <p className="whitespace-pre-line">{product.description}</p>
+            <p className="whitespace-pre-line">{formattedDescription}</p>
           </div>
           
           <div className="w-full max-w-sm mt-2 text-center">

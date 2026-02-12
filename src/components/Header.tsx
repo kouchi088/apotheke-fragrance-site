@@ -21,7 +21,7 @@ const Header = () => {
   const isAdmin = user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white shadow-md py-2 border-b border-accent opacity-70">
+    <header className={`fixed top-0 w-full z-50 bg-white shadow-md py-2 border-b border-accent ${isMobileMenuOpen ? 'opacity-80' : 'opacity-70'}`}>
       <div className="container mx-auto relative flex items-center px-4">
         {/* Left Section: Logo */}
         <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center">
