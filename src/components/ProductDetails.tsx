@@ -36,7 +36,18 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     return <div className="text-center py-20">商品が見つかりませんでした。</div>;
   }
 
-  const normalizeImageSrc = (src?: string) => {
+  const normalizeImageSrc = (rawSrc: unknown) => {
+    const src =
+      typeof rawSrc === 'string'
+        ? rawSrc
+        : (rawSrc && typeof rawSrc === 'object' && 'url' in rawSrc && typeof (rawSrc as { url?: unknown }).url === 'string')
+          ? (rawSrc as { url: string }).url
+          : (rawSrc && typeof rawSrc === 'object' && 'publicUrl' in rawSrc && typeof (rawSrc as { publicUrl?: unknown }).publicUrl === 'string')
+            ? (rawSrc as { publicUrl: string }).publicUrl
+            : (rawSrc && typeof rawSrc === 'object' && 'path' in rawSrc && typeof (rawSrc as { path?: unknown }).path === 'string')
+              ? (rawSrc as { path: string }).path
+              : '';
+
     if (!src) return '';
     if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) {
       return src;
@@ -59,7 +70,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   };
 
   const normalizedImages = (product.images || [])
-    .map((img) => normalizeImageSrc(img))
+    .map((img: unknown) => normalizeImageSrc(img))
     .filter((img) => img.length > 0);
   const fallbackImage = normalizeImageSrc(product.image);
 

@@ -57,7 +57,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                   src={src}
                   alt="Concrete vase detail"
                   fill
-                  style={{ objectFit: 'cover' }}
+                  className="object-cover md:object-contain object-top"
                   priority={index === 0}
                 />
               </div>
