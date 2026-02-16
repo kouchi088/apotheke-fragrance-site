@@ -8,12 +8,15 @@ export default async function AdminProductsPage() {
   unstable_noStore();
   if (!hasSupabaseAdminEnv()) return <AdminEnvNotice />;
   const db = getSupabaseAdminClient();
-  let { data, error } = await db
+  let data: any[] | null = null;
+  let error: any = null;
+
+  ({ data, error } = await db
     .from('products')
     .select('id, name, slug, price, is_published, updated_at')
     .is('deleted_at', null)
     .order('updated_at', { ascending: false })
-    .limit(100);
+    .limit(100));
   if (error?.code === '42703') {
     ({ data, error } = await db
       .from('products')
