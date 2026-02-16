@@ -27,7 +27,7 @@ export default function LandingPage() {
       style={{ fontFamily: '"Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif' }}
     >
       {/* --- Hero Section --- */}
-      <section className="relative -mt-[78px] w-full overflow-hidden md:h-[calc(100vh+78px)]">
+      <section className="relative w-full overflow-hidden md:h-screen">
         <div className="relative z-0 w-full aspect-[4/3] bg-[#f6f6f4] md:absolute md:inset-0">
           <Image
             src="/LP_hero.png?v=20260211"
@@ -39,7 +39,7 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-white/15"></div>
         </div>
 
-        <div className="absolute inset-0 z-10 h-full flex flex-col justify-center items-center text-center px-5 sm:px-6 pt-[78px] md:pt-0">
+        <div className="absolute inset-0 z-10 h-full flex flex-col justify-center items-center text-center px-5 sm:px-6">
           <FadeIn>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-medium leading-tight mb-6 sm:mb-8 text-foreground tracking-[0.12em] sm:tracking-[0.15em] text-center">
               MEGURI 出会う

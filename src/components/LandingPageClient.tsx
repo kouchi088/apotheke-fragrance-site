@@ -44,7 +44,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
     <div className="antialiased bg-white selection:bg-accent selection:text-foreground">
       <main>
         {/* --- Hero Section (Main Visual) --- */}
-        <section className="relative -mt-[78px] w-full aspect-[4/3] md:aspect-[43/24] overflow-hidden">
+        <section className="relative w-full aspect-[4/3] md:aspect-[43/24] overflow-hidden">
           <div className="absolute inset-0 z-0">
             {HERO_IMAGES.map((src, index) => (
               <div
