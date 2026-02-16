@@ -72,40 +72,7 @@ export async function middleware(req: NextRequest) {
     trackAffiliateClick(req, affCode);
   }
 
-  // --- Basic Auth Handling ---
-  const isBuildProcess = process.env.CI === 'true' || process.env.VERCEL === 'true';
-  const isAuthDisabled = process.env.BASIC_AUTH_ENABLED !== 'true';
-
-  if (isBuildProcess || isAuthDisabled) {
-    return response; // Return response, which may have the affiliate cookie
-  }
-
-  const basicAuth = req.headers.get('authorization');
-  if (basicAuth) {
-    const authValue = basicAuth.split(' ')[1];
-    const [user, pwd] = atob(authValue).split(':');
-
-    if (user === process.env.BASIC_AUTH_USER && pwd === process.env.BASIC_AUTH_PASSWORD) {
-      return response; // Return response, which may have the affiliate cookie
-    }
-  }
-
-  // Auth failed, create a new 401 response
-  const authResponse = new Response('Auth required', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="Secure Area"',
-    },
-  });
-
-  // If an affiliate cookie was set, we need to transfer it to the auth response
-  // because we are returning a completely new Response object.
-  const cookie = response.headers.get('set-cookie');
-  if (cookie) {
-    authResponse.headers.set('set-cookie', cookie);
-  }
-
-  return authResponse;
+  return response;
 }
 
 export const config = {
