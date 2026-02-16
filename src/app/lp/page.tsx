@@ -33,10 +33,10 @@ export default function LandingPage() {
             src="/LP_hero.png?v=20260211"
             alt="MEGURID ヒーロー"
             fill
-            className="grayscale object-cover md:object-contain object-top"
+            className="grayscale object-cover md:object-contain object-top scale-105"
             priority
           />
-          <div className="absolute inset-0 bg-white/15"></div>
+          <div className="absolute inset-0 bg-white/30"></div>
         </div>
 
         <div className="absolute inset-0 z-10 h-full flex flex-col justify-center items-center text-center px-5 sm:px-6">
@@ -103,7 +103,7 @@ export default function LandingPage() {
               <FadeIn direction="left" delay={300} className="h-full w-full">
                 <div className="relative w-full h-full bg-gray-100">
                   <Image
-                    src="/about_as.png"
+                    src="/about_as.jpg"
                     alt="制作風景"
                     fill
                     style={{ objectFit: 'cover' }}
