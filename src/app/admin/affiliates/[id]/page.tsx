@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { CopyableLink } from './CopyableLink';
+import { hasSupabaseAdminEnv } from '@/lib/adminAuth';
+import { AdminEnvNotice } from '@/app/admin/AdminEnvNotice';
 
 // --- Type Definitions ---
 type AffiliateLinkWithStats = {
@@ -58,6 +60,9 @@ async function createLinkAction(formData: FormData) {
 
 // The main page component is a Server Component
 export default async function AffiliateDetailPage({ params }: { params: { id: string } }) {
+  if (!hasSupabaseAdminEnv()) {
+    return <AdminEnvNotice />;
+  }
   const supabase = getSupabaseAdmin();
   const affiliateId = params.id;
 

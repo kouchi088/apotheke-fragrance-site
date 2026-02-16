@@ -9,11 +9,6 @@ console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
 console.log('SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 console.log('APP_URL:', process.env.NEXT_PUBLIC_APP_URL);
 
-// Initialize Stripe with the secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-08-27.basil",
-});
-
 interface QuickBuyRequest {
   productId: string;
   quantity: number;
@@ -23,6 +18,7 @@ async function logError(source: string, error: any, context: object = {}) {
   const errorMessage = error instanceof Error ? error.message : "Unknown error";
   console.error(`Error from ${source}:`, errorMessage, context);
   try {
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return;
     const supabaseAdmin = createAdminClient({
       global: {
         headers: { Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}` },
@@ -39,6 +35,16 @@ async function logError(source: string, error: any, context: object = {}) {
 }
 
 export async function POST(req: NextRequest) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || !process.env.NEXT_PUBLIC_APP_URL) {
+    return NextResponse.json({ error: 'Supabase env is not configured' }, { status: 500 });
+  }
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return NextResponse.json({ error: 'Stripe env is not configured' }, { status: 500 });
+  }
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2025-08-27.basil",
+  });
+
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
