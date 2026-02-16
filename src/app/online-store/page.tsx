@@ -14,9 +14,26 @@ interface Product {
 async function getProducts() {
   unstable_noStore();
   const supabase = createClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from('products')
-    .select('id, name, price, images, description, stock_quantity');
+    .select('id, name, price, images, description, stock_quantity')
+    .eq('is_published', true)
+    .is('deleted_at', null);
+
+  let { data, error } = await query;
+  if (error?.code === '42703') {
+    // Backward compatibility for environments where only deleted_at is missing.
+    ({ data, error } = await supabase
+      .from('products')
+      .select('id, name, price, images, description, stock_quantity')
+      .eq('is_published', true));
+  }
+  if (error?.code === '42703') {
+    // Last fallback for environments where both visibility columns are missing.
+    ({ data, error } = await supabase
+      .from('products')
+      .select('id, name, price, images, description, stock_quantity'));
+  }
 
   if (error) {
     console.error('Error fetching products:', error);

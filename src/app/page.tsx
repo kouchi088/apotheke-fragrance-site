@@ -9,10 +9,26 @@ export const revalidate = 0;
 export default async function LandingPage() {
   const supabase = createClient();
 
-  const { data: products, error } = await supabase
+  let productsQuery = supabase
     .from('products')
     .select('id, name, price, images, description, stock_quantity')
+    .eq('is_published', true)
+    .is('deleted_at', null)
     .limit(3);
+  let { data: products, error } = await productsQuery;
+  if (error?.code === '42703') {
+    ({ data: products, error } = await supabase
+      .from('products')
+      .select('id, name, price, images, description, stock_quantity')
+      .eq('is_published', true)
+      .limit(3));
+  }
+  if (error?.code === '42703') {
+    ({ data: products, error } = await supabase
+      .from('products')
+      .select('id, name, price, images, description, stock_quantity')
+      .limit(3));
+  }
 
   if (error) {
     console.error('Error fetching products for LP:', error);
@@ -37,11 +53,29 @@ export default async function LandingPage() {
     console.error('Error fetching reviews for LP:', reviewsError);
   }
 
-  const { data: featuredProducts, error: featuredProductsError } = await supabase
+  let featuredQuery = supabase
     .from('products')
     .select('id, name, price, images, description, stock_quantity')
+    .eq('is_published', true)
+    .is('deleted_at', null)
     .eq('is_featured', true)
     .limit(3);
+  let { data: featuredProducts, error: featuredProductsError } = await featuredQuery;
+  if (featuredProductsError?.code === '42703') {
+    ({ data: featuredProducts, error: featuredProductsError } = await supabase
+      .from('products')
+      .select('id, name, price, images, description, stock_quantity')
+      .eq('is_published', true)
+      .eq('is_featured', true)
+      .limit(3));
+  }
+  if (featuredProductsError?.code === '42703') {
+    ({ data: featuredProducts, error: featuredProductsError } = await supabase
+      .from('products')
+      .select('id, name, price, images, description, stock_quantity')
+      .eq('is_featured', true)
+      .limit(3));
+  }
 
   if (featuredProductsError) {
     console.error('Error fetching featured products for LP:', featuredProductsError);

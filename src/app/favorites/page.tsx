@@ -40,12 +40,34 @@ export default function FavoritesPage() {
           const { data: products, error: productsError } = await supabase
             .from('products')
             .select('id, name, price, image')
+            .eq('is_published', true)
+            .is('deleted_at', null)
             .in('id', productIds);
 
-          if (productsError) {
-            console.error('Error fetching favorited products:', productsError);
+          let finalProducts = products;
+          let finalError = productsError;
+          if (productsError?.code === '42703') {
+            const fallback = await supabase
+              .from('products')
+              .select('id, name, price, image')
+              .eq('is_published', true)
+              .in('id', productIds);
+            finalProducts = fallback.data;
+            finalError = fallback.error;
+          }
+          if (finalError?.code === '42703') {
+            const fallback = await supabase
+              .from('products')
+              .select('id, name, price, image')
+              .in('id', productIds);
+            finalProducts = fallback.data;
+            finalError = fallback.error;
+          }
+
+          if (finalError) {
+            console.error('Error fetching favorited products:', finalError);
           } else {
-            setFavorites(products as FavoriteProduct[]);
+            setFavorites((finalProducts || []) as FavoriteProduct[]);
           }
         }
       } else {

@@ -15,10 +15,25 @@ const getSupabaseServerClient = () => {
 
 export default async function SubmitReviewPage() {
   const supabase = getSupabaseServerClient();
-  const { data: products, error } = await supabase
+  let { data: products, error } = await supabase
     .from('products')
     .select('id, name')
+    .eq('is_published', true)
+    .is('deleted_at', null)
     .order('name', { ascending: true });
+  if (error?.code === '42703') {
+    ({ data: products, error } = await supabase
+      .from('products')
+      .select('id, name')
+      .eq('is_published', true)
+      .order('name', { ascending: true }));
+  }
+  if (error?.code === '42703') {
+    ({ data: products, error } = await supabase
+      .from('products')
+      .select('id, name')
+      .order('name', { ascending: true }));
+  }
 
   if (error) {
     console.error('Error fetching products for UGC form:', error);

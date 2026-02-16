@@ -26,17 +26,47 @@ const ProductReviews = () => {
 
 // Generate static paths for all products at build time
 export async function generateStaticParams() {
-  const { data: products } = await supabase.from('products').select('id');
+  let { data: products, error } = await supabase
+    .from('products')
+    .select('id')
+    .eq('is_published', true)
+    .is('deleted_at', null);
+  if (error?.code === '42703') {
+    ({ data: products, error } = await supabase
+      .from('products')
+      .select('id')
+      .eq('is_published', true));
+  }
+  if (error?.code === '42703') {
+    ({ data: products } = await supabase.from('products').select('id'));
+  }
   return products?.map(({ id }) => ({ id })) || [];
 }
 
 // Generate metadata for the page (title, description)
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const { data: product } = await supabase
+  let { data: product, error } = await supabase
     .from('products')
     .select('name, description')
     .eq('id', params.id)
+    .eq('is_published', true)
+    .is('deleted_at', null)
     .single();
+  if (error?.code === '42703') {
+    ({ data: product } = await supabase
+      .from('products')
+      .select('name, description')
+      .eq('id', params.id)
+      .eq('is_published', true)
+      .single());
+  }
+  if (error?.code === '42703') {
+    ({ data: product } = await supabase
+      .from('products')
+      .select('name, description')
+      .eq('id', params.id)
+      .single());
+  }
 
   return {
     title: product?.name || 'Product',
@@ -46,12 +76,34 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 // The main page component, now a Server Component
 const ProductPage = async ({ params }: { params: { id: string } }) => {
-  // Fetch product and approved reviews in parallel
-  const [productRes, reviewsRes] = await Promise.all([
-    supabase.from('products').select('*').eq('id', params.id).single(),
+  let productQuery = supabase
+    .from('products')
+    .select('*')
+    .eq('id', params.id)
+    .eq('is_published', true)
+    .is('deleted_at', null)
+    .single();
+
+  let productPromise = productQuery;
+  const [productResFirst, reviewsRes] = await Promise.all([
+    productPromise,
     supabase.from('ugc_submissions').select(`*, images:ugc_images(*)`).eq('product_id', params.id).eq('status', 'approved').order('created_at', { ascending: false })
   ]);
 
+  let productRes = productResFirst;
+  if (productRes.error?.code === '42703') {
+    productRes = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', params.id)
+      .eq('is_published', true)
+      .single();
+  }
+  if (productRes.error?.code === '42703') {
+    productRes = await supabase.from('products').select('*').eq('id', params.id).single();
+  }
+
+  // Fetch product and approved reviews in parallel
   const { data: product, error: productError } = productRes;
   const { data: reviews, error: reviewsError } = reviewsRes;
 

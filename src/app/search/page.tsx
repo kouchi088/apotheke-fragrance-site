@@ -30,10 +30,26 @@ function SearchResults() {
 
     const fetchProducts = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from('products')
         .select('id, name, price, image')
+        .eq('is_published', true)
+        .is('deleted_at', null)
         .textSearch('name', query, { type: 'websearch' });
+
+      if (error?.code === '42703') {
+        ({ data, error } = await supabase
+          .from('products')
+          .select('id, name, price, image')
+          .eq('is_published', true)
+          .textSearch('name', query, { type: 'websearch' }));
+      }
+      if (error?.code === '42703') {
+        ({ data, error } = await supabase
+          .from('products')
+          .select('id, name, price, image')
+          .textSearch('name', query, { type: 'websearch' }));
+      }
 
       if (error) {
         console.error('Error searching products:', error);
