@@ -12,15 +12,29 @@ interface Product {
   images: string[];
 }
 
+function normalizeImageSrc(src?: string): string {
+  if (!src) return '/placeholder.jpg';
+  const trimmed = src.trim();
+  if (!trimmed) return '/placeholder.jpg';
+
+  // Guard against common typo from CMS/DB values.
+  const fixedProtocol = trimmed.replace(/^hhttps?:\/\//i, 'https://');
+  if (fixedProtocol.startsWith('/')) return fixedProtocol;
+  if (/^https?:\/\//i.test(fixedProtocol)) return fixedProtocol;
+
+  return '/placeholder.jpg';
+}
+
 export default function StoreProductGrid({ products }: { products: Product[] }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = (product: any) => {
+    const firstImage = normalizeImageSrc(product.images?.[0]);
     const productToAdd = {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg',
+      image: firstImage,
       images: product.images || [],
       description: product.description || '',
       stock_quantity: product.stock_quantity || 0,
@@ -34,27 +48,35 @@ export default function StoreProductGrid({ products }: { products: Product[] }) 
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-      {products.map((product) => (
+      {products.map((product) => {
+        // Prevent render crashes when external URLs are malformed in DB.
+        const primaryImage = normalizeImageSrc(product.images?.[0]);
+        const secondaryImage = normalizeImageSrc(product.images?.[1]);
+        const hasSecondary = product.images?.length > 1 && secondaryImage !== '/placeholder.jpg';
+
+        return (
         <div key={product.id} className="group">
           <Link href={`/products/${product.id}`} className="block">
             <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
               {product.images && product.images.length > 0 && (
                 <>
                   <Image
-                    src={product.images[0]}
+                    src={primaryImage}
                     alt={product.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     style={{ objectFit: 'cover' }}
                     className={`transition-all duration-500 ${
-                      product.images.length > 1 ? 'group-hover:opacity-0' : 'group-hover:scale-105'
+                      hasSecondary ? 'group-hover:opacity-0' : 'group-hover:scale-105'
                     }`}
                   />
                   {/* Hover Image (if available) */}
-                  {product.images.length > 1 && (
+                  {hasSecondary && (
                     <Image
-                      src={product.images[1]}
+                      src={secondaryImage}
                       alt={`${product.name} - detail`}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       style={{ objectFit: 'cover' }}
                       className="absolute inset-0 transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-105"
                     />
@@ -72,7 +94,8 @@ export default function StoreProductGrid({ products }: { products: Product[] }) 
             カートに追加
           </button>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

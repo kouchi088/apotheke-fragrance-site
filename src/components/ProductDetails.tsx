@@ -49,24 +49,25 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
               : '';
 
     if (!src) return '';
-    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) {
-      return src;
+    const normalizedSrc = src.trim().replace(/^hhttps?:\/\//i, 'https://');
+    if (normalizedSrc.startsWith('http://') || normalizedSrc.startsWith('https://') || normalizedSrc.startsWith('data:')) {
+      return normalizedSrc;
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
     // Relative Supabase Storage path like "/storage/v1/object/public/..."
-    if (src.startsWith('/storage/v1/object/public/')) {
-      return supabaseUrl ? `${supabaseUrl}${src}` : src;
+    if (normalizedSrc.startsWith('/storage/v1/object/public/')) {
+      return supabaseUrl ? `${supabaseUrl}${normalizedSrc}` : normalizedSrc;
     }
 
     // Public folder assets
-    if (src.startsWith('/')) {
-      return src;
+    if (normalizedSrc.startsWith('/')) {
+      return normalizedSrc;
     }
 
     // Bare storage path like "product-images/xxx.jpg"
-    return supabaseUrl ? `${supabaseUrl}/storage/v1/object/public/${src.replace(/^\/+/, '')}` : src;
+    return supabaseUrl ? `${supabaseUrl}/storage/v1/object/public/${normalizedSrc.replace(/^\/+/, '')}` : normalizedSrc;
   };
 
   const normalizedImages = (product.images || [])
