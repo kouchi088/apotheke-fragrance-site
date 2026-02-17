@@ -78,7 +78,11 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     .replace(/\\r\\n/g, '\n')
     .replace(/\\n/g, '\n')
     .replace(/\r\n/g, '\n')
-    .replace(/\u2028|\u2029/g, '\n');
+    .replace(/\u2028|\u2029/g, '\n')
+    .replace(/※?\s*実際の寸法に合わせてご?記入ください/g, '')
+    .replace(/[ＳS]\s*サイズ/g, 'サイズ')
+    .replace(/[［\[]\s*([0-9]+(?:\.[0-9]+)?)\s*[］\]]/g, '$1')
+    .replace(/(サイズ\s*)[［\[]([^］\]]+)[］\]]/g, '$1$2');
 
   const handleAddToCart = () => {
     addToCart(product, quantity);

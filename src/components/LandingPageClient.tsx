@@ -173,7 +173,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
               <div className="w-full md:w-1/2">
                 <div className="aspect-square relative overflow-hidden bg-accent">
                   <Image
-                    src="https://picsum.photos/800/1000?blur=2&grayscale"
+                    src="/journal.png"
                     alt="Process of making concrete"
                     fill
                     style={{ objectFit: 'cover' }}
@@ -210,13 +210,15 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                     <Link href="/lp/concrete-guide" className="block group">
                       <div className="flex gap-6 items-start">
                         <div className="w-24 h-24 bg-accent flex-shrink-0 relative overflow-hidden">
-                           {/* Placeholder for Column Image */}
-                           <div className="absolute inset-0 flex items-center justify-center text-secondary text-[10px]">
-                             Image
-                           </div>
+                          <Image
+                            src="/journal_top.png"
+                            alt="Latest Column"
+                            fill
+                            style={{ objectFit: 'cover' }}
+                          />
                         </div>
                         <div>
-                          <p className="text-xs text-secondary mb-2">2023.11.22</p>
+                          <p className="text-xs text-secondary mb-2">2026.02.17</p>
                           <h4 className="text-sm text-foreground font-medium leading-relaxed group-hover:text-primary transition-colors">
                             コンクリート雑貨 完全ガイド：素材の特性からお手入れまで
                           </h4>

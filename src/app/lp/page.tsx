@@ -167,7 +167,7 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-2 gap-5 sm:gap-8 md:gap-12">
             <FadeIn delay={100}>
-              <div className="group">
+              <div className="group h-full flex flex-col">
                 <Link href="/products/01cfccda-596a-4b45-9548-30f114b0f08c" className="block">
                   <div className="relative aspect-square bg-gray-100 overflow-hidden">
                     <Image
@@ -179,14 +179,14 @@ export default function LandingPage() {
                     />
                   </div>
                 </Link>
-                <div className="mt-4 sm:mt-6">
+                <div className="mt-4 sm:mt-6 flex flex-col flex-1">
                   <h3 className="text-base sm:text-lg font-serif text-foreground">Incense Holder</h3>
                   <p className="text-primary mt-2 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light">
                     香りの時間を、部屋の静けさとして定着させる。
                   </p>
                   <Link
                     href="/products/01cfccda-596a-4b45-9548-30f114b0f08c"
-                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
+                    className="mt-auto pt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
                   >
                     商品を見る
                   </Link>
@@ -195,7 +195,7 @@ export default function LandingPage() {
             </FadeIn>
 
             <FadeIn delay={200}>
-              <div className="group">
+              <div className="group h-full flex flex-col">
                 <Link href="/products/89b6acc2-858b-4eab-b337-d9852ff2cc9a" className="block">
                   <div className="relative aspect-square bg-gray-100 overflow-hidden">
                     <Image
@@ -207,14 +207,14 @@ export default function LandingPage() {
                     />
                   </div>
                 </Link>
-                <div className="mt-4 sm:mt-6">
+                <div className="mt-4 sm:mt-6 flex flex-col flex-1">
                   <h3 className="text-base sm:text-lg font-serif text-foreground">Tray</h3>
                   <p className="text-primary mt-2 text-[9.5pt] sm:text-[10pt] leading-relaxed sm:leading-normal font-light">
                     散らかり方にルールを与え、視界を整えるための面。
                   </p>
                   <Link
                     href="/products/89b6acc2-858b-4eab-b337-d9852ff2cc9a"
-                    className="mt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
+                    className="mt-auto pt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
                   >
                     商品を見る
                   </Link>
