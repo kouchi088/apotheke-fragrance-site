@@ -41,25 +41,37 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   } = await supabase.auth.getUser();
 
   let isAllowed = false;
-  const userEmail = user?.email?.trim().toLowerCase();
+  const token = cookieStore.get('admin_access_token')?.value ?? null;
+  let userEmail = user?.email?.trim().toLowerCase();
 
   if (isProduction) {
-    const token = cookieStore.get('admin_access_token')?.value ?? null;
     const auth = await authenticateAdminFromBearer(token ? `Bearer ${token}` : null);
     if (auth) {
       isAllowed = true;
+      userEmail = auth.email.trim().toLowerCase();
     }
   }
 
-  if (!isAllowed && user && serviceRoleKey) {
+  // Fallback: validate user directly from access token when server session cookie is unavailable.
+  if (!isAllowed && token) {
+    const { data: tokenUserRes } = await supabase.auth.getUser(token);
+    const tokenUserEmail = tokenUserRes.user?.email?.trim().toLowerCase();
+    if (tokenUserEmail) {
+      userEmail = tokenUserEmail;
+    }
+  }
+
+  if (!isAllowed && serviceRoleKey && (user || userEmail)) {
     const admin = createClient(supabaseUrl, serviceRoleKey);
-    const { data: adminUserById } = await admin
-      .from('admin_users')
-      .select('id')
-      .eq('auth_user_id', user.id)
-      .eq('is_active', true)
-      .maybeSingle();
-    isAllowed = Boolean(adminUserById);
+    if (user) {
+      const { data: adminUserById } = await admin
+        .from('admin_users')
+        .select('id')
+        .eq('auth_user_id', user.id)
+        .eq('is_active', true)
+        .maybeSingle();
+      isAllowed = Boolean(adminUserById);
+    }
 
     if (!isAllowed && userEmail) {
       const { data: adminUserByEmail } = await admin
