@@ -24,7 +24,11 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError(error.message);
+      if (error.message === 'Invalid login credentials') {
+        setError('ID/パスワードが間違っています');
+      } else {
+        setError(error.message);
+      }
       console.error('Error logging in:', error);
     } else {
       router.push('/');

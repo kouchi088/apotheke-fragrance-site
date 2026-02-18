@@ -21,9 +21,9 @@ export default function ProfilePage() {
         .from('user_profiles')
         .select('name, address, phone')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') { // PGRST116: row not found
+      if (error) {
         throw error;
       }
 
@@ -58,8 +58,7 @@ export default function ProfilePage() {
     try {
       const { error } = await supabase
         .from('user_profiles')
-        .update({ name, address, phone })
-        .eq('id', user.id);
+        .upsert({ id: user.id, name, address, phone }, { onConflict: 'id' });
 
       if (error) throw error;
 
