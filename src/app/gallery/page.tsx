@@ -52,8 +52,8 @@ export default async function GalleryPage() {
         <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
           {submissions?.map((submission) => (
             submission.images.map((image) => (
-              <div key={image.id} className="group relative">
-                <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+              <div key={image.id} className="group">
+                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-200">
                   <Image
                     src={image.cdn_url}
                     alt={submission.caption || 'User submitted content'}

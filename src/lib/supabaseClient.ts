@@ -8,9 +8,6 @@ export function createClient(options?: { global?: { headers?: { Authorization?: 
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing Supabase environment variables');
   }
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  const cookieDomain = appUrl ? new URL(appUrl).hostname : undefined;
-
   const mergedOptions = {
     ...options,
     auth: {
@@ -19,13 +16,6 @@ export function createClient(options?: { global?: { headers?: { Authorization?: 
       autoRefreshToken: true,
       detectSessionInUrl: true,
       flowType: 'pkce',
-      cookieOptions: cookieDomain ? {
-        name: 'sb',
-        domain: cookieDomain,
-        path: '/',
-        sameSite: 'Lax',
-        secure: true,
-      } : undefined,
     },
   };
 

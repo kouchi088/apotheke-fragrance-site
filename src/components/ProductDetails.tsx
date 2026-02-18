@@ -80,6 +80,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
     .replace(/\r\n/g, '\n')
     .replace(/\u2028|\u2029/g, '\n')
     .replace(/※?\s*実際の寸法に合わせてご?記入ください/g, '')
+    .replace(/[*＊]\s*裏面には家具を傷つけないよう、保護材を貼り付けています。?/g, '')
     .replace(/[ＳS]\s*サイズ/g, 'サイズ')
     .replace(/[［\[]\s*([0-9]+(?:\.[0-9]+)?)\s*[］\]]/g, '$1')
     .replace(/(サイズ\s*)[［\[]([^］\]]+)[］\]]/g, '$1$2');
