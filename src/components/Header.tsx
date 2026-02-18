@@ -26,7 +26,7 @@ const Header = () => {
         {/* Left Section: Logo */}
         <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center">
           <Link href="/">
-            <Image src="/logo.png" alt="MEGURID Logo" width={40} height={54} priority className="my-2" />
+            <Image src="/logo.png" alt="MEGURID Logo" width={40} height={54} priority className="my-2 h-auto" />
           </Link>
         </div>
 

@@ -7,9 +7,7 @@ import { revalidatePath } from 'next/cache';
 const getSupabaseAdmin = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceKey) {
-    throw new Error('Supabase credentials not found in environment variables.');
-  }
+  if (!supabaseUrl || !serviceKey) return null;
   return createClient(supabaseUrl, serviceKey);
 };
 
@@ -20,6 +18,9 @@ type ActionState = {
 
 export async function submitUgcAction(prevState: ActionState, formData: FormData): Promise<ActionState> {
   const supabase = getSupabaseAdmin();
+  if (!supabase) {
+    return { success: false, error: '現在レビュー投稿を受け付けできません。環境設定（SUPABASE_SERVICE_ROLE_KEY）を確認してください。' };
+  }
 
   const rawFormData = {
     email: formData.get('email') as string,
@@ -34,21 +35,23 @@ export async function submitUgcAction(prevState: ActionState, formData: FormData
     return { success: false, error: '必須項目（メールアドレス、商品、利用規約への同意）が入力されていません。' };
   }
 
-  const files = formData.getAll('files') as File[];
-  if (files.every(f => f.size === 0)) {
-    return { success: false, error: '少なくとも1枚の写真をアップロードしてください。' };
-  }
+  const files = formData
+    .getAll('files')
+    .filter((f): f is File => f instanceof File && f.size > 0);
 
   // --- File Uploads ---
   const uploadedFileKeys: { key: string; url: string }[] = [];
 
   for (const file of files) {
-    if (file.size === 0) continue;
     // Generate a random UUID for the file name to avoid conflicts
-    const fileName = `${crypto.randomUUID()}-${file.name}`;
+    const safeName = file.name.replace(/[^\w.\-]+/g, '_');
+    const fileName = `${crypto.randomUUID()}-${safeName}`;
+    const fileBuffer = await file.arrayBuffer();
     const { data, error } = await supabase.storage
       .from('ugc-images')
-      .upload(fileName, file);
+      .upload(fileName, fileBuffer, {
+        contentType: file.type || 'application/octet-stream',
+      });
 
     if (error) {
       console.error('Error uploading file:', error);

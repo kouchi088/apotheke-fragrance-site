@@ -28,19 +28,67 @@ export function SubmitReviewForm({ products }: { products: Product[] }) {
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
 
+  const setSelectedFiles = (incomingFiles: File[]) => {
+    if (incomingFiles.length > 5) {
+      setFileError("写真は5枚までアップロードできます。");
+      setFiles([]);
+      return;
+    }
+    setFiles(incomingFiles);
+    setFileError(null);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
-      if (selectedFiles.length > 5) {
-        setFileError("写真は5枚までアップロードできます。");
-        e.target.value = ''; // Reset file input
-        setFiles([]);
-        return;
-      }
-      setFiles(selectedFiles);
-      setFileError(null);
+      setSelectedFiles(Array.from(e.target.files));
     }
   };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const droppedFiles = Array.from(e.dataTransfer.files || []);
+    const imageFiles = droppedFiles.filter((file) => file.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+      setFileError('画像ファイルを選択してください。');
+      return;
+    }
+
+    setSelectedFiles(imageFiles.slice(0, 5));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    // Ensure dropped files are always included across browsers.
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    formData.delete('files');
+    files.forEach((file) => formData.append('files', file));
+    formAction(formData);
+  };
+
+  useEffect(() => {
+    // Safari can navigate to file:// on drop unless default behavior is blocked at document level.
+    const preventBrowserFileOpen = (event: DragEvent) => {
+      event.preventDefault();
+    };
+
+    const options: AddEventListenerOptions = { capture: true, passive: false };
+    window.addEventListener('dragenter', preventBrowserFileOpen, options);
+    window.addEventListener('dragover', preventBrowserFileOpen, options);
+    window.addEventListener('drop', preventBrowserFileOpen, options);
+    document.addEventListener('dragenter', preventBrowserFileOpen, options);
+    document.addEventListener('dragover', preventBrowserFileOpen, options);
+    document.addEventListener('drop', preventBrowserFileOpen, options);
+
+    return () => {
+      window.removeEventListener('dragenter', preventBrowserFileOpen, options);
+      window.removeEventListener('dragover', preventBrowserFileOpen, options);
+      window.removeEventListener('drop', preventBrowserFileOpen, options);
+      document.removeEventListener('dragenter', preventBrowserFileOpen, options);
+      document.removeEventListener('dragover', preventBrowserFileOpen, options);
+      document.removeEventListener('drop', preventBrowserFileOpen, options);
+    };
+  }, []);
 
   if (state.success) {
     return (
@@ -52,7 +100,7 @@ export function SubmitReviewForm({ products }: { products: Product[] }) {
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6">
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-foreground">メールアドレス <span className="text-red-500">*</span></label>
         <input type="email" name="email" id="email" required className="mt-1 block w-full px-3 py-2 border border-accent rounded-md shadow-sm focus:ring-primary focus:border-primary" />
@@ -79,18 +127,26 @@ export function SubmitReviewForm({ products }: { products: Product[] }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground">写真 (5枚まで) <span className="text-red-500">*</span></label>
-        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-accent border-dashed rounded-md">
+        <label className="block text-sm font-medium text-foreground">写真 (5枚まで・任意)</label>
+        <div
+          className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-accent border-dashed rounded-md"
+          onDropCapture={handleDrop}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onDrop={handleDrop}
+        >
           <div className="space-y-1 text-center">
             <svg className="mx-auto h-12 w-12 text-secondary" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             <div className="flex text-sm text-gray-600">
               <label htmlFor="files" className="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-foreground focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
-                <span>ファイルをアップロード</span>
-                <input id="files" name="files" type="file" className="sr-only" multiple accept="image/jpeg,image/png,image/webp,image/gif" onChange={handleFileChange} />
+                <span>写真/ファイルを選ぶ</span>
+                <input id="files" name="files" type="file" className="sr-only" multiple accept="image/*,.heic,.heif" onChange={handleFileChange} />
               </label>
-              <p className="pl-1">またはドラッグ＆ドロップ</p>
+              <p className="pl-1 hidden sm:block">またはドラッグ＆ドロップ</p>
             </div>
-            <p className="text-xs text-secondary">PNG, JPG, WEBP, GIF (10MBまで)</p>
+            <p className="text-xs text-secondary">スマホは「写真/ファイルを選ぶ」から選択してください（10MBまで）</p>
           </div>
         </div>
         {fileError && <p className="mt-2 text-sm text-red-500">{fileError}</p>}
