@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
+import { authenticateAdminFromBearer } from '@/lib/adminAuth';
 
 const links = [
   { href: '/admin', label: 'Dashboard' },
@@ -39,14 +40,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && isProduction) {
-    redirect('/auth/login');
-  }
-
   let isAllowed = false;
   const userEmail = user?.email?.trim().toLowerCase();
 
-  if (user && serviceRoleKey) {
+  if (isProduction) {
+    const token = cookieStore.get('admin_access_token')?.value ?? null;
+    const auth = await authenticateAdminFromBearer(token ? `Bearer ${token}` : null);
+    if (auth) {
+      isAllowed = true;
+    }
+  }
+
+  if (!isAllowed && user && serviceRoleKey) {
     const admin = createClient(supabaseUrl, serviceRoleKey);
     const { data: adminUserById } = await admin
       .from('admin_users')

@@ -211,7 +211,7 @@ export default function ConcreteGuideLP() {
               </table>
             </div>
             <p className="mt-5 text-sm text-primary leading-relaxed">
-              MEGURIDでは、素材本来の静かな表情を活かすためにマット仕上げを選んでいます。
+              MEGURIDでは、実用性と美観の両立を重視し、半艶仕上げを採用しています。
             </p>
           </FadeIn>
         </section>

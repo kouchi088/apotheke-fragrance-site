@@ -241,7 +241,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           </div>
           
           <div className="w-full max-w-sm mt-2 text-center">
-            <Link href="/gallery" className="text-xs text-secondary hover:text-foreground underline decoration-1 underline-offset-4 transition-colors">
+            <Link href={`/gallery?productId=${product.id}`} className="text-xs text-secondary hover:text-foreground underline decoration-1 underline-offset-4 transition-colors">
               この商品のレビューを見る
             </Link>
           </div>

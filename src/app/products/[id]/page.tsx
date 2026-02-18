@@ -10,11 +10,11 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.megurid.com';
 export const revalidate = 60;
 
 // --- UGC Reviews Component ---
-const ProductReviews = () => {
+const ProductReviews = ({ productId }: { productId: string }) => {
   return (
     <div className="bg-background py-16 text-center border-t border-accent">
       <Link 
-        href="/gallery" 
+        href={`/gallery?productId=${productId}`} 
         className="text-sm font-serif text-primary hover:text-foreground tracking-widest uppercase border-b border-primary hover:border-foreground pb-1 transition-colors"
       >
         View Reviews & Gallery
@@ -168,7 +168,7 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ProductDetails product={product} />
-      <ProductReviews />
+      <ProductReviews productId={product.id} />
     </>
   );
 };

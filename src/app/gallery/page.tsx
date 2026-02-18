@@ -19,18 +19,30 @@ type UgcGallerySubmission = {
   }[];
 };
 
-export default async function GalleryPage() {
-  const { data, error } = await supabase
+export default async function GalleryPage({
+  searchParams,
+}: {
+  searchParams?: { productId?: string };
+}) {
+  const productId = searchParams?.productId;
+  let query = supabase
     .from('ugc_submissions')
     .select(`
       id,
       caption,
+      product_id,
       product:products (id, name),
       images:ugc_images!inner (id, cdn_url)
     `)
     .eq('status', 'approved')
     .not('images', 'is', null)
     .order('created_at', { ascending: false });
+
+  if (productId) {
+    query = query.eq('product_id', productId);
+  }
+
+  const { data, error } = await query;
 
   const submissions: UgcGallerySubmission[] | null = data;
 
@@ -45,7 +57,7 @@ export default async function GalleryPage() {
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">How to Use</h1>
           <p className="mt-4 text-lg leading-8 text-gray-600">
-            お客様から寄せられた、素敵な投稿の数々です。
+            {productId ? 'この商品のレビュー一覧です。' : 'お客様から寄せられた、素敵な投稿の数々です。'}
           </p>
         </div>
 

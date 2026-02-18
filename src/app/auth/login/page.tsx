@@ -18,7 +18,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -31,6 +31,10 @@ export default function LoginPage() {
       }
       console.error('Error logging in:', error);
     } else {
+      const accessToken = data.session?.access_token;
+      if (accessToken) {
+        document.cookie = `admin_access_token=${accessToken}; Path=/; Max-Age=3600; SameSite=Lax; Secure`;
+      }
       router.push('/');
     }
   };
