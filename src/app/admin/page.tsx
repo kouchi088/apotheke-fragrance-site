@@ -14,7 +14,7 @@ export default async function AdminDashboardPage() {
     db.from('affiliate_commissions').select('commission_amount'),
     db.from('affiliates').select('id', { count: 'exact', head: true }).is('deleted_at', null),
     db.from('products').select('id', { count: 'exact', head: true }).is('deleted_at', null),
-    db.from('ugc_posts').select('id', { count: 'exact', head: true }).eq('status', 'PENDING').is('deleted_at', null),
+    db.from('ugc_submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
     db.from('blog_posts').select('id', { count: 'exact', head: true }),
   ]);
 
