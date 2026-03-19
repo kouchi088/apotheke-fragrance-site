@@ -38,7 +38,12 @@ export default async function AdminOrdersPage() {
   if (!hasSupabaseAdminEnv()) return <AdminEnvNotice />;
 
   const db = getSupabaseAdminClient();
-  const columns = await getTableColumns('orders');
+  let columns = new Set<string>();
+  try {
+    columns = await getTableColumns('orders');
+  } catch (columnError) {
+    console.error('[admin-orders] failed_to_load_columns', columnError);
+  }
   const orderFields = [
     'id',
     'created_at',
@@ -69,7 +74,36 @@ export default async function AdminOrdersPage() {
     .order('created_at', { ascending: false })
     .limit(50);
 
-  const safeOrders = orders ?? [];
+  if (error) {
+    console.error('[admin-orders] primary_query_failed', error);
+  }
+
+  let safeOrders: any[] = (orders as any[]) ?? [];
+
+  if (error && safeOrders.length === 0) {
+    const fallback = await db
+      .from('orders')
+      .select(`
+        id,
+        created_at,
+        order_details (
+          id,
+          quantity,
+          price,
+          products (
+            name
+          )
+        )
+      `)
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (fallback.error) {
+      console.error('[admin-orders] fallback_query_failed', fallback.error);
+    } else {
+      safeOrders = (fallback.data as any[]) ?? [];
+    }
+  }
   const totalRevenue = safeOrders.reduce(
     (sum: number, order: any) => sum + normalizeOrderAmount(Number(order.total ?? 0), order.currency ?? 'jpy'),
     0,
