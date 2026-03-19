@@ -45,11 +45,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const token = cookieStore.get('admin_access_token')?.value ?? null;
   let userEmail = user?.email?.trim().toLowerCase();
 
+  console.info(
+    `[admin-layout] start ${JSON.stringify({
+      isProduction,
+      hasServerUser: Boolean(user),
+      hasTokenCookie: Boolean(token),
+      hasServiceRoleKey: Boolean(serviceRoleKey),
+      allowedAdminEmail: allowedAdminEmail ?? null,
+    })}`,
+  );
+
   if (isProduction) {
     const auth = await authenticateAdminFromBearer(token ? `Bearer ${token}` : null);
     if (auth) {
       isAllowed = true;
       userEmail = auth.email.trim().toLowerCase();
+      console.info(`[admin-layout] allowed_via_bearer ${JSON.stringify({ email: userEmail })}`);
     }
   }
 
@@ -59,6 +70,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     const tokenUserEmail = tokenUserRes.user?.email?.trim().toLowerCase();
     if (tokenUserEmail) {
       userEmail = tokenUserEmail;
+      console.info(`[admin-layout] recovered_email_from_token ${JSON.stringify({ email: userEmail })}`);
     }
   }
 
@@ -72,6 +84,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         .eq('is_active', true)
         .maybeSingle();
       isAllowed = Boolean(adminUserById);
+      console.info(
+        `[admin-layout] admin_lookup_by_id ${JSON.stringify({
+          authUserId: user.id,
+          matched: Boolean(adminUserById),
+        })}`,
+      );
     }
 
     if (!isAllowed && userEmail) {
@@ -82,14 +100,33 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         .eq('is_active', true)
         .maybeSingle();
       isAllowed = Boolean(adminUserByEmail);
+      console.info(
+        `[admin-layout] admin_lookup_by_email ${JSON.stringify({
+          email: userEmail,
+          matched: Boolean(adminUserByEmail),
+        })}`,
+      );
     }
   }
 
   if (!isAllowed && allowedAdminEmail && userEmail) {
     isAllowed = userEmail === allowedAdminEmail;
+    console.info(
+      `[admin-layout] admin_env_email_fallback ${JSON.stringify({
+        email: userEmail,
+        matched: isAllowed,
+      })}`,
+    );
   }
 
   if (!isAllowed && isProduction) {
+    console.warn(
+      `[admin-layout] denied ${JSON.stringify({
+        hasServerUser: Boolean(user),
+        email: userEmail ?? null,
+        hasTokenCookie: Boolean(token),
+      })}`,
+    );
     redirect('/auth/login');
   }
 
