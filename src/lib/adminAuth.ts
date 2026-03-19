@@ -70,7 +70,7 @@ export async function authenticateAdminFromBearer(authorizationHeader: string | 
   const {
     data: { user },
     error: userError,
-  } = await authed.auth.getUser();
+  } = await authed.auth.getUser(accessToken);
 
   if (userError || !user) {
     logAdminAuth('token_user_lookup_failed', {
