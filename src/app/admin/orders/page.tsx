@@ -1,6 +1,7 @@
 import { unstable_noStore } from 'next/cache';
 import { getSupabaseAdminClient, hasSupabaseAdminEnv } from '@/lib/adminAuth';
 import { AdminEnvNotice } from '@/app/admin/AdminEnvNotice';
+import { getTableColumns } from '@/lib/admin/db';
 import {
   formatOrderCurrency,
   formatOrderDate,
@@ -37,26 +38,34 @@ export default async function AdminOrdersPage() {
   if (!hasSupabaseAdminEnv()) return <AdminEnvNotice />;
 
   const db = getSupabaseAdminClient();
+  const columns = await getTableColumns('orders');
+  const orderFields = [
+    'id',
+    'created_at',
+    columns.has('updated_at') ? 'updated_at' : null,
+    columns.has('customer_email') ? 'customer_email' : null,
+    columns.has('total') ? 'total' : null,
+    columns.has('currency') ? 'currency' : null,
+    columns.has('status') ? 'status' : null,
+    columns.has('shipping_address') ? 'shipping_address' : null,
+  ]
+    .filter(Boolean)
+    .join(', ');
+  const orderSelect = `
+    ${orderFields},
+    order_details (
+      id,
+      quantity,
+      price,
+      products (
+        name
+      )
+    )
+  `;
+
   const { data: orders, error } = await db
     .from('orders')
-    .select(`
-      id,
-      created_at,
-      updated_at,
-      customer_email,
-      total,
-      currency,
-      status,
-      shipping_address,
-      order_details (
-        id,
-        quantity,
-        price,
-        products (
-          name
-        )
-      )
-    `)
+    .select(orderSelect)
     .order('created_at', { ascending: false })
     .limit(50);
 

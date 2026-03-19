@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { getSupabaseAdminClient } from '@/lib/adminAuth';
+import { getTableColumns, pickExistingColumns } from '@/lib/admin/db';
 import { ORDER_STATUS_OPTIONS } from '@/lib/orders';
 
 export async function updateOrderStatus(formData: FormData) {
@@ -13,9 +14,18 @@ export async function updateOrderStatus(formData: FormData) {
   }
 
   const db = getSupabaseAdminClient();
+  const columns = await getTableColumns('orders');
   await db
     .from('orders')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update(
+      pickExistingColumns(
+        {
+          status,
+          updated_at: new Date().toISOString(),
+        },
+        columns,
+      ),
+    )
     .eq('id', orderId);
 
   revalidatePath('/admin');
