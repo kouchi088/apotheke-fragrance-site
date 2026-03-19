@@ -9,6 +9,7 @@ export default async function AdminSettingsPage() {
     db.from('system_settings').select('key, value, updated_at').order('key', { ascending: true }).limit(100),
     db.from('audit_logs').select('id, action, actor_email, entity_type, created_at').order('created_at', { ascending: false }).limit(20),
   ]);
+  const orderNotificationSetting = (settings ?? []).find((setting: any) => setting.key === 'order_notification_emails');
 
   return (
     <div className="space-y-8">
@@ -27,6 +28,20 @@ export default async function AdminSettingsPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold">Order Notifications</h2>
+        <div className="rounded-lg border border-stone-200 bg-stone-50 p-4 text-sm text-stone-700">
+          <p className="font-medium text-stone-900">注文通知メール</p>
+          <p className="mt-1">
+            Stripe webhook 完了時に管理者へ通知を送ります。通知先は `system_settings.order_notification_emails`
+            を優先し、未設定時は環境変数の `ADMIN_ORDER_NOTIFICATION_EMAIL` または `ADMIN_EMAIL` を使います。
+          </p>
+          <pre className="mt-3 overflow-x-auto rounded bg-white p-3 text-xs">
+            {JSON.stringify(orderNotificationSetting?.value ?? ['info@megurid.com'], null, 2)}
+          </pre>
+        </div>
       </section>
 
       <section className="space-y-2">

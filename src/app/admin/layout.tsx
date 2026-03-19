@@ -7,6 +7,7 @@ import { authenticateAdminFromBearer } from '@/lib/adminAuth';
 
 const links = [
   { href: '/admin', label: 'Dashboard' },
+  { href: '/admin/orders', label: 'Orders' },
   { href: '/admin/affiliates', label: 'Affiliates' },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/content/ugc', label: 'UGC' },

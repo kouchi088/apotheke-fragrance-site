@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { createClient } from '@/lib/supabaseClient';
+import { formatOrderCurrency, normalizeOrderAmount } from '@/lib/orders';
 
 // Stripeクライアントの初期化
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -35,6 +36,28 @@ async function logError(source: string, error: any, context: object = {}) {
   } catch (logError) {
     console.error('Failed to log error to Supabase:', logError);
   }
+}
+
+async function getAdminNotificationRecipients() {
+  const { data } = await supabase
+    .from('system_settings')
+    .select('value')
+    .eq('key', 'order_notification_emails')
+    .maybeSingle();
+
+  const rawValue = data?.value;
+  const settingRecipients = Array.isArray(rawValue)
+    ? rawValue
+    : typeof rawValue === 'string'
+      ? rawValue.split(',')
+      : Array.isArray((rawValue as any)?.emails)
+        ? (rawValue as any).emails
+        : [];
+
+  return [process.env.ADMIN_ORDER_NOTIFICATION_EMAIL, process.env.ADMIN_EMAIL, 'info@megurid.com', ...settingRecipients]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean)
+    .filter((value, index, array) => array.indexOf(value) === index);
 }
 
 export async function POST(req: NextRequest) {
@@ -167,6 +190,7 @@ export async function POST(req: NextRequest) {
 
       // Send notification email to admin
       try {
+        const adminRecipients = await getAdminNotificationRecipients();
         const itemsHtml = lineItems?.map(item => `<li>${item.description} (Quantity: ${item.quantity})</li>`).join('') || '<li>No items found</li>';
         const shippingAddressHtml = `
           <p>
@@ -177,28 +201,30 @@ export async function POST(req: NextRequest) {
           </p>
         `;
 
-        await resend.emails.send({
-          from: 'megurid <noreply@megurid.com>',
-          to: 'info@megurid.com',
-          subject: `[megurid Admin] New Order Received - ${order.id}`,
-          html: `
-            <h1>New Order Received</h1>
-            <p>A new order has been placed on megurid.</p>
-            <h2>Order Details</h2>
-            <ul>
-              <li><strong>Order ID:</strong> ${order.id}</li>
-              <li><strong>Customer Name:</strong> ${shipping_details.name}</li>
-              <li><strong>Customer Email:</strong> ${customer_details.email}</li>
-              <li><strong>Total Amount:</strong> ¥${fullSession.amount_total?.toLocaleString()}</li>
-            </ul>
-            <h2>Shipping Address</h2>
-            ${shippingAddressHtml}
-            <h2>Items</h2>
-            <ul>
-              ${itemsHtml}
-            </ul>
-          `
-        });
+        if (adminRecipients.length > 0) {
+          await resend.emails.send({
+            from: 'megurid <noreply@megurid.com>',
+            to: adminRecipients,
+            subject: `[megurid Admin] New Order Received - ${order.id}`,
+            html: `
+              <h1>New Order Received</h1>
+              <p>A new order has been placed on megurid.</p>
+              <h2>Order Details</h2>
+              <ul>
+                <li><strong>Order ID:</strong> ${order.id}</li>
+                <li><strong>Customer Name:</strong> ${shipping_details.name}</li>
+                <li><strong>Customer Email:</strong> ${customer_details.email}</li>
+                <li><strong>Total Amount:</strong> ${formatOrderCurrency(normalizeOrderAmount(fullSession.amount_total ?? 0, fullSession.currency ?? 'jpy'), fullSession.currency ?? 'jpy')}</li>
+              </ul>
+              <h2>Shipping Address</h2>
+              ${shippingAddressHtml}
+              <h2>Items</h2>
+              <ul>
+                ${itemsHtml}
+              </ul>
+            `
+          });
+        }
       } catch (adminEmailError) {
         // Log the error but don't crash the process
         await logError('webhook_admin_email_sending', adminEmailError, { orderId: order.id });
@@ -214,4 +240,3 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ received: true });
 }
-
