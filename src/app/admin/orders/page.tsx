@@ -13,6 +13,13 @@ import { updateOrderStatus } from '@/app/admin/orders/actions';
 
 export const dynamic = 'force-dynamic';
 
+type AdminOrdersPageProps = {
+  searchParams?: {
+    q?: string;
+    status?: string;
+  };
+};
+
 function getShippingSummary(shippingAddress: any) {
   if (!shippingAddress) return { name: '-', address: '-', phone: '-' };
 
@@ -34,9 +41,35 @@ function getShippingSummary(shippingAddress: any) {
   };
 }
 
-export default async function AdminOrdersPage() {
+function matchesOrderQuery(order: any, query: string) {
+  if (!query) return true;
+
+  const shipping = getShippingSummary(order.shipping_address);
+  const items = (order.order_details ?? [])
+    .map((item: any) => item.products?.name ?? '')
+    .join(' ');
+  const haystack = [
+    order.id,
+    order.customer_email,
+    shipping.name,
+    shipping.address,
+    shipping.phone,
+    items,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  return haystack.includes(query.toLowerCase());
+}
+
+export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageProps) {
   unstable_noStore();
   if (!hasSupabaseAdminEnv()) return <AdminEnvNotice />;
+  const rawQuery = typeof searchParams?.q === 'string' ? searchParams.q.trim() : '';
+  const rawStatus = typeof searchParams?.status === 'string' ? searchParams.status.trim() : '';
+  const statusFilter =
+    rawStatus && ORDER_STATUS_OPTIONS.includes(rawStatus as (typeof ORDER_STATUS_OPTIONS)[number]) ? rawStatus : '';
 
   const db = getSupabaseAdminClient();
   let columns = new Set<string>();
@@ -73,7 +106,7 @@ export default async function AdminOrdersPage() {
     .from('orders')
     .select(orderSelect)
     .order('created_at', { ascending: false })
-    .limit(50);
+    .limit(100);
 
   if (error) {
     console.error('[admin-orders] primary_query_failed', error);
@@ -87,6 +120,9 @@ export default async function AdminOrdersPage() {
       .select(`
         id,
         created_at,
+        customer_email,
+        status,
+        shipping_address,
         order_details (
           id,
           quantity,
@@ -97,7 +133,7 @@ export default async function AdminOrdersPage() {
         )
       `)
       .order('created_at', { ascending: false })
-      .limit(50);
+      .limit(100);
 
     if (fallback.error) {
       console.error('[admin-orders] fallback_query_failed', fallback.error);
@@ -105,12 +141,17 @@ export default async function AdminOrdersPage() {
       safeOrders = (fallback.data as any[]) ?? [];
     }
   }
-  const totalRevenue = safeOrders.reduce(
+  const filteredOrders = safeOrders.filter((order: any) => {
+    const statusMatches = !statusFilter || order.status === statusFilter;
+    return statusMatches && matchesOrderQuery(order, rawQuery);
+  });
+
+  const totalRevenue = filteredOrders.reduce(
     (sum: number, order: any) => sum + normalizeOrderAmount(Number(order.total ?? 0), order.currency ?? 'jpy'),
     0,
   );
-  const newOrders = safeOrders.filter((order: any) => order.status === 'completed').length;
-  const processingOrders = safeOrders.filter((order: any) => order.status === 'processing').length;
+  const newOrders = filteredOrders.filter((order: any) => order.status === 'completed').length;
+  const processingOrders = filteredOrders.filter((order: any) => order.status === 'processing').length;
 
   return (
     <div className="space-y-6">
@@ -135,8 +176,46 @@ export default async function AdminOrdersPage() {
         <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error.message}</div>
       )}
 
+      <section className="rounded-xl border border-stone-200 bg-white p-4">
+        <form className="grid gap-3 md:grid-cols-[minmax(0,1fr)_200px_120px]">
+          <input
+            type="search"
+            name="q"
+            defaultValue={rawQuery}
+            placeholder="名前・メール・電話・住所・商品名で検索"
+            className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm"
+          />
+          <select
+            name="status"
+            defaultValue={statusFilter}
+            className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm"
+          >
+            <option value="">すべてのステータス</option>
+            {ORDER_STATUS_OPTIONS.map((status) => (
+              <option key={status} value={status}>
+                {getOrderStatusLabel(status)}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            className="rounded-md bg-stone-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-stone-700"
+          >
+            絞り込む
+          </button>
+        </form>
+        {(rawQuery || statusFilter) && (
+          <div className="mt-3 flex items-center justify-between gap-3 text-sm text-stone-600">
+            <p>{filteredOrders.length}件を表示中</p>
+            <a href="/admin/orders" className="underline underline-offset-4">
+              条件をクリア
+            </a>
+          </div>
+        )}
+      </section>
+
       <div className="grid gap-4 xl:grid-cols-2">
-        {safeOrders.map((order: any) => {
+        {filteredOrders.map((order: any) => {
           const shipping = getShippingSummary(order.shipping_address);
           const items = order.order_details ?? [];
 
@@ -227,9 +306,9 @@ export default async function AdminOrdersPage() {
         })}
       </div>
 
-      {!error && safeOrders.length === 0 && (
+      {!error && filteredOrders.length === 0 && (
         <div className="rounded-lg border border-dashed border-stone-300 px-4 py-10 text-center text-sm text-stone-500">
-          注文データはまだありません。
+          {rawQuery || statusFilter ? '条件に一致する注文がありません。' : '注文データはまだありません。'}
         </div>
       )}
     </div>
