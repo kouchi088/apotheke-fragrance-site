@@ -14,7 +14,7 @@ import { updateOrderStatus } from '@/app/admin/orders/actions';
 export const dynamic = 'force-dynamic';
 
 function getShippingSummary(shippingAddress: any) {
-  if (!shippingAddress) return { name: '-', address: '-' };
+  if (!shippingAddress) return { name: '-', address: '-', phone: '-' };
 
   const name = shippingAddress.name ?? shippingAddress.recipient ?? '-';
   const address = [
@@ -30,6 +30,7 @@ function getShippingSummary(shippingAddress: any) {
   return {
     name,
     address: address || '-',
+    phone: shippingAddress.phone ?? shippingAddress.phone_number ?? '-',
   };
 }
 
@@ -181,6 +182,7 @@ export default async function AdminOrdersPage() {
                     <div className="mt-2 rounded-lg bg-stone-50 px-3 py-3 text-sm text-stone-700">
                       <p className="font-medium text-stone-900">{shipping.name}</p>
                       <p className="mt-1 break-all">{order.customer_email ?? '-'}</p>
+                      <p className="mt-1">{shipping.phone}</p>
                     </div>
                   </section>
                 </div>
@@ -190,6 +192,7 @@ export default async function AdminOrdersPage() {
                     <p className="text-xs uppercase tracking-[0.16em] text-stone-500">Shipping</p>
                     <div className="mt-2 rounded-lg bg-stone-50 px-3 py-3 text-sm text-stone-700">
                       <p className="whitespace-pre-line leading-6">{shipping.address}</p>
+                      <p className="mt-3 border-t border-stone-200 pt-3">電話番号: {shipping.phone}</p>
                     </div>
                   </section>
 

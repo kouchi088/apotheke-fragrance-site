@@ -111,6 +111,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/products/${productId}`,
       shipping_address_collection: { allowed_countries: ['JP'] },
+      phone_number_collection: { enabled: true },
       automatic_tax: { enabled: true },
       client_reference_id: userId ?? undefined,
     };

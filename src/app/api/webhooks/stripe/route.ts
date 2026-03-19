@@ -100,6 +100,11 @@ export async function POST(req: NextRequest) {
       const lineItems = fullSession.line_items?.data;
       const { customer_details } = fullSession;
       const shipping_details = fullSession.collected_information?.shipping_details;
+      const customerPhone = customer_details?.phone ?? null;
+      const shippingPayload = {
+        ...shipping_details,
+        phone: customerPhone ?? (shipping_details as any)?.phone ?? null,
+      };
 
       if (!customer_details?.email || !shipping_details) {
         throw new Error('Critical data missing in session (email or shipping).');
@@ -107,7 +112,7 @@ export async function POST(req: NextRequest) {
 
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert({ user_id: userId, customer_email: customer_details.email, stripe_session_id: sessionId, total: fullSession.amount_total, currency: fullSession.currency, status: 'completed', shipping_address: shipping_details })
+        .insert({ user_id: userId, customer_email: customer_details.email, stripe_session_id: sessionId, total: fullSession.amount_total, currency: fullSession.currency, status: 'completed', shipping_address: shippingPayload })
         .select()
         .single();
 
@@ -214,6 +219,7 @@ export async function POST(req: NextRequest) {
                 <li><strong>Order ID:</strong> ${order.id}</li>
                 <li><strong>Customer Name:</strong> ${shipping_details.name}</li>
                 <li><strong>Customer Email:</strong> ${customer_details.email}</li>
+                <li><strong>Phone:</strong> ${customerPhone ?? 'Not provided'}</li>
                 <li><strong>Total Amount:</strong> ${formatOrderCurrency(normalizeOrderAmount(fullSession.amount_total ?? 0, fullSession.currency ?? 'jpy'), fullSession.currency ?? 'jpy')}</li>
               </ul>
               <h2>Shipping Address</h2>
