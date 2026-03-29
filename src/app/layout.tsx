@@ -1,6 +1,6 @@
 'use client';
 
-import type { Metadata } from "next";
+import Script from "next/script";
 import { Toaster } from 'react-hot-toast';
 import "./globals.css";
 import { CartProvider } from "../context/CartContext";
@@ -18,6 +18,18 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-534N3XNK9D"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-534N3XNK9D');
+          `}
+        </Script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
