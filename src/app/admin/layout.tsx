@@ -1,9 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
-import { createClient } from '@supabase/supabase-js';
-import { authenticateAdminFromBearer } from '@/lib/adminAuth';
+import { resolveAdminAccess } from '@/lib/adminAccess';
 
 const links = [
   { href: '/admin', label: 'Dashboard' },
@@ -19,112 +17,30 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const isProduction = process.env.NODE_ENV === 'production';
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const allowedAdminEmailRaw = process.env.ADMIN_EMAIL ?? process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-  const allowedAdminEmail = allowedAdminEmailRaw?.trim().toLowerCase();
 
   if (!supabaseUrl || !supabaseAnonKey) {
     redirect('/auth/login');
   }
 
   const cookieStore = cookies();
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      get(name: string) {
-        return cookieStore.get(name)?.value;
-      },
-      set() {},
-      remove() {},
-    },
-  });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let isAllowed = false;
-  const token = cookieStore.get('admin_access_token')?.value ?? null;
-  let userEmail = user?.email?.trim().toLowerCase();
+  const { isAdmin, user, userEmail } = await resolveAdminAccess(cookieStore);
 
   console.info(
     `[admin-layout] start ${JSON.stringify({
       isProduction,
       hasServerUser: Boolean(user),
-      hasTokenCookie: Boolean(token),
-      hasServiceRoleKey: Boolean(serviceRoleKey),
-      allowedAdminEmail: allowedAdminEmail ?? null,
+      hasTokenCookie: Boolean(cookieStore.get('admin_access_token')?.value),
+      userEmail: userEmail ?? null,
+      isAdmin,
     })}`,
   );
 
-  if (isProduction) {
-    const auth = await authenticateAdminFromBearer(token ? `Bearer ${token}` : null);
-    if (auth) {
-      isAllowed = true;
-      userEmail = auth.email.trim().toLowerCase();
-      console.info(`[admin-layout] allowed_via_bearer ${JSON.stringify({ email: userEmail })}`);
-    }
-  }
-
-  // Fallback: validate user directly from access token when server session cookie is unavailable.
-  if (!isAllowed && token) {
-    const { data: tokenUserRes } = await supabase.auth.getUser(token);
-    const tokenUserEmail = tokenUserRes.user?.email?.trim().toLowerCase();
-    if (tokenUserEmail) {
-      userEmail = tokenUserEmail;
-      console.info(`[admin-layout] recovered_email_from_token ${JSON.stringify({ email: userEmail })}`);
-    }
-  }
-
-  if (!isAllowed && serviceRoleKey && (user || userEmail)) {
-    const admin = createClient(supabaseUrl, serviceRoleKey);
-    if (user) {
-      const { data: adminUserById } = await admin
-        .from('admin_users')
-        .select('id')
-        .eq('auth_user_id', user.id)
-        .eq('is_active', true)
-        .maybeSingle();
-      isAllowed = Boolean(adminUserById);
-      console.info(
-        `[admin-layout] admin_lookup_by_id ${JSON.stringify({
-          authUserId: user.id,
-          matched: Boolean(adminUserById),
-        })}`,
-      );
-    }
-
-    if (!isAllowed && userEmail) {
-      const { data: adminUserByEmail } = await admin
-        .from('admin_users')
-        .select('id')
-        .eq('email', userEmail)
-        .eq('is_active', true)
-        .maybeSingle();
-      isAllowed = Boolean(adminUserByEmail);
-      console.info(
-        `[admin-layout] admin_lookup_by_email ${JSON.stringify({
-          email: userEmail,
-          matched: Boolean(adminUserByEmail),
-        })}`,
-      );
-    }
-  }
-
-  if (!isAllowed && allowedAdminEmail && userEmail) {
-    isAllowed = userEmail === allowedAdminEmail;
-    console.info(
-      `[admin-layout] admin_env_email_fallback ${JSON.stringify({
-        email: userEmail,
-        matched: isAllowed,
-      })}`,
-    );
-  }
-
-  if (!isAllowed && isProduction) {
+  if (!isAdmin && isProduction) {
     console.warn(
       `[admin-layout] denied ${JSON.stringify({
         hasServerUser: Boolean(user),
         email: userEmail ?? null,
-        hasTokenCookie: Boolean(token),
+        hasTokenCookie: Boolean(cookieStore.get('admin_access_token')?.value),
       })}`,
     );
     redirect('/auth/login');

@@ -7,7 +7,7 @@ import { useState } from 'react';
 const supabase = createClient();
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -17,8 +17,6 @@ const Header = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-
-  const isAdmin = user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
   return (
     <header className={`fixed top-0 w-full z-50 bg-white shadow-md py-2 border-b border-accent ${isMobileMenuOpen ? 'opacity-80' : 'opacity-70'}`}>

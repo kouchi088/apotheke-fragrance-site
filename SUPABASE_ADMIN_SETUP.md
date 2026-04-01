@@ -11,8 +11,16 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 ## 2. SQL適用順
-1. `/Users/kou/concrete-lab/megurid/admin_schema.sql`
-2. `/Users/kou/concrete-lab/megurid/supabase/admin_integration.sql`
+1. `/Users/kou/開発/concrete-lab/megurid/admin_schema.sql`
+2. `/Users/kou/開発/concrete-lab/megurid/supabase/admin_integration.sql`
+3. `/Users/kou/開発/concrete-lab/megurid/supabase/harden_public_products_rls.sql`
+
+`Advisors` で `rls_disabled_in_public` が出ている場合は、少なくとも 3 を適用してください。
+このSQLは `public.products` に対して以下を行います。
+
+- RLS を有効化
+- 公開商品のみ匿名/ログインユーザーに `SELECT` 許可
+- 匿名/ログインユーザーの `INSERT/UPDATE/DELETE` を明示的に剥奪
 
 ## 3. 管理者ユーザー初期化
 Supabase Auth で管理者アカウントを作成後、`auth.users.id` を使って `admin_users` に投入:
@@ -26,6 +34,7 @@ DO UPDATE SET role = EXCLUDED.role, is_active = true;
 
 ## 4. 動作確認
 - `/admin` が表示される
+- `/online-store` と `/products/[id]` で公開商品が表示される
 - `/api/admin/affiliates` が 401 ではなく 200/403 を返す
 - `audit_logs` に更新履歴が入る
 
