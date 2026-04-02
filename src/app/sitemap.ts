@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { createClient } from '@/lib/supabaseClient';
+import { getAllColumns } from '@/lib/columns';
 
 const supabase = createClient();
 const siteUrl = 'https://www.megurid.com';
@@ -26,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/concept',
     '/contact',
     '/cart',
+    '/columns',
     '/favorites',
     '/legal',
     '/online-store',
@@ -39,6 +41,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
   }));
 
+  const columnUrls = getAllColumns().map((column) => ({
+    url: `${siteUrl}/columns/${column.routeSlug}`,
+    lastModified: new Date(),
+  }));
+
   // 3. Combine and return all URLs
-  return [...staticUrls, ...productUrls];
+  return [...staticUrls, ...productUrls, ...columnUrls];
 }

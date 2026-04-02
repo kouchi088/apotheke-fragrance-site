@@ -1,6 +1,7 @@
 import React from 'react';
 import { createClient } from '@/lib/supabaseClient';
 import LandingPageClient from '@/components/LandingPageClient';
+import { getLatestColumn } from '@/lib/columns';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -8,6 +9,7 @@ export const revalidate = 0;
 // --- Page Component (Server Component) ---
 export default async function LandingPage() {
   const supabase = createClient();
+  const latestColumn = getLatestColumn();
 
   let productsQuery = supabase
     .from('products')
@@ -86,6 +88,7 @@ export default async function LandingPage() {
       products={products || []} 
       reviews={reviews || []} 
       featuredProducts={featuredProducts || []}
+      latestColumn={latestColumn}
     />
   );
 }

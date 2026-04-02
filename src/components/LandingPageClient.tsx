@@ -15,7 +15,17 @@ const ArrowRight = ({ className }: { className?: string }) => (
 const HERO_IMAGES = ['/tophero.png', '/tophero2.png'];
 
 // --- Client Component ---
-export default function LandingPageClient({ products, reviews, featuredProducts }: { products: any[]; reviews: any[]; featuredProducts: any[] }) {
+export default function LandingPageClient({
+  products,
+  reviews,
+  featuredProducts,
+  latestColumn,
+}: {
+  products: any[];
+  reviews: any[];
+  featuredProducts: any[];
+  latestColumn?: { slug: string; routeSlug: string; title: string; order: number } | null;
+}) {
   const { addToCart } = useCart();
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
@@ -207,7 +217,7 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                   {/* --- Column Section (Kurasu Style) --- */}
                   <div className="mt-12 pt-12 border-t border-secondary">
                     <h3 className="text-sm font-serif text-foreground mb-6">Latest Column</h3>
-                    <Link href="/lp/concrete-guide" className="block group">
+                    <Link href={latestColumn ? `/columns/${latestColumn.routeSlug}` : '/columns'} className="block group">
                       <div className="flex gap-6 items-start">
                         <div className="w-24 h-24 bg-accent flex-shrink-0 relative overflow-hidden">
                           <Image
@@ -218,13 +228,20 @@ export default function LandingPageClient({ products, reviews, featuredProducts 
                           />
                         </div>
                         <div>
-                          <p className="text-xs text-secondary mb-2">2026.02.17</p>
+                          <p className="text-xs text-secondary mb-2">
+                            {latestColumn ? `COLUMN ${String(latestColumn.order).padStart(2, '0')}` : 'COLUMN'}
+                          </p>
                           <h4 className="text-sm text-foreground font-medium leading-relaxed group-hover:text-primary transition-colors">
-                            コンクリート雑貨 完全ガイド：素材の特性からお手入れまで
+                            {latestColumn?.title ?? 'コラム一覧を見る'}
                           </h4>
                         </div>
                       </div>
                     </Link>
+                    <div className="pt-5">
+                      <Link href="/columns" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1 hover:border-foreground transition-colors text-primary">
+                        View All Columns
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

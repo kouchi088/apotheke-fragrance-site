@@ -185,10 +185,10 @@ export default function LandingPage() {
                     香りの時間を、部屋の静けさとして定着させる。
                   </p>
                   <Link
-                    href="/products/01cfccda-596a-4b45-9548-30f114b0f08c"
+                    href="/online-store"
                     className="mt-auto pt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
                   >
-                    商品を見る
+                    商品はこちら
                   </Link>
                 </div>
               </div>
@@ -213,10 +213,10 @@ export default function LandingPage() {
                     散らかり方にルールを与え、視界を整えるための面。
                   </p>
                   <Link
-                    href="/products/89b6acc2-858b-4eab-b337-d9852ff2cc9a"
+                    href="/online-store"
                     className="mt-auto pt-4 inline-flex items-center border-b border-foreground pb-1 text-xs sm:text-sm tracking-[0.12em] sm:tracking-widest hover:text-primary hover:border-primary transition-colors"
                   >
-                    商品を見る
+                    商品はこちら
                   </Link>
                 </div>
               </div>
@@ -237,7 +237,7 @@ export default function LandingPage() {
             <FadeIn delay={200}>
               <Link href="/online-store">
                 <Button variant="outline" className="min-w-[190px] sm:min-w-[220px]">
-                  オンラインストアを見る
+                  商品はこちら
                 </Button>
               </Link>
             </FadeIn>
