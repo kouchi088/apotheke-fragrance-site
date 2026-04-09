@@ -75,6 +75,41 @@ export default function ColumnContent({ blocks }: { blocks: ColumnBlock[] }) {
           );
         }
 
+        if (block.type === 'table') {
+          return (
+            <div key={index} className="overflow-x-auto">
+              <table className="w-full border-collapse text-[15px] leading-relaxed text-foreground/90">
+                <thead>
+                  <tr className="border-b border-foreground/20">
+                    {block.headers.map((header, i) => (
+                      <th key={i} className="px-4 py-3 text-left font-semibold text-foreground">{renderInline(header)}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row, rowIndex) => (
+                    <tr key={rowIndex} className="border-b border-accent">
+                      {row.map((cell, cellIndex) => (
+                        <td key={cellIndex} className="px-4 py-3">{renderInline(cell)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+
+        if (block.type === 'blockquote') {
+          return (
+            <blockquote key={index} className="border-l-2 border-foreground/30 pl-5 text-foreground/80 italic">
+              {block.text.split('\n').map((line, i) => (
+                <p key={i} className="whitespace-pre-line">{renderInline(line)}</p>
+              ))}
+            </blockquote>
+          );
+        }
+
         return (
           <pre
             key={index}

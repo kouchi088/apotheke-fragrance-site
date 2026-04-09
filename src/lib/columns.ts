@@ -8,6 +8,8 @@ export type ColumnBlock =
   | { type: 'paragraph'; text: string }
   | { type: 'list'; ordered: boolean; items: string[] }
   | { type: 'code'; code: string }
+  | { type: 'table'; headers: string[]; rows: string[][] }
+  | { type: 'blockquote'; text: string }
   | { type: 'hr' };
 
 export type ColumnSummary = {
@@ -23,7 +25,7 @@ export type ColumnArticle = ColumnSummary & {
   blocks: ColumnBlock[];
 };
 
-const columnsDirectory = path.join(process.cwd(), 'columns');
+const columnsDirectory = path.join(process.cwd(), 'columns-v2');
 
 function normalizeValue(value: string) {
   return value.normalize('NFC');
@@ -85,7 +87,7 @@ function parseMarkdown(content: string): ColumnBlock[] {
       continue;
     }
 
-    if (trimmed === '```') {
+    if (trimmed.startsWith('```')) {
       flushParagraph(paragraphBuffer);
       index += 1;
       const codeLines: string[] = [];
@@ -142,6 +144,51 @@ function parseMarkdown(content: string): ColumnBlock[] {
         index += 1;
       }
       blocks.push({ type: 'list', ordered: true, items });
+      continue;
+    }
+
+    // Table: pipe-delimited with separator line
+    if (/^\|.+\|$/.test(trimmed) && index + 1 < lines.length) {
+      const nextTrimmed = lines[index + 1].trim();
+      if (/^\|[\s\-:|]+\|$/.test(nextTrimmed)) {
+        flushParagraph(paragraphBuffer);
+        const headers = trimmed
+          .slice(1, -1)
+          .split('|')
+          .map((cell) => cell.trim());
+        index += 2; // skip header + separator
+        const tableRows: string[][] = [];
+        while (index < lines.length && /^\|.+\|$/.test(lines[index].trim())) {
+          const row = lines[index]
+            .trim()
+            .slice(1, -1)
+            .split('|')
+            .map((cell) => cell.trim());
+          tableRows.push(row);
+          index += 1;
+        }
+        blocks.push({ type: 'table', headers, rows: tableRows });
+        continue;
+      }
+    }
+
+    // Blockquote: lines starting with >
+    if (trimmed.startsWith('> ') || trimmed === '>') {
+      flushParagraph(paragraphBuffer);
+      const quoteLines: string[] = [];
+      while (index < lines.length) {
+        const qt = lines[index].trim();
+        if (qt.startsWith('> ')) {
+          quoteLines.push(qt.slice(2));
+          index += 1;
+        } else if (qt === '>') {
+          quoteLines.push('');
+          index += 1;
+        } else {
+          break;
+        }
+      }
+      blocks.push({ type: 'blockquote', text: quoteLines.join('\n').trim() });
       continue;
     }
 
