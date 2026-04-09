@@ -145,7 +145,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                 >
                   <Image
                     src={img}
-                    alt={`${product.name} thumbnail ${index + 1}`}
+                    alt={`${product.name} 商品画像 サムネイル ${index + 1}`}
                     fill
                     sizes="40px"
                     style={{ objectFit: 'cover' }}
@@ -161,7 +161,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
               <>
                 <Image
                   src={normalizedImages[currentImageIndex]}
-                  alt={product.name}
+                  alt={`${product.name} 商品画像 ${currentImageIndex + 1}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   style={{ objectFit: 'cover' }}
@@ -187,7 +187,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
             ) : (
               <Image
                 src={fallbackImage || '/placeholder.jpg'}
-                alt={product.name}
+                alt={`${product.name} 商品画像`}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 style={{ objectFit: 'cover' }}

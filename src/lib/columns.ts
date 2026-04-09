@@ -18,6 +18,8 @@ export type ColumnSummary = {
   title: string;
   excerpt: string;
   order: number;
+  publishedAt: string;
+  updatedAt: string;
 };
 
 export type ColumnArticle = ColumnSummary & {
@@ -203,6 +205,7 @@ function parseMarkdown(content: string): ColumnBlock[] {
 function createColumnArticle(fileName: string): ColumnArticle {
   const fullPath = path.join(columnsDirectory, fileName);
   const content = fs.readFileSync(fullPath, 'utf8');
+  const stats = fs.statSync(fullPath);
   const slug = getSlugFromFileName(fileName);
   const title = getTitleFromContent(content, slug);
   const blocks = parseMarkdown(content);
@@ -216,6 +219,8 @@ function createColumnArticle(fileName: string): ColumnArticle {
     title,
     excerpt: stripMarkdown(firstParagraph?.text ?? '').slice(0, 160),
     order: getOrderFromFileName(fileName),
+    publishedAt: stats.birthtime.toISOString(),
+    updatedAt: stats.mtime.toISOString(),
     content,
     blocks,
   };
@@ -239,6 +244,8 @@ export function getAllColumns(): ColumnSummary[] {
       title: article.title,
       excerpt: article.excerpt,
       order: article.order,
+      publishedAt: article.publishedAt,
+      updatedAt: article.updatedAt,
     };
   });
 }

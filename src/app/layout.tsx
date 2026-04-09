@@ -1,6 +1,5 @@
-'use client';
-
 import Script from "next/script";
+import type { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
 import "./globals.css";
 import { CartProvider } from "../context/CartContext";
@@ -9,6 +8,47 @@ import CartButton from "../components/CartButton";
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import {
+  buildAbsoluteUrl,
+  defaultDescription,
+  defaultOgImage,
+  siteName,
+  siteUrl,
+} from '@/lib/seo';
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'megurid | モルタルの静かな日用品',
+    template: '%s | MEGURID',
+  },
+  description: defaultDescription,
+  alternates: {
+    canonical: buildAbsoluteUrl('/'),
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ja_JP',
+    url: buildAbsoluteUrl('/'),
+    siteName,
+    title: 'megurid | モルタルの静かな日用品',
+    description: defaultDescription,
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: 'MEGURID',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'megurid | モルタルの静かな日用品',
+    description: defaultDescription,
+    images: [defaultOgImage],
+  },
+};
 
 export default function RootLayout({
   children,

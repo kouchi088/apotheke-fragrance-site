@@ -5,8 +5,14 @@ import { notFound } from 'next/navigation';
 import ColumnContent from '@/components/ColumnContent';
 import { getAllColumns, getColumnBySlug } from '@/lib/columns';
 import type { ColumnBlock } from '@/lib/columns';
-
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.megurid.com';
+import {
+  buildAbsoluteUrl,
+  createBreadcrumbJsonLd,
+  defaultOgImage,
+  formatJapaneseDate,
+  siteName,
+  siteUrl,
+} from '@/lib/seo';
 
 type ColumnPageProps = {
   params: {
@@ -44,13 +50,24 @@ export function generateMetadata({ params }: ColumnPageProps): Metadata {
       description,
       type: 'article',
       url,
-      siteName: 'MEGURID',
+      siteName,
       locale: 'ja_JP',
+      publishedTime: column.publishedAt,
+      modifiedTime: column.updatedAt,
+      images: [
+        {
+          url: defaultOgImage,
+          width: 1200,
+          height: 630,
+          alt: column.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: [defaultOgImage],
     },
   };
 }
@@ -95,6 +112,11 @@ export default function ColumnDetailPage({ params }: ColumnPageProps) {
 
   const faqs = extractFAQs(article.blocks);
   const articleUrl = `${siteUrl}/columns/${article.routeSlug}`;
+  const breadcrumbJsonLd = createBreadcrumbJsonLd([
+    { name: 'ホーム', path: '/' },
+    { name: 'コラム', path: '/columns' },
+    { name: article.title, path: `/columns/${article.routeSlug}` },
+  ]);
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -104,18 +126,25 @@ export default function ColumnDetailPage({ params }: ColumnPageProps) {
     url: articleUrl,
     author: {
       '@type': 'Organization',
-      name: 'MEGURID',
+      name: siteName,
       url: siteUrl,
     },
     publisher: {
       '@type': 'Organization',
-      name: 'MEGURID',
+      name: siteName,
       url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: defaultOgImage,
+      },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': articleUrl,
     },
+    datePublished: article.publishedAt,
+    dateModified: article.updatedAt,
+    image: [defaultOgImage],
   };
 
   const faqJsonLd = faqs.length > 0 ? {
@@ -137,6 +166,10 @@ export default function ColumnDetailPage({ params }: ColumnPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {faqJsonLd && (
         <script
           type="application/ld+json"
@@ -145,14 +178,29 @@ export default function ColumnDetailPage({ params }: ColumnPageProps) {
       )}
       <article className="mx-auto max-w-3xl px-6 py-10 md:px-6 md:py-16">
         <div className="mb-10 border-b border-accent pb-8">
-          <Link href="/columns" className="text-[11px] uppercase tracking-[0.24em] text-secondary transition-colors hover:text-foreground md:text-xs">
-            Back to Columns
-          </Link>
+          <nav aria-label="Breadcrumb" className="mb-6 text-[11px] uppercase tracking-[0.22em] text-secondary md:text-xs">
+            <ol className="flex flex-wrap items-center gap-2">
+              <li>
+                <Link href="/" className="transition-colors hover:text-foreground">Home</Link>
+              </li>
+              <li>/</li>
+              <li>
+                <Link href="/columns" className="transition-colors hover:text-foreground">Columns</Link>
+              </li>
+              <li>/</li>
+              <li className="text-foreground">{String(article.order).padStart(2, '0')}</li>
+            </ol>
+          </nav>
           <p className="mt-6 text-[11px] uppercase tracking-[0.3em] text-secondary md:text-xs">
             Column {String(article.order).padStart(2, '0')}
           </p>
           <h1 className="mt-4 text-[2rem] font-serif leading-[1.35] text-foreground md:text-5xl md:leading-tight">{article.title}</h1>
           <p className="mt-6 text-[16px] leading-8 text-foreground/80 md:text-base">{article.excerpt}</p>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-secondary">
+            <p>著者: {siteName}</p>
+            <p>公開日: <time dateTime={article.publishedAt}>{formatJapaneseDate(article.publishedAt)}</time></p>
+            <p>更新日: <time dateTime={article.updatedAt}>{formatJapaneseDate(article.updatedAt)}</time></p>
+          </div>
         </div>
 
         <ColumnContent blocks={article.blocks} />
