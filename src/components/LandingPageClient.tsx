@@ -88,7 +88,7 @@ export default function LandingPageClient({
         {/* --- New Arrivals Section (formerly Collection) --- */}
         {products && products.length > 0 && (
           <section id="new-arrivals" className="py-20 sm:py-24 bg-white">
-            <div className="container mx-auto px-8 sm:px-9">
+            <div className="container mx-auto px-5 sm:px-9">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 sm:mb-16">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-serif text-foreground mb-2">New Arrivals</h2>
@@ -98,7 +98,7 @@ export default function LandingPageClient({
                   View All Items
                 </Link>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
                 {products.map((product: any) => (
                   <div key={product.id} className="group h-full flex flex-col">
                     <Link href={`/products/${product.id}`} className="block">
@@ -139,11 +139,11 @@ export default function LandingPageClient({
         {/* --- Featured / Best Sellers Section --- */}
         {featuredProducts && featuredProducts.length > 0 && (
           <section id="featured" className="py-20 sm:py-24 bg-white">
-            <div className="container mx-auto px-8 sm:px-9 text-center">
+            <div className="container mx-auto px-5 sm:px-9 text-center">
               <h2 className="text-2xl sm:text-3xl font-serif text-foreground mb-4">Featured Collections</h2>
               <p className="text-secondary text-sm mb-10 sm:mb-12">Curated selection of our signature items.</p>
               
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
                 {featuredProducts.map((product: any) => (
                   <div key={product.id} className="group h-full flex flex-col">
                     <Link href={`/products/${product.id}`} className="block">

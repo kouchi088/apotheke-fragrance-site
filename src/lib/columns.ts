@@ -20,6 +20,7 @@ export type ColumnSummary = {
   order: number;
   publishedAt: string;
   updatedAt: string;
+  heroImage?: string | null;
 };
 
 export type ColumnArticle = ColumnSummary & {
@@ -28,6 +29,7 @@ export type ColumnArticle = ColumnSummary & {
 };
 
 const columnsDirectory = path.join(process.cwd(), 'columns-v2');
+const defaultColumnHeroImage = '/journal_top.png';
 
 function normalizeValue(value: string) {
   return value.normalize('NFC');
@@ -221,6 +223,7 @@ function createColumnArticle(fileName: string): ColumnArticle {
     order: getOrderFromFileName(fileName),
     publishedAt: stats.birthtime.toISOString(),
     updatedAt: stats.mtime.toISOString(),
+    heroImage: defaultColumnHeroImage,
     content,
     blocks,
   };
@@ -246,6 +249,7 @@ export function getAllColumns(): ColumnSummary[] {
       order: article.order,
       publishedAt: article.publishedAt,
       updatedAt: article.updatedAt,
+      heroImage: article.heroImage,
     };
   });
 }

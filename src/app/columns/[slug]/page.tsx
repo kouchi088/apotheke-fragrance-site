@@ -38,6 +38,7 @@ export function generateMetadata({ params }: ColumnPageProps): Metadata {
   const title = `${column.title} | MEGURID`;
   const description = column.excerpt;
   const url = `${siteUrl}/columns/${column.routeSlug}`;
+  const heroImage = column.heroImage ? buildAbsoluteUrl(column.heroImage) : defaultOgImage;
 
   return {
     title,
@@ -56,7 +57,7 @@ export function generateMetadata({ params }: ColumnPageProps): Metadata {
       modifiedTime: column.updatedAt,
       images: [
         {
-          url: defaultOgImage,
+          url: heroImage,
           width: 1200,
           height: 630,
           alt: column.title,
@@ -67,7 +68,7 @@ export function generateMetadata({ params }: ColumnPageProps): Metadata {
       card: 'summary_large_image',
       title,
       description,
-      images: [defaultOgImage],
+      images: [heroImage],
     },
   };
 }
@@ -112,6 +113,13 @@ export default function ColumnDetailPage({ params }: ColumnPageProps) {
 
   const faqs = extractFAQs(article.blocks);
   const articleUrl = `${siteUrl}/columns/${article.routeSlug}`;
+  const heroImage = article.heroImage ? buildAbsoluteUrl(article.heroImage) : defaultOgImage;
+  const contentBlocks =
+    article.blocks[0]?.type === 'heading' &&
+    article.blocks[0].level === 1 &&
+    article.blocks[0].text.trim() === article.title.trim()
+      ? article.blocks.slice(1)
+      : article.blocks;
   const breadcrumbJsonLd = createBreadcrumbJsonLd([
     { name: 'ホーム', path: '/' },
     { name: 'コラム', path: '/columns' },
@@ -144,7 +152,7 @@ export default function ColumnDetailPage({ params }: ColumnPageProps) {
     },
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
-    image: [defaultOgImage],
+    image: [heroImage],
   };
 
   const faqJsonLd = faqs.length > 0 ? {
@@ -203,7 +211,7 @@ export default function ColumnDetailPage({ params }: ColumnPageProps) {
           </div>
         </div>
 
-        <ColumnContent blocks={article.blocks} />
+        <ColumnContent blocks={contentBlocks} />
 
         <div className="mt-16 border-t border-accent pt-8">
           <div className="grid gap-4 md:grid-cols-2">

@@ -2,16 +2,35 @@ export const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.megurid.c
 export const siteName = 'MEGURID';
 export const defaultDescription =
   'meguridは、モルタルとコンクリートでつくる静かな日用品ブランドです。トレイ、コースター、インセンスホルダーなど、空間に静けさを添える道具を届けます。';
-export const defaultOgImage = `${siteUrl}/logo.png`;
 
 export function buildAbsoluteUrl(path = '/') {
   return new URL(path, siteUrl).toString();
 }
 
+export const defaultOgImage = buildAbsoluteUrl('/og-image.jpg');
+
+function normalizeImageInput(image: string) {
+  const normalizedImage = image.trim().replace(/^hhttps?:\/\//i, 'https://');
+
+  if (/^\/https?:\/\//i.test(normalizedImage)) {
+    return normalizedImage.slice(1);
+  }
+
+  const normalizedSiteUrl = siteUrl.replace(/\/+$/, '');
+  if (
+    normalizedImage.startsWith(`${normalizedSiteUrl}https://`) ||
+    normalizedImage.startsWith(`${normalizedSiteUrl}http://`)
+  ) {
+    return normalizedImage.slice(normalizedSiteUrl.length);
+  }
+
+  return normalizedImage;
+}
+
 export function buildImageUrl(image?: string | null) {
   if (!image) return null;
 
-  const normalizedImage = image.trim().replace(/^hhttps?:\/\//i, 'https://');
+  const normalizedImage = normalizeImageInput(image);
   if (!normalizedImage) return null;
 
   if (
@@ -22,15 +41,16 @@ export function buildImageUrl(image?: string | null) {
     return normalizedImage;
   }
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, '');
+
   if (normalizedImage.startsWith('/storage/v1/object/public/')) {
-    return `${siteUrl}${normalizedImage}`;
+    return supabaseUrl ? `${supabaseUrl}${normalizedImage}` : buildAbsoluteUrl(normalizedImage);
   }
 
   if (normalizedImage.startsWith('/')) {
     return buildAbsoluteUrl(normalizedImage);
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!supabaseUrl) return normalizedImage;
 
   return `${supabaseUrl}/storage/v1/object/public/${normalizedImage.replace(/^\/+/, '')}`;

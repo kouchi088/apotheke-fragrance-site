@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 
   const title = product?.name || 'Product';
-  const description = product?.description || defaultDescription;
+  const description = product?.description?.slice(0, 120) || defaultDescription;
   const firstImage = buildImageUrl(product?.images?.[0] || product?.image || null) || defaultOgImage;
   const canonicalUrl = buildAbsoluteUrl(`/products/${params.id}`);
 
