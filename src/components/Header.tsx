@@ -14,6 +14,11 @@ const Header = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    await fetch('/api/admin/access', {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      cache: 'no-store',
+    }).catch(() => undefined);
   };
 
   const toggleMobileMenu = () => {

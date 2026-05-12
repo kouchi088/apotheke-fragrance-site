@@ -1,12 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
 import { authenticateAdminFromBearer } from '@/lib/adminAuth';
+import { ADMIN_ACCESS_COOKIE_NAME } from '@/lib/adminAccessCookie';
 
 type CookieReader = {
   get(name: string): { value: string } | undefined;
 };
 
-export async function resolveAdminAccess(cookieStore: CookieReader) {
+export async function resolveAdminAccess(
+  cookieStore: CookieReader,
+  options?: { accessToken?: string | null },
+) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -35,7 +39,7 @@ export async function resolveAdminAccess(cookieStore: CookieReader) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const token = cookieStore.get('admin_access_token')?.value ?? null;
+  const token = options?.accessToken ?? cookieStore.get(ADMIN_ACCESS_COOKIE_NAME)?.value ?? null;
   let userEmail = user?.email?.trim().toLowerCase() ?? null;
   let isAdmin = false;
 

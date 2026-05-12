@@ -33,9 +33,14 @@ export default function LoginPage() {
     } else {
       const accessToken = data.session?.access_token;
       if (accessToken) {
-        document.cookie = `admin_access_token=${accessToken}; Path=/; Max-Age=3600; SameSite=Lax; Secure`;
+        await fetch('/api/admin/access', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          credentials: 'same-origin',
+          cache: 'no-store',
+        });
       }
       router.push('/');
+      router.refresh();
     }
   };
 
