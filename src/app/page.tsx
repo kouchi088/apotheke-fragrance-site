@@ -77,6 +77,15 @@ export default async function LandingPage() {
       .from('products')
       .select('id, name, price, images, description, stock_quantity')
       .eq('is_published', true)
+      .eq('is_new_arrival', true)
+      .order('created_at', { ascending: false })
+      .limit(3));
+  }
+  if (error?.code === '42703') {
+    ({ data: products, error } = await supabase
+      .from('products')
+      .select('id, name, price, images, description, stock_quantity')
+      .eq('is_published', true)
       .is('deleted_at', null)
       .order('created_at', { ascending: false })
       .limit(3));
