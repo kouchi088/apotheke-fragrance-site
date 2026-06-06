@@ -11,5 +11,5 @@ test('homepage new arrivals query returns selected products first', () => {
 
   assert.ok(newArrivalsQuery, 'expected to find the homepage products query');
   assert.match(newArrivalsQuery, /\.eq\('is_new_arrival', true\)/);
-  assert.match(newArrivalsQuery, /\.order\('updated_at', \{ ascending: false \}\)/);
+  assert.match(newArrivalsQuery, /\.order\('created_at', \{ ascending: false \}\)/);
 });
