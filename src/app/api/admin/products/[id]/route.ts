@@ -23,6 +23,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     'slug',
     'description_md',
     'description_html',
+    'image',
+    'images',
     'price',
     'is_published',
     'is_new_arrival',

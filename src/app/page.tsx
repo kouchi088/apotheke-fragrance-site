@@ -69,7 +69,7 @@ export default async function LandingPage() {
     .eq('is_published', true)
     .is('deleted_at', null)
     .eq('is_new_arrival', true)
-    .order('updated_at', { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(3);
   let { data: products, error } = await productsQuery;
   if (error?.code === '42703') {

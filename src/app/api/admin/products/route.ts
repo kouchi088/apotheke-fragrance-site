@@ -46,6 +46,8 @@ export async function POST(req: NextRequest) {
       name,
       slug,
       price,
+      image: body.image ?? null,
+      images: Array.isArray(body.images) ? body.images : [],
       description_md: body.description_md ?? null,
       description_html: body.description_html ?? null,
       is_published: Boolean(body.is_published),

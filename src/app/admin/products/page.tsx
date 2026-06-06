@@ -17,7 +17,6 @@ async function updateNewArrivalStatus(formData: FormData) {
     .from('products')
     .update({
       is_new_arrival: isNewArrival,
-      updated_at: new Date().toISOString(),
     })
     .eq('id', id);
 
@@ -35,9 +34,9 @@ export default async function AdminProductsPage() {
 
   ({ data, error } = await db
     .from('products')
-    .select('id, name, slug, price, is_published, is_new_arrival, updated_at')
+    .select('id, name, slug, price, is_published, is_new_arrival, created_at')
     .is('deleted_at', null)
-    .order('updated_at', { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(100));
   if (error?.code === '42703') {
     hasNewArrivalColumn = false;
