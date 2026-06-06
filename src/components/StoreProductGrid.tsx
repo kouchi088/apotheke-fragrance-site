@@ -65,7 +65,8 @@ export default function StoreProductGrid({ products }: { products: Product[] }) 
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'contain' }}
+                    unoptimized
                     className={`transition-all duration-500 ${
                       hasSecondary ? 'group-hover:opacity-0' : 'group-hover:scale-105'
                     }`}
@@ -77,7 +78,8 @@ export default function StoreProductGrid({ products }: { products: Product[] }) 
                       alt={`${product.name} - detail`}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'contain' }}
+                      unoptimized
                       className="absolute inset-0 transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-105"
                     />
                   )}

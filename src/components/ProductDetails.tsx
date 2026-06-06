@@ -164,8 +164,9 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                   alt={`${product.name} 商品画像 ${currentImageIndex + 1}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: 'contain' }}
                   priority
+                  unoptimized
                 />
                 {normalizedImages.length > 1 && (
                   <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
@@ -190,8 +191,9 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
                 alt={`${product.name} 商品画像`}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'contain' }}
                 priority
+                unoptimized
               />
             )}
           </div>

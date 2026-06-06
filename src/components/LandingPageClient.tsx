@@ -108,7 +108,8 @@ export default function LandingPageClient({
                             src={product.images[0]}
                             alt={product.name}
                             fill
-                            style={{ objectFit: 'cover' }}
+                            style={{ objectFit: 'contain' }}
+                            unoptimized
                             className="transition-transform duration-300 group-hover:scale-105"
                           />
                         )}
@@ -153,7 +154,8 @@ export default function LandingPageClient({
                             src={product.images[0]}
                             alt={product.name}
                             fill
-                            style={{ objectFit: 'cover' }}
+                            style={{ objectFit: 'contain' }}
+                            unoptimized
                             className="transition-transform duration-300 group-hover:scale-105"
                           />
                         )}
