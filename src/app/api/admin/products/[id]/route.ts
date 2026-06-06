@@ -25,6 +25,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     'description_html',
     'price',
     'is_published',
+    'is_new_arrival',
     'seo_title',
     'seo_description',
     'seo_canonical',
@@ -36,7 +37,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   const db = getSupabaseAdminClient();
   const { data: before } = await db.from('products').select('*').eq('id', params.id).single();
-  const { data, error } = await db.from('products').update(patch).eq('id', params.id).select('*').single();
+  let { data, error } = await db.from('products').update(patch).eq('id', params.id).select('*').single();
+  if (error?.code === '42703') {
+    const { is_new_arrival: _isNewArrival, ...fallbackPatch } = patch;
+    ({ data, error } = await db.from('products').update(fallbackPatch).eq('id', params.id).select('*').single());
+  }
   if (error || !data) return fail('DB_ERROR', error?.message ?? 'update failed', 500);
 
   await db.from('audit_logs').insert({
