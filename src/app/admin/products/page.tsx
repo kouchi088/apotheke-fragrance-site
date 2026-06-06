@@ -39,14 +39,14 @@ export default async function AdminProductsPage() {
     .order('created_at', { ascending: false })
     .limit(100));
   if (error?.code === '42703') {
-    hasNewArrivalColumn = false;
     ({ data, error } = await db
       .from('products')
-      .select('id, name, slug, price, is_published, created_at')
+      .select('id, name, slug, price, is_published, is_new_arrival, created_at')
       .order('created_at', { ascending: false })
       .limit(100));
   }
   if (error?.code === '42703') {
+    hasNewArrivalColumn = false;
     ({ data, error } = await db
       .from('products')
       .select('id, name, slug, price, is_published')
