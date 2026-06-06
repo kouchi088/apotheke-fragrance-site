@@ -68,7 +68,8 @@ export default async function LandingPage() {
     .select('id, name, price, images, description, stock_quantity')
     .eq('is_published', true)
     .is('deleted_at', null)
-    .order('created_at', { ascending: false })
+    .eq('is_new_arrival', true)
+    .order('updated_at', { ascending: false })
     .limit(3);
   let { data: products, error } = await productsQuery;
   if (error?.code === '42703') {
@@ -76,6 +77,7 @@ export default async function LandingPage() {
       .from('products')
       .select('id, name, price, images, description, stock_quantity')
       .eq('is_published', true)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false })
       .limit(3));
   }
@@ -83,6 +85,7 @@ export default async function LandingPage() {
     ({ data: products, error } = await supabase
       .from('products')
       .select('id, name, price, images, description, stock_quantity')
+      .eq('is_published', true)
       .order('created_at', { ascending: false })
       .limit(3));
   }

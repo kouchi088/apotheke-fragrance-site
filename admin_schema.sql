@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS products (
   price NUMERIC(12,2) NOT NULL,
   currency CHAR(3) NOT NULL DEFAULT 'JPY',
   is_published BOOLEAN NOT NULL DEFAULT FALSE,
+  is_new_arrival BOOLEAN NOT NULL DEFAULT FALSE,
   seo_title TEXT,
   seo_description TEXT,
   seo_canonical TEXT,
