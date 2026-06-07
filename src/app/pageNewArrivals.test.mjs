@@ -23,3 +23,13 @@ test('homepage keeps new arrivals filtering when only deleted_at is missing', ()
   assert.match(firstFallbackQuery, /\.eq\('is_new_arrival', true\)/);
   assert.doesNotMatch(firstFallbackQuery, /\.is\('deleted_at', null\)/);
 });
+
+test('homepage keeps new arrivals filtering when created_at is missing', () => {
+  const newArrivalFallbacks = Array.from(
+    pageSource.matchAll(/if \(error\?\.code === '42703'\) \{[\s\S]*?\.from\('products'\)[\s\S]*?\.limit\(3\)\);/g),
+    (match) => match[0],
+  ).filter((query) => query.includes(".eq('is_new_arrival', true)"));
+  const noCreatedAtFallback = newArrivalFallbacks.find((query) => !query.includes(".order('created_at'"));
+
+  assert.ok(noCreatedAtFallback, 'expected a selected-products fallback without created_at ordering');
+});

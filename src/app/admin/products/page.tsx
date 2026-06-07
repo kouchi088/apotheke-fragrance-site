@@ -46,6 +46,12 @@ export default async function AdminProductsPage() {
       .limit(100));
   }
   if (error?.code === '42703') {
+    ({ data, error } = await db
+      .from('products')
+      .select('id, name, slug, price, is_published, is_new_arrival')
+      .limit(100));
+  }
+  if (error?.code === '42703') {
     hasNewArrivalColumn = false;
     ({ data, error } = await db
       .from('products')
