@@ -14,6 +14,36 @@ const ArrowRight = ({ className }: { className?: string }) => (
 
 const HERO_IMAGES = ['/tophero.png', '/tophero2.png'];
 
+function normalizeImageSrc(rawSrc: unknown): string {
+  const src =
+    typeof rawSrc === 'string'
+      ? rawSrc
+      : rawSrc && typeof rawSrc === 'object' && 'url' in rawSrc && typeof (rawSrc as { url?: unknown }).url === 'string'
+        ? (rawSrc as { url: string }).url
+        : rawSrc && typeof rawSrc === 'object' && 'publicUrl' in rawSrc && typeof (rawSrc as { publicUrl?: unknown }).publicUrl === 'string'
+          ? (rawSrc as { publicUrl: string }).publicUrl
+          : rawSrc && typeof rawSrc === 'object' && 'path' in rawSrc && typeof (rawSrc as { path?: unknown }).path === 'string'
+            ? (rawSrc as { path: string }).path
+            : '';
+
+  if (!src) return '/placeholder.jpg';
+  const normalizedSrc = src.trim().replace(/^hhttps?:\/\//i, 'https://');
+  if (!normalizedSrc) return '/placeholder.jpg';
+  if (normalizedSrc.startsWith('http://') || normalizedSrc.startsWith('https://') || normalizedSrc.startsWith('data:')) {
+    return normalizedSrc;
+  }
+  if (normalizedSrc.startsWith('/storage/v1/object/public/')) {
+    return process.env.NEXT_PUBLIC_SUPABASE_URL
+      ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}${normalizedSrc}`
+      : normalizedSrc;
+  }
+  if (normalizedSrc.startsWith('/')) return normalizedSrc;
+
+  return process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${normalizedSrc.replace(/^\/+/, '')}`
+    : '/placeholder.jpg';
+}
+
 // --- Client Component ---
 export default function LandingPageClient({
   products,
@@ -38,12 +68,13 @@ export default function LandingPageClient({
   }, []);
 
   const handleAddToCart = (product: any) => {
+    const firstImage = normalizeImageSrc(product.images?.[0]);
     const productToAdd = {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg',
-      images: product.images || [],
+      image: firstImage,
+      images: (product.images || []).map((img: unknown) => normalizeImageSrc(img)),
       description: product.description || '',
       stock_quantity: product.stock_quantity || 0,
     };
@@ -99,34 +130,36 @@ export default function LandingPageClient({
                 </Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
-                {products.map((product: any) => (
-                  <div key={product.id} className="group h-full flex flex-col">
-                    <Link href={`/products/${product.id}`} className="block">
-                      <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
-                        {product.images && product.images.length > 0 && (
+                {products.map((product: any) => {
+                  const primaryImage = normalizeImageSrc(product.images?.[0]);
+
+                  return (
+                    <div key={product.id} className="group h-full flex flex-col">
+                      <Link href={`/products/${product.id}`} className="block">
+                        <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
                           <Image
-                            src={product.images[0]}
+                            src={primaryImage}
                             alt={product.name}
                             fill
                             style={{ objectFit: 'contain' }}
                             unoptimized
                             className="transition-transform duration-300 group-hover:scale-105"
                           />
-                        )}
+                        </div>
+                        <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
+                      </Link>
+                      <div className="mt-auto pt-2">
+                        <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
+                        >
+                          カートに追加
+                        </button>
                       </div>
-                      <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
-                    </Link>
-                    <div className="mt-auto pt-2">
-                      <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
-                      >
-                        カートに追加
-                      </button>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               <div className="mt-12 sm:mt-16 text-center md:hidden">
                 <Link href="/online-store" className="inline-block text-xs uppercase tracking-[0.2em] border-b border-primary pb-1">
@@ -145,34 +178,36 @@ export default function LandingPageClient({
               <p className="text-secondary text-sm mb-10 sm:mb-12">Curated selection of our signature items.</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-10 md:gap-y-12">
-                {featuredProducts.map((product: any) => (
-                  <div key={product.id} className="group h-full flex flex-col">
-                    <Link href={`/products/${product.id}`} className="block">
-                      <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
-                        {product.images && product.images.length > 0 && (
+                {featuredProducts.map((product: any) => {
+                  const primaryImage = normalizeImageSrc(product.images?.[0]);
+
+                  return (
+                    <div key={product.id} className="group h-full flex flex-col">
+                      <Link href={`/products/${product.id}`} className="block">
+                        <div className="relative w-full aspect-square overflow-hidden bg-accent rounded-lg shadow-md">
                           <Image
-                            src={product.images[0]}
+                            src={primaryImage}
                             alt={product.name}
                             fill
                             style={{ objectFit: 'contain' }}
                             unoptimized
                             className="transition-transform duration-300 group-hover:scale-105"
                           />
-                        )}
+                        </div>
+                        <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
+                      </Link>
+                      <div className="mt-auto pt-2">
+                        <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
+                        >
+                          カートに追加
+                        </button>
                       </div>
-                      <h3 className="mt-4 text-base sm:text-lg font-semibold text-foreground">{product.name}</h3>
-                    </Link>
-                    <div className="mt-auto pt-2">
-                      <p className="mt-1 text-sm text-primary">¥{product.price.toLocaleString()}</p>
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="mt-4 px-4 py-2 border border-gray-button text-gray-button text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-colors w-full"
-                      >
-                        カートに追加
-                      </button>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </section>
